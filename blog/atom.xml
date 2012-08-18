@@ -7,7 +7,7 @@
         <link href="/"/>
     
         
-    <updated>2012-08-17T20:40:48Z</updated>
+    <updated>2012-08-18T15:00:15Z</updated>
 
     <id>/blog/atom.xml/</id>
 
@@ -124,6 +124,23 @@ really upset about that tie. He was trying to get his own&amp;nbsp;back.&lt;/p&g
 &lt;p&gt;&lt;span class=&#34;dquo&#34;&gt;&amp;#8220;&lt;/span&gt;Lord Pershore will be staying here from to-night, Jeeves,&amp;#8221; I said&amp;nbsp;coldly.&lt;/p&gt;
 &lt;p&gt;&lt;span class=&#34;dquo&#34;&gt;&amp;#8220;&lt;/span&gt;Very good, sir. Breakfast is ready,&amp;nbsp;sir.&amp;#8221;&lt;/p&gt;
 &lt;p&gt;&lt;a href=&#34;http://www.gutenberg.org/cache/epub/8164/pg8164.html&#34;&gt;My Man Jeeves by &lt;span class=&#34;caps&#34;&gt;PG&lt;/span&gt;&amp;nbsp;Wodehouse&lt;/a&gt;&lt;/p&gt;            </content>
+        </entry>
+            <entry>
+            <title type="html">Fist post</title>
+            <author><name>Lakshmi Vyasarajan</name></author>
+            <link href="/blog/first-post.html"/>
+            <updated>2011-02-01T10:00:00Z</updated>
+            <published>2011-02-01T10:00:00Z</published>
+            <id>/blog/first-post.html</id>
+                        <category   scheme="/blog/tags"
+                        term="post"
+                        label="Post" />
+                        <category   scheme="/blog/tags"
+                        term="test"
+                        label="Test" />
+            
+            <content type="html">
+                                &lt;p&gt;first post for testthis is my first&amp;nbsp;post&lt;/p&gt;            </content>
         </entry>
             <entry>
             <title type="html">An Angry Post</title>

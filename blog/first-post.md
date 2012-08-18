@@ -22,8 +22,9 @@
         compatibility mode is within the first 1K bytes
         code.google.com/p/chromium/issues/detail?id=23003 -->
 
-  <title>BASIC - A hyde website</title>
-  <meta name="description" content="Home page for the BASIC hyde template">
+  <title>A Happy Post</title>
+  <meta name="description" content="Smile. Laugh.
+">
   <meta name="author" content="Lakshmi Vyasarajan">
 
   <!--  Mobile viewport optimized: j.mp/bplateviewport -->
@@ -41,7 +42,7 @@
         enables HTML5 elements & feature detects -->
     <script src="/media/js/libs/modernizr-1.7.min.js"></script>
     </head>
-<body id="index">
+<body id="first-post">
     <div id="container">
             <div id="main" role="main">
           <header class="banner clearfix">
@@ -50,13 +51,13 @@
     <ul>
                 <li>
             <a title="Home Page"
-                class="button white active home"
+                class="button white home"
                 href="/index.html">
                 Home
             </a>
         </li>        <li>
             <a title="Blog"
-                class="button white blog"
+                class="button white active blog"
                 href="/blog">
                 Blog
             </a>
@@ -70,22 +71,60 @@
 </nav>
                     </header>
           <section class="content">
-          <section class="blog_excerpt">
+          <article class="post">
+<nav class="post_nav">
+<a class="backlink" href="/blog">Back to list</a>
+<a class="prev disabled"
+    title=""
+    >
+    Previous
+</a>
 
-<article class=post>
-<h3><a href="/blog/first-post.html">First post</a></h3>
-<a href="/blog/first-post.html"></a>
-<p>test Markdown&nbsp;syntax</p>
-<time datetime="2012-08-18">
-    Posted: Sat, 18 Aug 2012
+<a class="next disabled"
+    title=""
+    >
+    Next
+</a>
+
+<br>
+<div id="twitter_share">
+<a href="http://twitter.com/share"
+    class="twitter-share-button"
+    data-count="vertical"
+    data-via="ringce">Tweet</a>
+    <script type="text/javascript"
+        src="http://platform.twitter.com/widgets.js"></script>
+</div>
+<div id="facebook_like">
+<iframe src="http://www.facebook.com/plugins/like.php?href&amp;layout=box_count&amp;show_faces=false&amp;width=450&amp;action=like&amp;font=arial&amp;colorscheme=light&amp;height=65"
+            scrolling="no"
+            frameborder="0"
+            style="border:none; overflow:hidden; width:450px; height:65px;"
+            allowTransparency="true"></iframe>
+</div>
+</nav>
+<h1 class="title">
+    <a href="/blog/first-post.md">
+        A Happy Post
+    </a>
+</h1>
+<time datetime="2011-02-01">
+    Posted: Tue, 01 Feb 2011
 </time>
-</article>
 
-
-<a class="button white medium"
-    href="/blog/first-post.html">Read more&hellip;</a>
-</section>
-          </section>
+<ul class="tags clear">
+<li>
+    <a class="small" href="/blog/tags/post.html">
+        post
+    </a>
+</li>
+<li>
+    <a class="small" href="/blog/tags/test.html">
+        test
+    </a>
+</li>
+</ul>
+<p>first post for testthis is my first&nbsp;post</p></article>          </section>
       </div>
       </div> <!--! end of #container -->
   <footer>
