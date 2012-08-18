@@ -12,30 +12,34 @@ plugins:
     - hyde.ext.plugins.textlinks.TextlinksPlugin
 context:
     data:
-        tweet_via: ringce
+        site_title: newk's blog
+        author:
+            name: newkedison
+            url: "http://newkedison.tk"
+        home_url: /index.html
         menu:
             -
-                name: Home
+                title: Home
                 description: Home Page
                 css_class: home
                 type: page
-                url: index.html
+                url: /index.html
             -
-                name: Blog
+                title: Blog
                 description: Blog
                 css_class: blog
                 type: node
-                url: blog
+                url: /blog/index.html
             -
-                name: About
+                title: About
                 description: About
                 css_class: about
                 type: page
-                url: about.html
+                url: /about.html
 meta:
     nodemeta: meta.yaml
     created: !!timestamp 2010-01-01 00:00:00
-    author: Lakshmi Vyasarajan
+    author: newkedison
 sorter:
     time:
         attr:

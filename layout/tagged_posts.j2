@@ -1,28 +1,74 @@
 {% extends "base.j2" %}
 
-{% block main %}
-<section class="archives">
-<h1 class="tag title">{{ tag.name }}</h1>
-<ul class="posts clear">
-{% for resource in walker() -%}
-<li class="post clear">
-    <time datetime="{{ resource.meta.created.strftime('%Y-%m-%d') }}">
-        {{ resource.meta.created.strftime('%a, %d %b %Y') }}
-    </time>
-    <a href="{{ content_url(resource.url) }}">{{ resource.meta.title }}</a>
-    {% if resource.meta.tags %}
-    <ul class="tags">
-    {% for tag in resource.meta.tags %}
-    <li>
-        <a class="small" href="{{ content_url('blog/tags/'~tag~'.html') }}">
-            {{ tag }}
-        </a>
-    </li>
-    {% endfor %}
-    </ul>
-    {% endif %}
-</li>
-{%- endfor %}
-</ul>
-</section>
-{% endblock %}
+{% block basecss %}
+{{ super() }}
+<link href="{{ media_url('css/columns.css') }}" rel="stylesheet">
+{% endblock basecss %}
+
+
+{% block content %}
+
+<div class="page-header">
+  {% block header %}
+  <h1>
+    {% block page_title %}{{ resource.meta.title }}{% endblock %}
+    {% if resource.meta.subtitle %}<small>{% block page_subtitle %}{{ resource.meta.subtitle }}{% endblock %}</small>{% endif %}
+  </h1>
+  {% endblock header %}
+</div>
+
+<div class="row">
+  <div class="span10">
+    {% block main %}
+      <section class="archives">
+      <h1 class="tag title">{{ tag.name }}</h1>
+      <ul class="posts clear">
+      {% for resource in walker() -%}
+      <li class="post clear">
+          <time datetime="{{ resource.meta.created.strftime('%Y-%m-%d') }}">
+              {{ resource.meta.created.strftime('%a, %d %b %Y') }}
+          </time>
+          <a href="{{ content_url(resource.url) }}">{{ resource.meta.title }}</a>
+          {% if resource.meta.tags %}
+          <ul class="tags">
+          {% for tag in resource.meta.tags %}
+          <li>
+              <a class="small" href="{{ content_url('blog/tags/'~tag~'.html') }}">
+                  {{ tag }}
+              </a>
+          </li>
+          {% endfor %}
+          </ul>
+          {% endif %}
+      </li>
+      {%- endfor %}
+      </ul>
+      </section>
+    {% endblock %}
+  </div>
+  <div class="span4">
+    {% block sidebar %}
+    <nav class="post_nav">
+    <a class="backlink" href="{{ content_url(resource.node.url) }}">Back to list</a>
+    <a class="prev{{' disabled' if not resource.prev_by_time }}"
+        title="{{ resource.prev_by_time.meta.title }}"
+        {% if resource.prev_by_time %}
+        href="{{ content_url(resource.prev_by_time.url) }}"{% endif %}>
+        Previous
+    </a>
+
+    <a class="next{{' disabled' if not resource.next_by_time }}"
+        title="{{ resource.next_by_time.meta.title }}"
+        {% if resource.next_by_time %}
+        href="{{ content_url(resource.next_by_time.url) }}"{% endif %}>
+        Next
+    </a>
+
+    </nav>
+    {% endblock %}
+  </div>
+</div>
+
+{% endblock content %}
+
+

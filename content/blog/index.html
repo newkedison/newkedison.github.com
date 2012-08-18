@@ -1,6 +1,15 @@
 ---
-title: A basic blog
+title: blogs list
 extends: listing.j2
-default_block: test
 listable: false
 ---
+
+{% block css %}
+{{ super() }}
+<style>
+  img {
+    max-height: 50px;
+    max-width: 50px;
+  }
+</style>
+{% endblock %}

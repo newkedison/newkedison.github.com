@@ -7,13 +7,112 @@
         <link href="/"/>
     
         
-    <updated>2012-08-18T15:00:15Z</updated>
+    <updated>2012-08-18T21:46:29Z</updated>
 
     <id>/blog/atom.xml/</id>
 
             <entry>
+            <title type="html">First post</title>
+            <author><name>newkedison</name></author>
+            <link href="/blog/first-post.html"/>
+            <updated>2012-08-18T13:00:00Z</updated>
+            <published>2012-08-18T13:00:00Z</published>
+            <id>/blog/first-post.html</id>
+                        <category   scheme="/blog/tags"
+                        term="post"
+                        label="Post" />
+                        <category   scheme="/blog/tags"
+                        term="test"
+                        label="Test" />
+                        <category   scheme="/blog/tags"
+                        term="markdown"
+                        label="Markdown" />
+            
+            <content type="html">
+                                &lt;p&gt;test Markdown&amp;nbsp;syntax&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;注意,由于&lt;span class=&#34;caps&#34;&gt;CSS&lt;/span&gt;的影响,部分效果未能看到,但是从&lt;span class=&#34;caps&#34;&gt;HTML&lt;/span&gt;源码里面还是可以看到效果的&lt;/strong&gt;&lt;/p&gt;
+&lt;h1&gt;Test Markdown&amp;nbsp;syntax&lt;/h1&gt;
+&lt;h2&gt;level 2&amp;nbsp;title&lt;/h2&gt;
+&lt;h3&gt;level 3&amp;nbsp;title&lt;/h3&gt;
+&lt;h4&gt;level 4&amp;nbsp;title&lt;/h4&gt;
+&lt;h5&gt;level 5&amp;nbsp;title&lt;/h5&gt;
+&lt;h6&gt;level 6&amp;nbsp;title&lt;/h6&gt;
+&lt;p&gt;连续多行内容
+会被认为是连续的,
+放在一对&amp;lt;P&amp;gt;&amp;lt;/P&amp;gt;里面,&amp;nbsp;如果要分段,至少留一个空行&lt;/p&gt;
+&lt;p&gt;有另一种办法&lt;br /&gt;
+就是在行末添加两个空格&lt;br /&gt;
+这样会被替换为&amp;lt;br&amp;nbsp;/&amp;gt;&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;可以直接写&lt;i&gt;&lt;span class=&#34;caps&#34;&gt;HTML&lt;/span&gt;&lt;/i&gt;,&amp;nbsp;而且4&amp;lt;5这种写法是没问题的&lt;/b&gt;&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;引用内容前面用一个大于号即可&lt;br /&gt;
+每一段内容只要第一行有一个大于号就可以了&lt;br /&gt;
+但是为了美观,&amp;nbsp;最好还是每一行前面一个大于号&lt;/p&gt;
+&lt;p&gt;引用可以嵌套&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;只要多加一个大于号即可&amp;nbsp;而且可以内嵌其他语法,比如 &lt;/p&gt;
+&lt;h2&gt;标题2&lt;/h2&gt;
+&lt;/blockquote&gt;
+&lt;h3&gt;标题3&lt;/h3&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;列表分为有序列表和无序列表&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;无序列表前面可以是星号&lt;/li&gt;
+&lt;li&gt;加号&lt;/li&gt;
+&lt;li&gt;或者减号&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;有序列表前面是数字加一个小数点&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;可以是任意数字&lt;/li&gt;
+&lt;li&gt;不影响最后的结果&lt;/li&gt;
+&lt;li&gt;数字之间不论任何大小关系都可以&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;要结束一个列表,需要一行非列表的内容&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;如果列表要有多段&lt;/p&gt;
+&lt;p&gt;后面的段要缩进4个空格或者一个Tab&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;只要每一段的第一行缩进即可&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;1111.&amp;nbsp;有些时候为了避免数字被解析为列表,需要在小数点前面加上反斜杠进行转义&lt;/p&gt;
+&lt;p&gt;代码段用4空格缩进来表示,比如&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;int main(int argc, const char* argv[])
+{
+  printf(&#34;hello world&#34;);
+  return 0;
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;代码段中的全部内容会保留原样不变,除了一开始的4个空格被移除外,所有缩进也都保留&lt;/p&gt;
+&lt;hr /&gt;
+&lt;hr /&gt;
+&lt;hr /&gt;
+&lt;p&gt;三个或更多的等号和星号,可以变成一根横线,中间可以有任意个空格&lt;/p&gt;
+&lt;p&gt;超链接有三种写法&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;行内链接&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;http://www.google.com&#34; title=&#34;这里是title属性&#34;&gt;google&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;引用链接&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;http://www.google.com&#34; title=&#34;这个title可以单引号,双引号,圆括号包围&#34;&gt;google&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;简单写法&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;http://www.google.com&#34;&gt;http://www.google.com&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;*或者_用来表示强调,前后各&lt;em&gt;一个&lt;/em&gt;会替换为&lt;em&gt;em(斜体)&lt;/em&gt;(测试下来好像只有星号有用),
+前后各&lt;strong&gt;两个&lt;/strong&gt;会替换为&lt;strong&gt;strong&lt;/strong&gt;&lt;/p&gt;
+&lt;hr /&gt;
+&lt;p&gt;行内内嵌代码块, 可以使用反引号, 例如&lt;code&gt;printf()&lt;/code&gt;&lt;/p&gt;            </content>
+        </entry>
+            <entry>
             <title type="html">A Happy Post</title>
-            <author><name>Lakshmi Vyasarajan</name></author>
+            <author><name>newkedison</name></author>
             <link href="/blog/happy-post.html"/>
             <updated>2011-02-01T10:00:00Z</updated>
             <published>2011-02-01T10:00:00Z</published>
@@ -126,25 +225,8 @@ really upset about that tie. He was trying to get his own&amp;nbsp;back.&lt;/p&g
 &lt;p&gt;&lt;a href=&#34;http://www.gutenberg.org/cache/epub/8164/pg8164.html&#34;&gt;My Man Jeeves by &lt;span class=&#34;caps&#34;&gt;PG&lt;/span&gt;&amp;nbsp;Wodehouse&lt;/a&gt;&lt;/p&gt;            </content>
         </entry>
             <entry>
-            <title type="html">Fist post</title>
-            <author><name>Lakshmi Vyasarajan</name></author>
-            <link href="/blog/first-post.html"/>
-            <updated>2011-02-01T10:00:00Z</updated>
-            <published>2011-02-01T10:00:00Z</published>
-            <id>/blog/first-post.html</id>
-                        <category   scheme="/blog/tags"
-                        term="post"
-                        label="Post" />
-                        <category   scheme="/blog/tags"
-                        term="test"
-                        label="Test" />
-            
-            <content type="html">
-                                &lt;p&gt;first post for testthis is my first&amp;nbsp;post&lt;/p&gt;            </content>
-        </entry>
-            <entry>
             <title type="html">An Angry Post</title>
-            <author><name>Lakshmi Vyasarajan</name></author>
+            <author><name>newkedison</name></author>
             <link href="/blog/angry-post.html"/>
             <updated>2011-01-01T10:00:00Z</updated>
             <published>2011-01-01T10:00:00Z</published>
@@ -244,7 +326,7 @@ attachment to&amp;nbsp;ornithology.&amp;#8221;&lt;/p&gt;
         </entry>
             <entry>
             <title type="html">A Sad Post</title>
-            <author><name>Lakshmi Vyasarajan</name></author>
+            <author><name>newkedison</name></author>
             <link href="/blog/sad-post.html"/>
             <updated>2010-12-01T10:00:00Z</updated>
             <published>2010-12-01T10:00:00Z</published>

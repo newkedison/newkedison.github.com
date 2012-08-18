@@ -1,6 +1,10 @@
 ---
 extends: base.j2
-default_block: main
-title: About BASIC
-description: The default hyde template
+default_block: content
+title: about me
+description: about me
 ---
+
+{% filter markdown|typogrify -%}
+Please visit [About me](http://about.me/newkedison) for more information
+{%- endfilter %}
