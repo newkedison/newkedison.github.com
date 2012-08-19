@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+        <meta charset="">
+    <title>First post | newk's blog</title>
+    <meta name="description" content="My first post
+">
+    <meta name="author" content="newkedison">
+    <meta name="viewport" content="">
+
+        <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+        <link href="/media/css/bootstrap.css" rel="stylesheet">
+    <link href="/media/css/style.css" rel="stylesheet">
+    <link href="/media/css/columns.css" rel="stylesheet">
+    
+<link href="/media/css/columns.css" rel="stylesheet">
+    
+
+
+                        
+        <script src="/media/js/libs/modernizr-1.7.min.js"></script>
+    
+      </head>
+
+  <body class="test-markdown">
+
+    
+    <div class="topbar">
+            <div class="fill">
+        <div class="container">
+          <a class="brand" href="/index.html">newk's blog</a>
+                    <ul class="nav">
+<li><a href="/index.html">Home</a></li><li><a href="/blog/index.html">Blog</a></li><li><a href="/about.html">About</a></li></ul>
+        </div>
+      </div>
+          </div>
+
+    <div class="container">
+      
+      <div class="content">
+                
+<div class="page-header">
+    <h1>
+    First post      </h1>
+  </div>
+
+<div class="row">
+  <div class="span10">
+    <time datetime="2012-08-18">
+      Posted: Sat, 18 Aug 2012
+    </time>
+
+        <ul class="tags clear">
+        <li>
+      <a class="small" href="/blog/tags/post.html">
+        post
+      </a>
+    </li>
+        <li>
+      <a class="small" href="/blog/tags/test.html">
+        test
+      </a>
+    </li>
+        <li>
+      <a class="small" href="/blog/tags/markdown.html">
+        markdown
+      </a>
+    </li>
+        </ul>
+    
+    <p>test Markdown&nbsp;syntax</p>
+<p><strong>注意,由于<span class="caps">CSS</span>的影响,部分效果未能看到,但是从<span class="caps">HTML</span>源码里面还是可以看到效果的</strong></p>
+<h1>Test Markdown&nbsp;syntax</h1>
+<h2>level 2&nbsp;title</h2>
+<h3>level 3&nbsp;title</h3>
+<h4>level 4&nbsp;title</h4>
+<h5>level 5&nbsp;title</h5>
+<h6>level 6&nbsp;title</h6>
+<p>连续多行内容
+会被认为是连续的,
+放在一对&lt;P&gt;&lt;/P&gt;里面,&nbsp;如果要分段,至少留一个空行</p>
+<p>有另一种办法<br />
+就是在行末添加两个空格<br />
+这样会被替换为&lt;br&nbsp;/&gt;</p>
+<p><b>可以直接写<i><span class="caps">HTML</span></i>,&nbsp;而且4&lt;5这种写法是没问题的</b></p>
+<blockquote>
+<p>引用内容前面用一个大于号即可<br />
+每一段内容只要第一行有一个大于号就可以了<br />
+但是为了美观,&nbsp;最好还是每一行前面一个大于号</p>
+<p>引用可以嵌套</p>
+<blockquote>
+<p>只要多加一个大于号即可&nbsp;而且可以内嵌其他语法,比如 </p>
+<h2>标题2</h2>
+</blockquote>
+<h3>标题3</h3>
+</blockquote>
+<p>列表分为有序列表和无序列表</p>
+<ul>
+<li>无序列表前面可以是星号</li>
+<li>加号</li>
+<li>或者减号</li>
+</ul>
+<p>有序列表前面是数字加一个小数点</p>
+<ol>
+<li>可以是任意数字</li>
+<li>不影响最后的结果</li>
+<li>数字之间不论任何大小关系都可以</li>
+</ol>
+<p>要结束一个列表,需要一行非列表的内容</p>
+<ul>
+<li>
+<p>如果列表要有多段</p>
+<p>后面的段要缩进4个空格或者一个Tab</p>
+</li>
+<li>
+<p>只要每一段的第一行缩进即可</p>
+</li>
+</ul>
+<p>1111.&nbsp;有些时候为了避免数字被解析为列表,需要在小数点前面加上反斜杠进行转义</p>
+<p>代码段用4空格缩进来表示,比如</p>
+<pre><code>int main(int argc, const char* argv[])
+{
+  printf("hello world");
+  return 0;
+}
+</code></pre>
+<p>代码段中的全部内容会保留原样不变,除了一开始的4个空格被移除外,所有缩进也都保留</p>
+<hr />
+<hr />
+<hr />
+<p>三个或更多的等号和星号,可以变成一根横线,中间可以有任意个空格</p>
+<p>超链接有三种写法</p>
+<ul>
+<li>
+<p>行内链接</p>
+<p><a href="http://www.google.com" title="这里是title属性">google</a></p>
+</li>
+<li>
+<p>引用链接</p>
+<p><a href="http://www.google.com" title="这个title可以单引号,双引号,圆括号包围">google</a></p>
+</li>
+<li>
+<p>简单写法</p>
+<p><a href="http://www.google.com">http://www.google.com</a></p>
+</li>
+</ul>
+<p>*或者_用来表示强调,前后各<em>一个</em>会替换为<em>em(斜体)</em>(测试下来好像只有星号有用),
+前后各<strong>两个</strong>会替换为<strong>strong</strong></p>
+<hr />
+<p>行内内嵌代码块, 可以使用反引号, 例如<code>printf()</code></p>  </div>
+  <div class="span4">
+        <nav class="post_nav">
+    <a class="backlink" href="/blog">Back to list</a>
+    <a class="prev"
+        title="使用Hyde建立静态网站"
+                href="/blog/how-to-use-hyde.html">
+        Previous
+    </a>
+
+    <a class="next disabled"
+        title=""
+        >
+        Next
+    </a>
+
+    </nav>
+      </div>
+</div>
+
+      </div>
+
+      <footer>
+                <p>Created by <a href="http://newkedison.tk">newkedison</a></p>
+              </footer>
+
+          </div> <!-- /container -->
+
+        
+                        <script>window.jQuery || document.write('<script src="/media/js/libs/jquery-1.5.1.min.js">\x3C/script>')</script>
+    
+            
+        
+
+    <!--[if lt IE 7 ]>
+      <script src="/media/js/libs/dd_belatedpng.js"></script>
+      <script>DD_belatedPNG.fix('img, .png_bg'); // Fix any <img> or .png_bg bg-images. Also, please read goo.gl/mZiyb </script>
+    <![endif]-->
+
+
+
+        <script>
+  var _gaq = [['_setAccount', 'UA-15769172-5'], ['_trackPageview']];
+  (function(d, t) {
+    var g = d.createElement(t),
+        s = d.getElementsByTagName(t)[0];
+    g.src = '//www.google-analytics.com/ga.js';
+    s.parentNode.insertBefore(g, s);
+  }(document, 'script'));
+</script>
+    
+      </body>
+</html>

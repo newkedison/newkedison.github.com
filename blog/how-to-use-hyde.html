@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+        <meta charset="">
+    <title>使用Hyde建立静态网站 | newk's blog</title>
+    <meta name="description" content="本网站是采用hyde来生成的, 这里记录一下在建立这个网站时碰到和解决的问题
+">
+    <meta name="author" content="newkedison">
+    <meta name="viewport" content="">
+
+        <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+        <link href="/media/css/bootstrap.css" rel="stylesheet">
+    <link href="/media/css/style.css" rel="stylesheet">
+    <link href="/media/css/columns.css" rel="stylesheet">
+    
+<link href="/media/css/columns.css" rel="stylesheet">
+    
+
+
+                        
+        <script src="/media/js/libs/modernizr-1.7.min.js"></script>
+    
+      </head>
+
+  <body class="how-to-use-hyde">
+
+    
+    <div class="topbar">
+            <div class="fill">
+        <div class="container">
+          <a class="brand" href="/index.html">newk's blog</a>
+                    <ul class="nav">
+<li><a href="/index.html">Home</a></li><li><a href="/blog/index.html">Blog</a></li><li><a href="/about.html">About</a></li></ul>
+        </div>
+      </div>
+          </div>
+
+    <div class="container">
+      
+      <div class="content">
+                
+<div class="page-header">
+    <h1>
+    使用Hyde建立静态网站      </h1>
+  </div>
+
+<div class="row">
+  <div class="span10">
+    <time datetime="2012-08-19">
+      Posted: Sun, 19 Aug 2012
+    </time>
+
+        <ul class="tags clear">
+        <li>
+      <a class="small" href="/blog/tags/hyde.html">
+        hyde
+      </a>
+    </li>
+        <li>
+      <a class="small" href="/blog/tags/github.html">
+        github
+      </a>
+    </li>
+        </ul>
+    
+    <p>本网站是采用hyde来生成的,&nbsp;这里记录一下在建立这个网站时碰到和解决的问题</p>
+<h6>想到什么写什么,暂时比较混乱,等写完再整理</h6>
+<h3>hyde对jinja2的扩展</h3>
+<p>hyde号称支持多种模板系统,但是目前仅支持jinja2,这是一种与Django模板语法很类似的&nbsp;模板系统,这也是我选择hyde而不是JekyII的原因</p>
+<p>但是,hyde对jinja2进行了一些扩展,导致我在看代码的时候,碰到看不懂的地方去查jinja2&nbsp;的文档总是找不到说明</p>
+<p>下面列举目前我知道的hyde对jinja的扩展</p>
+<h4>filter(过滤器)</h4>
+<h5>{% content|markdow&nbsp;%}</h5>
+<p>对content的内容按照markdown语法进行解析</p>
+<h5>{% content|typogrify&nbsp;%}</h5>
+<p>对content的内容进行一些美化,可参考<a href="http://code.google.com/p/typogrify/">这里</a>
+的说明(还有<a href="http://static.mintchaos.com/projects/typogrify/">demo</a>)</p>
+<h4>mark&nbsp;tag(标记)</h4>
+<h5>{% mark name -%}&#8230;{%- endmark&nbsp;%}</h5>
+<p>这个我还不知道干嘛用的,需要和下面的refer配套使用</p>
+<h5>{% refer to <span class="caps">XXX</span> as <span class="caps">YYY</span>&nbsp;%}</h5>
+<p>这个的具体用法也还没明白</p>  </div>
+  <div class="span4">
+        <nav class="post_nav">
+    <a class="backlink" href="/blog">Back to list</a>
+    <a class="prev disabled"
+        title=""
+        >
+        Previous
+    </a>
+
+    <a class="next"
+        title="First post"
+                href="/blog/test-markdown.html">
+        Next
+    </a>
+
+    </nav>
+      </div>
+</div>
+
+      </div>
+
+      <footer>
+                <p>Created by <a href="http://newkedison.tk">newkedison</a></p>
+              </footer>
+
+          </div> <!-- /container -->
+
+        
+                        <script>window.jQuery || document.write('<script src="/media/js/libs/jquery-1.5.1.min.js">\x3C/script>')</script>
+    
+            
+        
+
+    <!--[if lt IE 7 ]>
+      <script src="/media/js/libs/dd_belatedpng.js"></script>
+      <script>DD_belatedPNG.fix('img, .png_bg'); // Fix any <img> or .png_bg bg-images. Also, please read goo.gl/mZiyb </script>
+    <![endif]-->
+
+
+
+        <script>
+  var _gaq = [['_setAccount', 'UA-15769172-5'], ['_trackPageview']];
+  (function(d, t) {
+    var g = d.createElement(t),
+        s = d.getElementsByTagName(t)[0];
+    g.src = '//www.google-analytics.com/ga.js';
+    s.parentNode.insertBefore(g, s);
+  }(document, 'script'));
+</script>
+    
+      </body>
+</html>

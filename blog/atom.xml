@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+    <title>
+        BASIC blog full text feed    </title>
+        <link href="blog/atom.xml" rel="self" />
+    
+        <link href="/"/>
+    
+        
+    <updated>2012-08-19T13:34:30Z</updated>
+
+    <id>/blog/atom.xml/</id>
+
+            <entry>
+            <title type="html">使用Hyde建立静态网站</title>
+            <author><name>newkedison</name></author>
+            <link href="/blog/how-to-use-hyde.html"/>
+            <updated>2012-08-19T10:51:16Z</updated>
+            <published>2012-08-19T10:51:16Z</published>
+            <id>/blog/how-to-use-hyde.html</id>
+                        <category   scheme="/blog/tags"
+                        term="hyde"
+                        label="Hyde" />
+                        <category   scheme="/blog/tags"
+                        term="github"
+                        label="Github" />
+            
+            <content type="html">
+                                &lt;p&gt;本网站是采用hyde来生成的,&amp;nbsp;这里记录一下在建立这个网站时碰到和解决的问题&lt;/p&gt;
+&lt;h6&gt;想到什么写什么,暂时比较混乱,等写完再整理&lt;/h6&gt;
+&lt;h3&gt;hyde对jinja2的扩展&lt;/h3&gt;
+&lt;p&gt;hyde号称支持多种模板系统,但是目前仅支持jinja2,这是一种与Django模板语法很类似的&amp;nbsp;模板系统,这也是我选择hyde而不是JekyII的原因&lt;/p&gt;
+&lt;p&gt;但是,hyde对jinja2进行了一些扩展,导致我在看代码的时候,碰到看不懂的地方去查jinja2&amp;nbsp;的文档总是找不到说明&lt;/p&gt;
+&lt;p&gt;下面列举目前我知道的hyde对jinja的扩展&lt;/p&gt;
+&lt;h4&gt;filter(过滤器)&lt;/h4&gt;
+&lt;h5&gt;{% content|markdow&amp;nbsp;%}&lt;/h5&gt;
+&lt;p&gt;对content的内容按照markdown语法进行解析&lt;/p&gt;
+&lt;h5&gt;{% content|typogrify&amp;nbsp;%}&lt;/h5&gt;
+&lt;p&gt;对content的内容进行一些美化,可参考&lt;a href=&#34;http://code.google.com/p/typogrify/&#34;&gt;这里&lt;/a&gt;
+的说明(还有&lt;a href=&#34;http://static.mintchaos.com/projects/typogrify/&#34;&gt;demo&lt;/a&gt;)&lt;/p&gt;
+&lt;h4&gt;mark&amp;nbsp;tag(标记)&lt;/h4&gt;
+&lt;h5&gt;{% mark name -%}&amp;#8230;{%- endmark&amp;nbsp;%}&lt;/h5&gt;
+&lt;p&gt;这个我还不知道干嘛用的,需要和下面的refer配套使用&lt;/p&gt;
+&lt;h5&gt;{% refer to &lt;span class=&#34;caps&#34;&gt;XXX&lt;/span&gt; as &lt;span class=&#34;caps&#34;&gt;YYY&lt;/span&gt;&amp;nbsp;%}&lt;/h5&gt;
+&lt;p&gt;这个的具体用法也还没明白&lt;/p&gt;            </content>
+        </entry>
+            <entry>
+            <title type="html">First post</title>
+            <author><name>newkedison</name></author>
+            <link href="/blog/test-markdown.html"/>
+            <updated>2012-08-18T13:00:00Z</updated>
+            <published>2012-08-18T13:00:00Z</published>
+            <id>/blog/test-markdown.html</id>
+                        <category   scheme="/blog/tags"
+                        term="post"
+                        label="Post" />
+                        <category   scheme="/blog/tags"
+                        term="test"
+                        label="Test" />
+                        <category   scheme="/blog/tags"
+                        term="markdown"
+                        label="Markdown" />
+            
+            <content type="html">
+                                &lt;p&gt;test Markdown&amp;nbsp;syntax&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;注意,由于&lt;span class=&#34;caps&#34;&gt;CSS&lt;/span&gt;的影响,部分效果未能看到,但是从&lt;span class=&#34;caps&#34;&gt;HTML&lt;/span&gt;源码里面还是可以看到效果的&lt;/strong&gt;&lt;/p&gt;
+&lt;h1&gt;Test Markdown&amp;nbsp;syntax&lt;/h1&gt;
+&lt;h2&gt;level 2&amp;nbsp;title&lt;/h2&gt;
+&lt;h3&gt;level 3&amp;nbsp;title&lt;/h3&gt;
+&lt;h4&gt;level 4&amp;nbsp;title&lt;/h4&gt;
+&lt;h5&gt;level 5&amp;nbsp;title&lt;/h5&gt;
+&lt;h6&gt;level 6&amp;nbsp;title&lt;/h6&gt;
+&lt;p&gt;连续多行内容
+会被认为是连续的,
+放在一对&amp;lt;P&amp;gt;&amp;lt;/P&amp;gt;里面,&amp;nbsp;如果要分段,至少留一个空行&lt;/p&gt;
+&lt;p&gt;有另一种办法&lt;br /&gt;
+就是在行末添加两个空格&lt;br /&gt;
+这样会被替换为&amp;lt;br&amp;nbsp;/&amp;gt;&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;可以直接写&lt;i&gt;&lt;span class=&#34;caps&#34;&gt;HTML&lt;/span&gt;&lt;/i&gt;,&amp;nbsp;而且4&amp;lt;5这种写法是没问题的&lt;/b&gt;&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;引用内容前面用一个大于号即可&lt;br /&gt;
+每一段内容只要第一行有一个大于号就可以了&lt;br /&gt;
+但是为了美观,&amp;nbsp;最好还是每一行前面一个大于号&lt;/p&gt;
+&lt;p&gt;引用可以嵌套&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;只要多加一个大于号即可&amp;nbsp;而且可以内嵌其他语法,比如 &lt;/p&gt;
+&lt;h2&gt;标题2&lt;/h2&gt;
+&lt;/blockquote&gt;
+&lt;h3&gt;标题3&lt;/h3&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;列表分为有序列表和无序列表&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;无序列表前面可以是星号&lt;/li&gt;
+&lt;li&gt;加号&lt;/li&gt;
+&lt;li&gt;或者减号&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;有序列表前面是数字加一个小数点&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;可以是任意数字&lt;/li&gt;
+&lt;li&gt;不影响最后的结果&lt;/li&gt;
+&lt;li&gt;数字之间不论任何大小关系都可以&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;要结束一个列表,需要一行非列表的内容&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;如果列表要有多段&lt;/p&gt;
+&lt;p&gt;后面的段要缩进4个空格或者一个Tab&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;只要每一段的第一行缩进即可&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;1111.&amp;nbsp;有些时候为了避免数字被解析为列表,需要在小数点前面加上反斜杠进行转义&lt;/p&gt;
+&lt;p&gt;代码段用4空格缩进来表示,比如&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;int main(int argc, const char* argv[])
+{
+  printf(&#34;hello world&#34;);
+  return 0;
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;代码段中的全部内容会保留原样不变,除了一开始的4个空格被移除外,所有缩进也都保留&lt;/p&gt;
+&lt;hr /&gt;
+&lt;hr /&gt;
+&lt;hr /&gt;
+&lt;p&gt;三个或更多的等号和星号,可以变成一根横线,中间可以有任意个空格&lt;/p&gt;
+&lt;p&gt;超链接有三种写法&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;行内链接&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;http://www.google.com&#34; title=&#34;这里是title属性&#34;&gt;google&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;引用链接&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;http://www.google.com&#34; title=&#34;这个title可以单引号,双引号,圆括号包围&#34;&gt;google&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;简单写法&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;http://www.google.com&#34;&gt;http://www.google.com&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;*或者_用来表示强调,前后各&lt;em&gt;一个&lt;/em&gt;会替换为&lt;em&gt;em(斜体)&lt;/em&gt;(测试下来好像只有星号有用),
+前后各&lt;strong&gt;两个&lt;/strong&gt;会替换为&lt;strong&gt;strong&lt;/strong&gt;&lt;/p&gt;
+&lt;hr /&gt;
+&lt;p&gt;行内内嵌代码块, 可以使用反引号, 例如&lt;code&gt;printf()&lt;/code&gt;&lt;/p&gt;            </content>
+        </entry>
+    </feed>

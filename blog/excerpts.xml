@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+    <title>
+        BASIC blog excerpts feed    </title>
+        <link href="blog/excerpts.xml" rel="self" />
+    
+        <link href="/"/>
+    
+        
+    <updated>2012-08-19T13:34:30Z</updated>
+
+    <id>/blog/excerpts.xml/</id>
+
+            <entry>
+            <title type="html">使用Hyde建立静态网站</title>
+            <author><name>newkedison</name></author>
+            <link href="/blog/how-to-use-hyde.html"/>
+            <updated>2012-08-19T10:51:16Z</updated>
+            <published>2012-08-19T10:51:16Z</published>
+            <id>/blog/how-to-use-hyde.html</id>
+                        <category   scheme="/blog/tags"
+                        term="hyde"
+                        label="Hyde" />
+                        <category   scheme="/blog/tags"
+                        term="github"
+                        label="Github" />
+            
+            <content type="html">
+                
+                &lt;p&gt;本网站是采用hyde来生成的,&amp;nbsp;这里记录一下在建立这个网站时碰到和解决的问题&lt;/p&gt;            </content>
+        </entry>
+            <entry>
+            <title type="html">First post</title>
+            <author><name>newkedison</name></author>
+            <link href="/blog/test-markdown.html"/>
+            <updated>2012-08-18T13:00:00Z</updated>
+            <published>2012-08-18T13:00:00Z</published>
+            <id>/blog/test-markdown.html</id>
+                        <category   scheme="/blog/tags"
+                        term="post"
+                        label="Post" />
+                        <category   scheme="/blog/tags"
+                        term="test"
+                        label="Test" />
+                        <category   scheme="/blog/tags"
+                        term="markdown"
+                        label="Markdown" />
+            
+            <content type="html">
+                
+                &lt;p&gt;test Markdown&amp;nbsp;syntax&lt;/p&gt;            </content>
+        </entry>
+    </feed>
