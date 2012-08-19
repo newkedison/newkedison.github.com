@@ -1,0 +1,17 @@
+body {
+  padding-top: 45px;
+  font-size: 15px;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+.content {
+  padding: 20px 0 20px 20px;
+}
+
+.popover-title, .popover-content {
+  margin-left: -20px;
+}
+
+.container > footer p {
+  text-align: center;
+}

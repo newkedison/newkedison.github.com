@@ -3,7 +3,7 @@
 
 {% block content %}
 
-<div class="page-header">
+<div class="popover-title">
   {% block header %}
   <h1>
     {% block page_title %}{{ resource.meta.title }}{% endblock %}
@@ -12,34 +12,40 @@
   {% endblock header %}
 </div>
 
-<div class="row">
-  <div class="span9">
-    {% block main %}
+<div class="popover-content">
+  <div class="row">
+    <div class="span9">
+      <div class="content">
+        {% block main %}
 
-    <ul class="listing clear">
-    {% for res in resource.node.walk_resources_sorted_by_time() %}
-    <li>
-        {{ render_excerpt(res) }}
-    </li>
-    {% endfor %}
-    </ul>
-    {% endblock %}
-  </div>
-  <div class="span3">
-    {% block sidebar %}
-    <div id="recentcomments" class="dsq-widget">
-      <h2 class="dsq-widget-title">最近评论</h2>
-      <script type="text/javascript" 
-      src="http://newk-blog.disqus.com/recent_comments_widget.js?num_items=5&hide_avatars=0&avatar_size=24&excerpt_length=200">
-      </script>
+        <ul class="listing clear">
+        {% for res in resource.node.walk_resources_sorted_by_time() %}
+        <li>
+            {{ render_excerpt(res) }}
+        </li>
+        {% endfor %}
+        </ul>
+        {% endblock %}
+      </div>
     </div>
-    <div id="popularthreads" class="dsq-widget">
-      <h2 class="dsq-widget-title">最热评论</h2>
-      <script type="text/javascript" 
-      src="http://newk-blog.disqus.com/popular_threads_widget.js?num_items=5">
-      </script>
+    <div class="span3">
+      <div class="content">
+        {% block sidebar %}
+        <div id="recentcomments" class="dsq-widget">
+          <h2 class="dsq-widget-title">最近评论</h2>
+          <script type="text/javascript" 
+          src="http://newk-blog.disqus.com/recent_comments_widget.js?num_items=5&hide_avatars=0&avatar_size=24&excerpt_length=200">
+          </script>
+        </div>
+        <div id="popularthreads" class="dsq-widget">
+          <h2 class="dsq-widget-title">最热评论</h2>
+          <script type="text/javascript" 
+          src="http://newk-blog.disqus.com/popular_threads_widget.js?num_items=5">
+          </script>
+        </div>
+        {% endblock %}
+      </div>
     </div>
-    {% endblock %}
   </div>
 </div>
 

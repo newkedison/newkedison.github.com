@@ -5,6 +5,10 @@ title: about me
 description: about me
 ---
 
-{% filter markdown|typogrify -%}
-Please visit [About me](http://about.me/newkedison) for more information
-{%- endfilter %}
+<div class="popover-content">
+  <div class="content">
+    {% filter markdown|typogrify -%}
+    Please visit [About me](http://about.me/newkedison) for more information
+    {%- endfilter %}
+  </div>
+</div>

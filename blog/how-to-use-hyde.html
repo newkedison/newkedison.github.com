@@ -50,33 +50,34 @@
 
     <div class="container">
       
-      <div class="content">
                 
-<div class="page-header">
+<div class="popover-title">
     <h1>
     使用Hyde建立静态网站      </h1>
   </div>
 
-<div class="row">
-  <div class="span9">
-    <time datetime="2012-08-19">
-      Posted: Sun, 19 Aug 2012
-    </time>
+<div class="popover-content">
+  <div class="row">
+    <div class="span9">
+      <div class="content">
+        <time datetime="2012-08-19">
+          Posted: Sun, 19 Aug 2012
+        </time>
 
-        <ul class="tags clear">
-        <li>
-      <a class="small" href="/blog/tags/hyde.html">
-        hyde
-      </a>
-    </li>
-        <li>
-      <a class="small" href="/blog/tags/github.html">
-        github
-      </a>
-    </li>
-        </ul>
-    
-    <p>本网站是采用hyde来生成的,&nbsp;这里记录一下在建立这个网站时碰到和解决的问题</p>
+                <ul class="tags clear">
+                <li>
+          <a class="small" href="/blog/tags/hyde.html">
+            hyde
+          </a>
+        </li>
+                <li>
+          <a class="small" href="/blog/tags/github.html">
+            github
+          </a>
+        </li>
+                </ul>
+        
+        <p>本网站是采用hyde来生成的,&nbsp;这里记录一下在建立这个网站时碰到和解决的问题</p>
 <h6>想到什么写什么,暂时比较混乱,等写完再整理</h6>
 <h3>hyde对jinja2的扩展</h3>
 <p>hyde号称支持多种模板系统,但是目前仅支持jinja2,这是一种与Django模板语法很类似的&nbsp;模板系统,这也是我选择hyde而不是JekyII的原因</p>
@@ -120,26 +121,30 @@
 <p>后来找到了一个解决的<a href="https://github.com/twitter/bootstrap/issues/598">方法</a>,&nbsp;测试下来也还可以</p>
 <p>然后不知道怎么搜的,找到了<a href="http://www.initializr.com/">http://www.initializr.com/</a>这个网站,可以生成一套基本的
 <span class="caps">HTML5</span>+jQuery+bootstrap的模板,于是我就让它给我生成了模板,然后又是慢慢搞,把原来的&nbsp;模板替换掉</p>
-<p>bootstrap从1.4到2.0,把code的样子改好看了,另外一个row原来是分成16份,现在是分成12.&nbsp;还有导航栏的语法似乎也变掉了.</p>  </div>
-  <div class="span3">
-        <nav class="post_nav">
-    <a class="backlink" href="/blog">返回文章列表</a>
-    
-    <div class="prev">
-    前一篇文章:<br />
-        没有文章了...
-        </div>
+<p>bootstrap从1.4到2.0,把code的样子改好看了,另外一个row原来是分成16份,现在是分成12.&nbsp;还有导航栏的语法似乎也变掉了.</p>      </div>
+    </div>
+    <div class="span3">
+      <div class="content">
+                <nav class="post_nav">
+        <a class="backlink" href="/blog">返回文章列表</a>
+        
+        <div class="prev">
+        前一篇文章:<br />
+                没有文章了...
+                </div>
 
-    <br />
+        <br />
 
-    <div class="next">
-    后一篇文章:<br />
-        <a title="2012-08-18"
-       href="/blog/test-markdown.html">
-       First post
-    </a>
-        </div>
-      </div>
+        <div class="next">
+        后一篇文章:<br />
+                <a title="2012-08-18"
+           href="/blog/test-markdown.html">
+           First post
+        </a>
+                </div>
+            </div>
+    </div>
+  </div>
 </div>
 
 <hr>
@@ -161,7 +166,6 @@ var disqus_shortname = 'newk-blog';
 <a href="http://disqus.com" class="dsq-brlink" target=_blank>comments powered by <span class="logo-disqus">Disqus</span></a>
 
 
-      </div>
 
       <footer>
                 <p>Created by <a href="http://newkedison.tk">newkedison</a></p>
