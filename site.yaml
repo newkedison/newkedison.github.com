@@ -17,6 +17,7 @@ context:
             name: newkedison
             url: "http://newkedison.tk"
         home_url: /index.html
+        google_analytics_id: UA-15769172-5
         menu:
             -
                 title: Home
