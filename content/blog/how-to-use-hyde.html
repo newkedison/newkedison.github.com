@@ -28,23 +28,24 @@ hyde号称支持多种模板系统,但是目前仅支持jinja2,这是一种与Dj
 {% raw %}
 
 #### filter(过滤器)
-##### {% content|markdow %}
+* `{% content|markdow %}`
 
-对content的内容按照markdown语法进行解析
+    对content的内容按照markdown语法进行解析
 
-##### {% content|typogrify %}
+* `{% content|typogrify %}`
 
-对content的内容进行一些美化,可参考[这里](http://code.google.com/p/typogrify/)
-的说明(还有[demo](http://static.mintchaos.com/projects/typogrify/))
+    对content的内容进行一些"美化"(我个人不认为很美),
+    可参考[这里](http://code.google.com/p/typogrify/)的说明
+    (还有[demo](http://static.mintchaos.com/projects/typogrify/))
 
 #### mark tag(标记)
-##### {% mark name -%}...{%- endmark %}
+* `{% mark name -%}...{%- endmark %}`
 
-这个我还不知道干嘛用的,需要和下面的refer配套使用
+    这个我还不知道干嘛用的,可能需要和下面的refer配套使用
 
-##### {% refer to XXX as YYY %}
+* `{% refer to XXX as YYY %}`
 
-这个的具体用法也还没明白
+    这个的具体用法也还没明白
 
 {% endraw %}
 

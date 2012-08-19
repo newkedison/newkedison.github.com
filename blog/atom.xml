@@ -7,7 +7,7 @@
         <link href="/"/>
     
         
-    <updated>2012-08-19T13:34:30Z</updated>
+    <updated>2012-08-19T16:21:48Z</updated>
 
     <id>/blog/atom.xml/</id>
 
@@ -33,16 +33,29 @@
 &lt;p&gt;但是,hyde对jinja2进行了一些扩展,导致我在看代码的时候,碰到看不懂的地方去查jinja2&amp;nbsp;的文档总是找不到说明&lt;/p&gt;
 &lt;p&gt;下面列举目前我知道的hyde对jinja的扩展&lt;/p&gt;
 &lt;h4&gt;filter(过滤器)&lt;/h4&gt;
-&lt;h5&gt;{% content|markdow&amp;nbsp;%}&lt;/h5&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;{% content|markdow %}&lt;/code&gt;&lt;/p&gt;
 &lt;p&gt;对content的内容按照markdown语法进行解析&lt;/p&gt;
-&lt;h5&gt;{% content|typogrify&amp;nbsp;%}&lt;/h5&gt;
-&lt;p&gt;对content的内容进行一些美化,可参考&lt;a href=&#34;http://code.google.com/p/typogrify/&#34;&gt;这里&lt;/a&gt;
-的说明(还有&lt;a href=&#34;http://static.mintchaos.com/projects/typogrify/&#34;&gt;demo&lt;/a&gt;)&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;{% content|typogrify %}&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;对content的内容进行一些&amp;#8221;美化&amp;#8221;(我个人不认为很美),
+可参考&lt;a href=&#34;http://code.google.com/p/typogrify/&#34;&gt;这里&lt;/a&gt;的说明
+(还有&lt;a href=&#34;http://static.mintchaos.com/projects/typogrify/&#34;&gt;demo&lt;/a&gt;)&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
 &lt;h4&gt;mark&amp;nbsp;tag(标记)&lt;/h4&gt;
-&lt;h5&gt;{% mark name -%}&amp;#8230;{%- endmark&amp;nbsp;%}&lt;/h5&gt;
-&lt;p&gt;这个我还不知道干嘛用的,需要和下面的refer配套使用&lt;/p&gt;
-&lt;h5&gt;{% refer to &lt;span class=&#34;caps&#34;&gt;XXX&lt;/span&gt; as &lt;span class=&#34;caps&#34;&gt;YYY&lt;/span&gt;&amp;nbsp;%}&lt;/h5&gt;
-&lt;p&gt;这个的具体用法也还没明白&lt;/p&gt;            </content>
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;{% mark name -%}...{%- endmark %}&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;这个我还不知道干嘛用的,可能需要和下面的refer配套使用&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;{% refer to XXX as YYY %}&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;这个的具体用法也还没明白&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;            </content>
         </entry>
             <entry>
             <title type="html">First post</title>

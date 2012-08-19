@@ -18,7 +18,7 @@
 </div>
 
 <div class="row">
-  <div class="span10">
+  <div class="span9">
     <time datetime="{{ resource.meta.created.strftime('%Y-%m-%d') }}">
       Posted: {{ resource.meta.created.strftime('%a, %d %b %Y') }}
     </time>
@@ -41,7 +41,7 @@
       {%- endmark %}
     {%- endfilter %}
   </div>
-  <div class="span4">
+  <div class="span3">
     {% block sidebar %}
     <nav class="post_nav">
     <a class="backlink" href="{{ content_url(resource.node.url) }}">Back to list</a>
