@@ -7,7 +7,7 @@
         <link href="/"/>
     
         
-    <updated>2012-08-19T16:21:48Z</updated>
+    <updated>2012-08-19T17:21:19Z</updated>
 
     <id>/blog/atom.xml/</id>
 
@@ -55,7 +55,22 @@
 &lt;p&gt;&lt;code&gt;{% refer to XXX as YYY %}&lt;/code&gt;&lt;/p&gt;
 &lt;p&gt;这个的具体用法也还没明白&lt;/p&gt;
 &lt;/li&gt;
-&lt;/ul&gt;            </content>
+&lt;/ul&gt;
+&lt;h3&gt;替换网页模板&lt;/h3&gt;
+&lt;p&gt;原来的模板比较难看,我不得不换一个模板,自己写一个模板就比较复杂了,但是其实原来的&amp;nbsp;模板主要是&lt;span class=&#34;caps&#34;&gt;CSS&lt;/span&gt;比较难看,于是主要工作变成了换&lt;span class=&#34;caps&#34;&gt;CSS&lt;/span&gt;.&lt;/p&gt;
+&lt;p&gt;刚好前阵子稍微学习了一下bootstrap,于是当然是换成整套的bootstrap,在hyde的Github
+主页上,给了一个使用bootstrap的项目(见
+&lt;a href=&#34;https://github.com/auzigog/hyde-bootstrap&#34;&gt;hyde-bootstrap&lt;/a&gt;)
+于是我下载了压缩包,然后把&lt;span class=&#34;caps&#34;&gt;CSS&lt;/span&gt;和js都弄过来,接着修改layout文件夹里面几个模板文件的
+内容,慢慢调试(这其实就是个耐心活),最后终于把原来的&lt;span class=&#34;caps&#34;&gt;CSS&lt;/span&gt;丢弃,换成了bootstrap,看起来&amp;nbsp;清爽多了&lt;/p&gt;
+&lt;p&gt;但是,上面的这个工程里面,用的bootstrap版本太老,是V1.4.0,而bootstrap早就更新到2.0
+以上了.本来&lt;span class=&#34;caps&#34;&gt;CSS&lt;/span&gt;这东西也没必要追求最新,但是我发现了一个地方的&lt;span class=&#34;caps&#34;&gt;CSS&lt;/span&gt;很难看,就是
+&lt;code&gt;&amp;lt;pre&amp;gt;&amp;lt;code&amp;gt;...&amp;lt;/code&amp;gt;&amp;lt;/pre&amp;gt;&lt;/code&gt;
+这种格式,这是Markdown在生成代码块的时候用的格式,在这个&lt;span class=&#34;caps&#34;&gt;CSS&lt;/span&gt;上看起来,文字底色是粉红&amp;nbsp;的,很不协调.&lt;/p&gt;
+&lt;p&gt;后来找到了一个解决的&lt;a href=&#34;https://github.com/twitter/bootstrap/issues/598&#34;&gt;方法&lt;/a&gt;,&amp;nbsp;测试下来也还可以&lt;/p&gt;
+&lt;p&gt;然后不知道怎么搜的,找到了&lt;a href=&#34;http://www.initializr.com/&#34;&gt;http://www.initializr.com/&lt;/a&gt;这个网站,可以生成一套基本的
+&lt;span class=&#34;caps&#34;&gt;HTML5&lt;/span&gt;+jQuery+bootstrap的模板,于是我就让它给我生成了模板,然后又是慢慢搞,把原来的&amp;nbsp;模板替换掉&lt;/p&gt;
+&lt;p&gt;bootstrap从1.4到2.0,把code的样子改好看了,另外一个row原来是分成16份,现在是分成12.&amp;nbsp;还有导航栏的语法似乎也变掉了.&lt;/p&gt;            </content>
         </entry>
             <entry>
             <title type="html">First post</title>

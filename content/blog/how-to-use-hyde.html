@@ -49,5 +49,33 @@ hyde号称支持多种模板系统,但是目前仅支持jinja2,这是一种与Dj
 
 {% endraw %}
 
+### 替换网页模板
+
+原来的模板比较难看,我不得不换一个模板,自己写一个模板就比较复杂了,但是其实原来的
+模板主要是CSS比较难看,于是主要工作变成了换CSS.
+
+刚好前阵子稍微学习了一下bootstrap,于是当然是换成整套的bootstrap,在hyde的Github
+主页上,给了一个使用bootstrap的项目(见
+[hyde-bootstrap](https://github.com/auzigog/hyde-bootstrap))
+于是我下载了压缩包,然后把CSS和js都弄过来,接着修改layout文件夹里面几个模板文件的
+内容,慢慢调试(这其实就是个耐心活),最后终于把原来的CSS丢弃,换成了bootstrap,看起来
+清爽多了
+
+但是,上面的这个工程里面,用的bootstrap版本太老,是V1.4.0,而bootstrap早就更新到2.0
+以上了.本来CSS这东西也没必要追求最新,但是我发现了一个地方的CSS很难看,就是
+`<pre><code>...</code></pre>`
+这种格式,这是Markdown在生成代码块的时候用的格式,在这个CSS上看起来,文字底色是粉红
+的,很不协调.
+
+后来找到了一个解决的[方法](https://github.com/twitter/bootstrap/issues/598),
+测试下来也还可以
+
+然后不知道怎么搜的,找到了<http://www.initializr.com/>这个网站,可以生成一套基本的
+HTML5+jQuery+bootstrap的模板,于是我就让它给我生成了模板,然后又是慢慢搞,把原来的
+模板替换掉
+
+bootstrap从1.4到2.0,把code的样子改好看了,另外一个row原来是分成16份,现在是分成12.
+还有导航栏的语法似乎也变掉了.
+
 {# vim: ft=markdown
 #}
