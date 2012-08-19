@@ -530,6 +530,10 @@ blockquote small {
 blockquote small:before {
   content: '\2014 \00A0';
 }
+pre code {
+  background-color: inherit;
+  line-height: inherit;
+}
 address {
   display: block;
   line-height: 18px;
@@ -544,7 +548,7 @@ code, pre {
   border-radius: 3px;
 }
 code {
-/*  background-color: #fee9cc;*/
+  background-color: #fee9cc;
   color: rgba(0, 0, 0, 0.75);
   padding: 1px 3px;
 }
