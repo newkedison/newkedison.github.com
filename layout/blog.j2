@@ -44,22 +44,33 @@
   <div class="span3">
     {% block sidebar %}
     <nav class="post_nav">
-    <a class="backlink" href="{{ content_url(resource.node.url) }}">Back to list</a>
-    <a class="prev{{' disabled' if not resource.prev_by_time }}"
-        title="{{ resource.prev_by_time.meta.title }}"
-        {% if resource.prev_by_time %}
-        href="{{ content_url(resource.prev_by_time.url) }}"{% endif %}>
-        Previous
+    <a class="backlink" href="{{ content_url(resource.node.url) }}">返回文章列表</a>
+    
+    <div class="prev">
+    前一篇文章:<br />
+    {% if not resource.prev_by_time %}
+    没有文章了...
+    {% else %}
+    <a title="{{ resource.prev_by_time.meta.created.strftime('%Y-%m-%d') }}"
+       href="{{ content_url(resource.prev_by_time.url) }}">
+       {{ resource.prev_by_time.meta.title }}
     </a>
+    {% endif %}
+    </div>
 
-    <a class="next{{' disabled' if not resource.next_by_time }}"
-        title="{{ resource.next_by_time.meta.title }}"
-        {% if resource.next_by_time %}
-        href="{{ content_url(resource.next_by_time.url) }}"{% endif %}>
-        Next
+    <br />
+
+    <div class="next">
+    后一篇文章:<br />
+    {% if not resource.next_by_time %}
+    没有文章了...
+    {% else %}
+    <a title="{{ resource.next_by_time.meta.created.strftime('%Y-%m-%d') }}"
+       href="{{ content_url(resource.next_by_time.url) }}">
+       {{ resource.next_by_time.meta.title }}
     </a>
-
-    </nav>
+    {% endif %}
+    </div>
     {% endblock %}
   </div>
 </div>

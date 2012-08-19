@@ -27,23 +27,18 @@
   </div>
   <div class="span3">
     {% block sidebar %}
-    <nav class="post_nav">
-    <a class="backlink" href="{{ content_url(resource.node.url) }}">Back to list</a>
-    <a class="prev{{' disabled' if not resource.prev_by_time }}"
-        title="{{ resource.prev_by_time.meta.title }}"
-        {% if resource.prev_by_time %}
-        href="{{ content_url(resource.prev_by_time.url) }}"{% endif %}>
-        Previous
-    </a>
-
-    <a class="next{{' disabled' if not resource.next_by_time }}"
-        title="{{ resource.next_by_time.meta.title }}"
-        {% if resource.next_by_time %}
-        href="{{ content_url(resource.next_by_time.url) }}"{% endif %}>
-        Next
-    </a>
-
-    </nav>
+    <div id="recentcomments" class="dsq-widget">
+      <h2 class="dsq-widget-title">最近评论</h2>
+      <script type="text/javascript" 
+      src="http://newk-blog.disqus.com/recent_comments_widget.js?num_items=5&hide_avatars=0&avatar_size=24&excerpt_length=200">
+      </script>
+    </div>
+    <div id="popularthreads" class="dsq-widget">
+      <h2 class="dsq-widget-title">最热评论</h2>
+      <script type="text/javascript" 
+      src="http://newk-blog.disqus.com/popular_threads_widget.js?num_items=5">
+      </script>
+    </div>
     {% endblock %}
   </div>
 </div>
