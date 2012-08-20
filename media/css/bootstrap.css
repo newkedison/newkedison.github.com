@@ -562,6 +562,7 @@ code {
   color: #B6BEE0;
   background-color: #f7f7f9;
   border: 1px solid #e1e1e8;
+  line-height: 25px;
 }
 pre {
   display: block;
