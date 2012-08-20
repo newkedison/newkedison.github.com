@@ -7,7 +7,7 @@
         <link href="/"/>
     
         
-    <updated>2012-08-19T21:27:53Z</updated>
+    <updated>2012-08-20T18:10:00Z</updated>
 
     <id>/blog/atom.xml/</id>
 
@@ -26,11 +26,12 @@
                         label="Github" />
             
             <content type="html">
-                                &lt;p&gt;本网站是采用hyde来生成的,&amp;nbsp;这里记录一下在建立这个网站时碰到和解决的问题&lt;/p&gt;
-&lt;h6&gt;想到什么写什么,暂时比较混乱,等写完再整理&lt;/h6&gt;
+                                &lt;h6&gt;想到什么写什么, 暂时比较混乱,&amp;nbsp;等写完再整理&lt;/h6&gt;
 &lt;h3&gt;hyde对jinja2的扩展&lt;/h3&gt;
-&lt;p&gt;hyde号称支持多种模板系统,但是目前仅支持jinja2,这是一种与Django模板语法很类似的&amp;nbsp;模板系统,这也是我选择hyde而不是JekyII的原因&lt;/p&gt;
-&lt;p&gt;但是,hyde对jinja2进行了一些扩展,导致我在看代码的时候,碰到看不懂的地方去查jinja2&amp;nbsp;的文档总是找不到说明&lt;/p&gt;
+&lt;p&gt;hyde号称支持多种模板系统, 但是目前仅支持jinja2, 这是一种与Django模板语法很类似的
+模板系统,&amp;nbsp;这也是我选择hyde而不是JekyII的原因&lt;/p&gt;
+&lt;p&gt;但是, hyde对jinja2进行了一些扩展, 导致我在看代码的时候, 碰到看不懂的地方去查
+jinja2&amp;nbsp;的文档总是找不到说明&lt;/p&gt;
 &lt;p&gt;下面列举目前我知道的hyde对jinja的扩展&lt;/p&gt;
 &lt;h4&gt;filter(过滤器)&lt;/h4&gt;
 &lt;ul&gt;
@@ -40,7 +41,7 @@
 &lt;/li&gt;
 &lt;li&gt;
 &lt;p&gt;&lt;code&gt;{% content|typogrify %}&lt;/code&gt;&lt;/p&gt;
-&lt;p&gt;对content的内容进行一些&amp;#8221;美化&amp;#8221;(我个人不认为很美),
+&lt;p&gt;对content的内容进行一些&amp;#8221;美化&amp;#8221;(我个人不认为很美), 
 可参考&lt;a href=&#34;http://code.google.com/p/typogrify/&#34;&gt;这里&lt;/a&gt;的说明
 (还有&lt;a href=&#34;http://static.mintchaos.com/projects/typogrify/&#34;&gt;demo&lt;/a&gt;)&lt;/p&gt;
 &lt;/li&gt;
@@ -49,7 +50,7 @@
 &lt;ul&gt;
 &lt;li&gt;
 &lt;p&gt;&lt;code&gt;{% mark name -%}...{%- endmark %}&lt;/code&gt;&lt;/p&gt;
-&lt;p&gt;这个我还不知道干嘛用的,可能需要和下面的refer配套使用&lt;/p&gt;
+&lt;p&gt;这个我还不知道干嘛用的,&amp;nbsp;可能需要和下面的refer配套使用&lt;/p&gt;
 &lt;/li&gt;
 &lt;li&gt;
 &lt;p&gt;&lt;code&gt;{% refer to XXX as YYY %}&lt;/code&gt;&lt;/p&gt;
@@ -57,23 +58,73 @@
 &lt;/li&gt;
 &lt;/ul&gt;
 &lt;h3&gt;替换网页模板&lt;/h3&gt;
-&lt;p&gt;原来的模板比较难看,我不得不换一个模板,自己写一个模板就比较复杂了,但是其实原来的&amp;nbsp;模板主要是&lt;span class=&#34;caps&#34;&gt;CSS&lt;/span&gt;比较难看,于是主要工作变成了换&lt;span class=&#34;caps&#34;&gt;CSS&lt;/span&gt;.&lt;/p&gt;
-&lt;p&gt;刚好前阵子稍微学习了一下bootstrap,于是当然是换成整套的bootstrap,在hyde的Github
-主页上,给了一个使用bootstrap的项目(见
+&lt;p&gt;原来的模板比较难看, 我不得不换一个模板, 自己写一个模板就比较复杂了, 但是其实原来的
+模板主要是&lt;span class=&#34;caps&#34;&gt;CSS&lt;/span&gt;比较难看,&amp;nbsp;于是主要工作变成了换&lt;span class=&#34;caps&#34;&gt;CSS&lt;/span&gt;.&lt;/p&gt;
+&lt;p&gt;刚好前阵子稍微学习了一下bootstrap, 于是当然是换成整套的bootstrap, 在hyde的Github
+主页上, 给了一个使用bootstrap的项目(见
 &lt;a href=&#34;https://github.com/auzigog/hyde-bootstrap&#34;&gt;hyde-bootstrap&lt;/a&gt;)
-于是我下载了压缩包,然后把&lt;span class=&#34;caps&#34;&gt;CSS&lt;/span&gt;和js都弄过来,接着修改layout文件夹里面几个模板文件的
-内容,慢慢调试(这其实就是个耐心活),最后终于把原来的&lt;span class=&#34;caps&#34;&gt;CSS&lt;/span&gt;丢弃,换成了bootstrap,看起来&amp;nbsp;清爽多了&lt;/p&gt;
-&lt;p&gt;但是,上面的这个工程里面,用的bootstrap版本太老,是V1.4.0,而bootstrap早就更新到2.0
-以上了.本来&lt;span class=&#34;caps&#34;&gt;CSS&lt;/span&gt;这东西也没必要追求最新,但是我发现了一个地方的&lt;span class=&#34;caps&#34;&gt;CSS&lt;/span&gt;很难看,就是
+于是我下载了压缩包, 然后把&lt;span class=&#34;caps&#34;&gt;CSS&lt;/span&gt;和js都弄过来, 接着修改layout文件夹里面几个模板文件的
+内容, 慢慢调试(这其实就是个耐心活), 最后终于把原来的&lt;span class=&#34;caps&#34;&gt;CSS&lt;/span&gt;丢弃, 换成了bootstrap, 看起来&amp;nbsp;清爽多了&lt;/p&gt;
+&lt;p&gt;但是, 上面的这个工程里面, 用的bootstrap版本太老, 是V1.4.0, 而bootstrap早就更新到2.0
+以上了.本来&lt;span class=&#34;caps&#34;&gt;CSS&lt;/span&gt;这东西也没必要追求最新, 但是我发现了一个地方的&lt;span class=&#34;caps&#34;&gt;CSS&lt;/span&gt;很难看, 就是
 &lt;code&gt;&amp;lt;pre&amp;gt;&amp;lt;code&amp;gt;...&amp;lt;/code&amp;gt;&amp;lt;/pre&amp;gt;&lt;/code&gt;
-这种格式,这是Markdown在生成代码块的时候用的格式,在这个&lt;span class=&#34;caps&#34;&gt;CSS&lt;/span&gt;上看起来,文字底色是粉红&amp;nbsp;的,很不协调.&lt;/p&gt;
+这种格式, 这是Markdown在生成代码块的时候用的格式, 在这个&lt;span class=&#34;caps&#34;&gt;CSS&lt;/span&gt;上看起来, 文字底色是粉红
+的,&amp;nbsp;很不协调.&lt;/p&gt;
 &lt;p&gt;后来找到了一个解决的&lt;a href=&#34;https://github.com/twitter/bootstrap/issues/598&#34;&gt;方法&lt;/a&gt;,&amp;nbsp;测试下来也还可以&lt;/p&gt;
-&lt;p&gt;然后不知道怎么搜的,找到了&lt;a href=&#34;http://www.initializr.com/&#34;&gt;http://www.initializr.com/&lt;/a&gt;这个网站,可以生成一套基本的
-&lt;span class=&#34;caps&#34;&gt;HTML5&lt;/span&gt;+jQuery+bootstrap的模板,于是我就让它给我生成了模板,然后又是慢慢搞,把原来的&amp;nbsp;模板替换掉&lt;/p&gt;
-&lt;p&gt;bootstrap从1.4到2.0,把code的样子改好看了,另外一个row原来是分成16份,现在是分成12.&amp;nbsp;还有导航栏的语法似乎也变掉了.&lt;/p&gt;            </content>
+&lt;p&gt;然后不知道怎么搜的, 找到了&lt;a href=&#34;http://www.initializr.com/&#34;&gt;http://www.initializr.com/&lt;/a&gt;这个网站, 可以生成一套基本的
+&lt;span class=&#34;caps&#34;&gt;HTML5&lt;/span&gt;+jQuery+bootstrap的模板, 于是我就让它给我生成了模板, 然后又是慢慢搞, 把原来的&amp;nbsp;模板替换掉.&lt;/p&gt;
+&lt;p&gt;其实修改&lt;span class=&#34;caps&#34;&gt;CSS&lt;/span&gt;就是需要耐性, 在有了强大的Chrome的Developer Tools后, 所有的&lt;span class=&#34;caps&#34;&gt;CSS&lt;/span&gt;效果
+都是&lt;span class=&#34;caps&#34;&gt;WYSIWYG&lt;/span&gt;, 只要调整到自己满意, 然后把代码复制下来,&amp;nbsp;写到&lt;span class=&#34;caps&#34;&gt;CSS&lt;/span&gt;文件里面即可&lt;/p&gt;
+&lt;p&gt;bootstrap从1.4到2.0, 把code的样子改好看了, 另外一个row原来是分成16份, 现在是分成12.&amp;nbsp;还有导航栏的语法似乎也变掉了.&lt;/p&gt;
+&lt;h3&gt;&lt;span class=&#34;caps&#34;&gt;CSS&lt;/span&gt;使用心得&lt;/h3&gt;
+&lt;p&gt;Chrome已经内置了一个强大的网页调试工具, 无论调试js还是&lt;span class=&#34;caps&#34;&gt;CSS&lt;/span&gt;, 无论调试本地代码还是
+观察服务器响应信息, 不论Debug还是Profile,&amp;nbsp;统统可以实现. &lt;/p&gt;
+&lt;p&gt;之前写js时, 它展现了强大的断点调试和单步调试功能, 后来用Stylish插件时, 又表现了
+完美的查找元素的功能. 这次我要调试&lt;span class=&#34;caps&#34;&gt;CSS&lt;/span&gt;,&amp;nbsp;又发现了它的&lt;span class=&#34;caps&#34;&gt;WYSIWYG&lt;/span&gt;也是那么强劲&lt;/p&gt;
+&lt;p&gt;目前我对&lt;span class=&#34;caps&#34;&gt;CSS&lt;/span&gt;的理解是这样的(不一定正确,&amp;nbsp;仅供参考):&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;浏览器按照&lt;span class=&#34;caps&#34;&gt;HTML&lt;/span&gt;里面编写的顺序, 依次加载和解析&lt;span class=&#34;caps&#34;&gt;CSS&lt;/span&gt;, 如果有多个&lt;span class=&#34;caps&#34;&gt;CSS&lt;/span&gt;段匹配同一个
+元素, 那么这些设置同时生效, 假设里面对同一个内容多次进行设置, 那么最后一个设置
+有效. 利用这个特点, 一般把bootstrap写在前面, 然后再引用一个我们自己写的配置文件,&amp;nbsp;覆盖那些我们不太满意的地方&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;理解&lt;span class=&#34;caps&#34;&gt;CSS&lt;/span&gt;的&lt;a href=&#34;http://www.w3schools.com/css/css_boxmodel.asp&#34;&gt;盒子模型&lt;/a&gt;非常重要,
+&lt;img alt=&#34;box model&#34; src=&#34;http://www.w3schools.com/css/box-model.gif&#34; /&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;有几个我觉得需要注意的地方:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;一个元素的width指的是content部分的宽度,不包括padding和border&lt;/li&gt;
+&lt;li&gt;padding和border取负值没有意义,&amp;nbsp;按0算&lt;/li&gt;
+&lt;li&gt;margin可以取负值, margin其实表示的是与父容器的相对位置, 比如margin-left就等于
+&lt;code&gt;Px-x&lt;/code&gt;, 其中&lt;code&gt;x&lt;/code&gt;指本身border左上角的横坐标, &lt;code&gt;Px&lt;/code&gt;指父容器content部分左上角横坐标,
+所以margin-left取负值时, 表示&lt;code&gt;x&amp;gt;Px&lt;/code&gt;,&amp;nbsp;也就是说这个元素的左边要突出父容器&lt;/li&gt;
+&lt;li&gt;当父容器大小不够容纳这个元素的时候, 这个元素的范围会凸出去, 而且margin-right
+可能会被舍弃(仅在Chrome中测试过,&amp;nbsp;其他浏览器未测试)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3&gt;浏览器兼容性&lt;/h3&gt;
+&lt;p&gt;我只在我的Ubuntu的Google Chrome浏览器中测试了各种效果, 其他浏览器都没有怎么测试.
+在一个Win7的&lt;span class=&#34;caps&#34;&gt;IE9&lt;/span&gt;上试过一下, 一开始是中文乱码, 后来加了一下charset的meta信息后, 
+就可以正常显示了. 然后又发现Disqus在&lt;span class=&#34;caps&#34;&gt;IE9&lt;/span&gt;上显示不了, 经过一阵子的折腾, 没有找到
+解决的办法,&amp;nbsp;暂时放弃.&lt;/p&gt;
+&lt;p&gt;本来找的那个&lt;span class=&#34;caps&#34;&gt;HTML5&lt;/span&gt;模板上, 写了一些兼容老&lt;span class=&#34;caps&#34;&gt;IE&lt;/span&gt;浏览器的内容, 但是经过慎重考虑, 我决定
+把大部分删掉, 就保留了一个提示升级浏览器的内容.&amp;nbsp;之所以这么做有两个原因&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;为了兼容老浏览器, 需要一些在线的js脚本, 这些脚本大部分是Google提供的, 由于
+众所周知的原因, 这些内容很可能访问不了,&amp;nbsp;从而会导致页面载入的速度非常慢&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;这个blog记录的绝大部分是技术内容, 如果一个喜欢技术的人, 是不可能一直用着古董
+级别的&lt;span class=&#34;caps&#34;&gt;IE6&lt;/span&gt;, 这样的人不是我的目标读者, 所以也没必要为了他们让我去纠结半天. 其实我
+甚至想直接不允许任何&lt;span class=&#34;caps&#34;&gt;IE&lt;/span&gt;用户访问, 毕竟即使是&lt;span class=&#34;caps&#34;&gt;IE9&lt;/span&gt;也有各种各样的毛病, 不过暂时还没
+下手, 反正我肯定是不会在兼容&lt;span class=&#34;caps&#34;&gt;IE&lt;/span&gt;系的浏览器花时间的, &lt;span class=&#34;caps&#34;&gt;FF&lt;/span&gt;的兼容性有时间的话还是要研究&amp;nbsp;一下的.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;            </content>
         </entry>
             <entry>
-            <title type="html">First post</title>
+            <title type="html">Markdown测试</title>
             <author><name>newkedison</name></author>
             <link href="/blog/test-markdown.html"/>
             <updated>2012-08-18T13:00:00Z</updated>
@@ -90,9 +141,7 @@
                         label="Markdown" />
             
             <content type="html">
-                                &lt;p&gt;test Markdown&amp;nbsp;syntax&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;注意,由于&lt;span class=&#34;caps&#34;&gt;CSS&lt;/span&gt;的影响,部分效果未能看到,但是从&lt;span class=&#34;caps&#34;&gt;HTML&lt;/span&gt;源码里面还是可以看到效果的&lt;/strong&gt;&lt;/p&gt;
-&lt;h1&gt;Test Markdown&amp;nbsp;syntax&lt;/h1&gt;
+                                &lt;h1&gt;Test Markdown&amp;nbsp;syntax&lt;/h1&gt;
 &lt;h2&gt;level 2&amp;nbsp;title&lt;/h2&gt;
 &lt;h3&gt;level 3&amp;nbsp;title&lt;/h3&gt;
 &lt;h4&gt;level 4&amp;nbsp;title&lt;/h4&gt;
@@ -104,7 +153,7 @@
 &lt;p&gt;有另一种办法&lt;br /&gt;
 就是在行末添加两个空格&lt;br /&gt;
 这样会被替换为&amp;lt;br&amp;nbsp;/&amp;gt;&lt;/p&gt;
-&lt;p&gt;&lt;b&gt;可以直接写&lt;i&gt;&lt;span class=&#34;caps&#34;&gt;HTML&lt;/span&gt;&lt;/i&gt;,&amp;nbsp;而且4&amp;lt;5这种写法是没问题的&lt;/b&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;可以直接写&lt;em&gt;&lt;span class=&#34;caps&#34;&gt;HTML&lt;/span&gt;&lt;/em&gt;,&amp;nbsp;而且4&amp;lt;5这种写法是没问题的&lt;/strong&gt;&lt;/p&gt;
 &lt;blockquote&gt;
 &lt;p&gt;引用内容前面用一个大于号即可&lt;br /&gt;
 每一段内容只要第一行有一个大于号就可以了&lt;br /&gt;

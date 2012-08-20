@@ -38,7 +38,7 @@
                 {% filter forceescape -%}
                 {% if resource.meta.excerpts_only -%}
                 {{ article.image|markdown|typogrify }}
-                {{ article.excerpt|markdown|typogrify }}
+                {{ res.meta.description|markdown|typogrify }}
                 {%- else %}
                 {{ article.post|markdown|typogrify }}
                 {%- endif %}

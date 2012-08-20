@@ -1,0 +1,12 @@
+<script type="text/javascript">
+if(top.location != window.location) {
+  window.location = '/error_iframe.php';
+}
+if(top!=self){
+  top.location.replace(document.location);
+  alert("For security reasons, framing is not allowed; click OK to remove the frames.")
+}
+if (parent.location.href == self.location.href) {
+  window.location.href = 'index.html';
+}
+</script>

@@ -483,6 +483,7 @@ hr {
 }
 strong {
   font-weight: bold;
+  color: #3AB32F;
 }
 em {
   font-style: italic;
@@ -550,15 +551,15 @@ code,
 pre {
   padding: 0 3px 2px;
   font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
-  font-size: 12px;
-  color: #282828;
+  font-size: 14px;
+  color: #B6BEE0;
   -webkit-border-radius: 3px;
   -moz-border-radius: 3px;
   border-radius: 3px;
 }
 code {
   padding: 2px 4px;
-  color: #d14;
+  color: #B6BEE0;
   background-color: #f7f7f9;
   border: 1px solid #e1e1e8;
 }
@@ -574,7 +575,6 @@ pre {
   white-space: pre-wrap;
   background-color: #f5f5f5;
   border: 1px solid #ccc;
-  border: 1px solid rgba(0, 0, 0, 0.15);
   -webkit-border-radius: 4px;
   -moz-border-radius: 4px;
   border-radius: 4px;
@@ -3716,7 +3716,7 @@ input[type="submit"].btn.btn-mini {
 .popover-title {
   padding: 9px 15px;
   line-height: 1;
-  background-color: #111;
+  background-color: #555;
   border-bottom: 1px solid #eee;
   -webkit-border-radius: 3px 3px 0 0;
   -moz-border-radius: 3px 3px 0 0;
@@ -4762,7 +4762,7 @@ select {
 }
 code,
 pre {
-  background-color: #eeeeee;
+  background-color: #202020;
 }
 .well,
 .hero-unit {
@@ -4773,7 +4773,7 @@ pre {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
 }
 blockquote {
-  border-left: 5px solid #33b5e5;
+  border-left: 3px solid #333333;
 }
 blockquote.pull-right {
   border-right: 5px solid #33b5e5;

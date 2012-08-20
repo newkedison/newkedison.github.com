@@ -1,8 +1,5 @@
 <!DOCTYPE html>
-<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang="en"> <![endif]-->
-<!--[if IE 7]>    <html class="no-js lt-ie9 lt-ie8" lang="en"> <![endif]-->
-<!--[if IE 8]>    <html class="no-js lt-ie9" lang="en"> <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
+<html>
   <head>
     {% block starthead %}{% endblock starthead %}
     <meta charset="utf-8">
@@ -11,16 +8,11 @@
     <meta name="description" content="{{ resource.meta.description }}">
     <meta name="author" content="{{ resource.meta.author }}">
     <meta name="viewport" content="{{ resource.meta.viewport }}">
-
-    {# Le HTML5 shim, for IE6-8 support of HTML elements #}
-    <!--[if lt IE 9]>
-      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
+    {% block meta_keyword %}{% endblock %}
 
     {% block basecss %}
     <link href="{{ media_url('css/bootstrap.css') }}" rel="stylesheet">
     <link href="{{ media_url('css/style.css') }}" rel="stylesheet">
-    <link href="{{ media_url('css/columns.css') }}" rel="stylesheet">
     {% endblock basecss %}
     {% block css %}{% endblock %}
 
@@ -96,14 +88,6 @@
 
     {% block scripts %}
     {% endblock scripts %}
-
-
-    <!--[if lt IE 7 ]>
-      <script src="{{ media_url('js/libs/dd_belatedpng.js') }}"></script>
-      <script>DD_belatedPNG.fix('img, .png_bg'); // Fix any <img> or .png_bg bg-images. Also, please read goo.gl/mZiyb </script>
-    <![endif]-->
-
-
 
     {% block analytics %}
     {% include "analytics.j2" %}

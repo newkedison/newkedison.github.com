@@ -1,10 +1,10 @@
 {% extends "base.j2" %}
 
-{% block basecss %}
-{{ super() }}
-<link href="{{ media_url('css/columns.css') }}" rel="stylesheet">
-{% endblock basecss %}
-
+{% block meta_keyword %}
+{% if resource.meta.tags %}
+<meta name="keywords" content="{% for tag in resource.meta.tags %}{{ tag~', ' }}{% endfor %}">
+{% endif %}
+{% endblock %}
 
 {% block content %}
 
@@ -21,21 +21,23 @@
   <div class="row">
     <div class="span9">
       <div class="content">
-        <time datetime="{{ resource.meta.created.strftime('%Y-%m-%d') }}">
-          Posted: {{ resource.meta.created.strftime('%a, %d %b %Y') }}
-        </time>
+        <p title="{{ resource.meta.created.strftime('%Y-%m-%d %a %H:%M:%S') }}">
+            Posted: {{ resource.meta.created.strftime('%a, %Y-%m-%d') }}
+        </p>
 
         {% if resource.meta.tags %}
-        <ul class="tags clear">
-        {% for tag in resource.meta.tags %}
-        <li>
-          <a class="small" href="{{ content_url('blog/tags/'~tag~'.html') }}">
-            {{ tag }}
-          </a>
-        </li>
-        {% endfor %}
-        </ul>
+        <div>
+          tags: 
+          {% for tag in resource.meta.tags %}
+            <a class="btn small" 
+               href="{{ content_url('blog/tags/'~tag~'.html') }}">
+              {{ tag }}
+            </a>
+          {% endfor %}
+        </div>
         {% endif %}
+
+        <hr />
 
         {% filter markdown|typogrify -%}
           {% mark post -%}
@@ -45,13 +47,14 @@
       </div>
     </div>
     <div class="span3">
-      <div class="content">
+      <div class="sidebar">
         {% block sidebar %}
         <nav class="post_nav">
-        <a class="backlink" href="{{ content_url(resource.node.url) }}">返回文章列表</a>
-        
+        <a class="backlink" href="{{ content_url(resource.node.url) }}">
+        &#x2190;返回文章列表</a>
+        <br /><br />
         <div class="prev">
-        前一篇文章:<br />
+        &#x00AB;前一篇文章<br />
         {% if not resource.prev_by_time %}
         没有文章了...
         {% else %}
@@ -61,11 +64,9 @@
         </a>
         {% endif %}
         </div>
-
         <br />
-
         <div class="next">
-        后一篇文章:<br />
+        后一篇文章&#x00BB;<br />
         {% if not resource.next_by_time %}
         没有文章了...
         {% else %}
