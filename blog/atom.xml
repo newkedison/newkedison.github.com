@@ -7,7 +7,7 @@
         <link href="/"/>
     
         
-    <updated>2012-08-21T11:49:10Z</updated>
+    <updated>2012-08-21T13:34:24Z</updated>
 
     <id>/blog/atom.xml/</id>
 
@@ -366,5 +366,191 @@ fread需要的字节数直接到一个整型变量中，后面就可以根据需
 &lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;这样可以查看所有含有bash的命令，已经他的父进程和子进程&lt;/p&gt;
 &lt;p&gt;&lt;code&gt;-p&lt;/code&gt;参数表示同时列出&lt;span class=&#34;caps&#34;&gt;PID&lt;/span&gt;，然后要kill还是要干嘛就方便了&lt;/p&gt;            </content>
+        </entry>
+            <entry>
+            <title type="html">Python小知识</title>
+            <author><name>newkedison</name></author>
+            <link href="/blog/tips-for-python.html"/>
+            <updated>2011-12-07T15:13:40Z</updated>
+            <published>2011-12-07T15:13:40Z</published>
+            <id>/blog/tips-for-python.html</id>
+                        <category   scheme="/blog/tags"
+                        term="python"
+                        label="Python" />
+                        <category   scheme="/blog/tags"
+                        term="tips"
+                        label="Tips" />
+            
+            <content type="html">
+                                &lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;type(10) == types.IntType&lt;/code&gt; 与 &lt;code&gt;type(10) is types.IntType&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;这两句的结果是一致的,&amp;nbsp;但是思路不同&lt;/p&gt;
+&lt;p&gt;首先要明确, &lt;code&gt;type&lt;/code&gt;的返回值是一个&amp;#8221;类型&amp;#8221;(也可以说是&amp;#8221;类&amp;#8221;, 因为从Python2.2开始, 
+这两者已经统一了), &lt;code&gt;types.IntType&lt;/code&gt;也是一个&amp;#8221;类型&amp;#8221;&lt;/p&gt;
+&lt;p&gt;其次, 两个类型在比较, 如果用==, 那么比较的是类型的值, 如果用&lt;code&gt;is&lt;/code&gt;, 
+比较的是是否指向同一个对象.可以这么理解, 如果用==, 是对整个类进行比较, 
+如果用&lt;code&gt;is&lt;/code&gt;, 是比较地址是否相等.显而易见, 比较地址的效率肯定是高的
+(另: &lt;code&gt;X is Y&lt;/code&gt;等价于&lt;code&gt;id(X)==id(Y)&lt;/code&gt;)&lt;/p&gt;
+&lt;p&gt;再次, 因为&lt;code&gt;type&lt;/code&gt;的返回值都是类型(类型的&lt;code&gt;__name__&lt;/code&gt;就叫&lt;code&gt;type&lt;/code&gt;), 
+这种类型总共就那么几个值, 这些值都是&lt;code&gt;types&lt;/code&gt;这个模块里面.
+用一个小实验(&lt;code&gt;id(type(10)==id(types.IntType)&lt;/code&gt;的结果为True), 就可以看出, 
+实际上&lt;code&gt;type&lt;/code&gt;返回值, 就是&lt;code&gt;types&lt;/code&gt;模块中几个类型的引用.&lt;/p&gt;
+&lt;p&gt;那么, 就可以用&lt;code&gt;is&lt;/code&gt;直接判断&lt;code&gt;type&lt;/code&gt;的返回值,&amp;nbsp;这样的效率比==要高一些&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;enumerate()&lt;/code&gt;这个函数在for循环中很好用&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;a=(1, 22, 333, 444)
+for i, value in enumerate(a)
+    print &#39;(%d)%d&#39; % i % value
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;这样在循环中, 可以同时取出数值和序号, 不用自己定义一个变量,&amp;nbsp;用来算序号&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;调试wxPython程序时, 由于错误信息已经给重定向了, 导致代码有错误时, 会一闪而过,
+解决的方法, 就是在定义App实例时, 设置参数&lt;code&gt;redirect=True&lt;/code&gt;, 这样就能看到错误提示了.
+注意, 如果继承了wx.App, 那么是在调用父类的&lt;code&gt;__init__&lt;/code&gt;中设置这个参数.&lt;/p&gt;
+&lt;p&gt;另外, 在Windows中, &lt;code&gt;redirect&lt;/code&gt;的默认值是True, 而在Linux/Unit中, 默认值是False, 
+所以最好手动赋值一下,&amp;nbsp;以免换平台时出错&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;继承一个类之后, 如果不重定义&lt;code&gt;__init__&lt;/code&gt;函数, 那么父类的&lt;code&gt;__init__&lt;/code&gt;会被自动调用,
+如果重定义了&lt;code&gt;__init__&lt;/code&gt;, 那么一定要记得在这个函数里面调用父类的&lt;code&gt;__init__&lt;/code&gt;, 
+因为Python不像C++, 他不会再自动调用父类的&lt;code&gt;__init__&lt;/code&gt;.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;判断一个变量是否已经定义，有三种方法&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;第一种方法：&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;quo&#34;&gt;&amp;#8216;&lt;/span&gt;var&amp;#8217; in&amp;nbsp;locals().keys()&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;第二种方法：&lt;/p&gt;
+&lt;p&gt;try: 
+  print var
+except NameError: 
+  print &amp;#8216;var not&amp;nbsp;defined&amp;#8217;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;第三种方法：&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;quo&#34;&gt;&amp;#8216;&lt;/span&gt;var&amp;#8217; in&amp;nbsp;dir()&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;关于&lt;span class=&#34;caps&#34;&gt;PEP8&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;caps&#34;&gt;PEP8&lt;/span&gt;是有关Python编程风格的一个推荐标准，详细的内容在网上很容易找到，&amp;nbsp;官方还提供了测试工具，通过以下命令安装&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;$ sudo easy_install pep8
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;安装完成后，要测试一个文件是否符合&lt;span class=&#34;caps&#34;&gt;PEP8&lt;/span&gt;，可以用以下命令&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;$ pep8 --show-source --show-pep8 --statistics --count --benchmark filename.py
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;看pep8 -h的介绍，可以很容易清楚上面那些参数是什么意思，
+另外还有一个&amp;#8212;ignore的参数，可以指定忽略哪些错误，比如我一般加上&amp;#8212;ignore=E111，&amp;nbsp;忽略要求缩进4个空格，因为我习惯于缩进2个空格&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;super()的用法&lt;/p&gt;
+&lt;p&gt;super函数是用来让子类调用父类的同名方法的，在V2.2版本以前，要调用父类的方法，&amp;nbsp;必须要写父类的类名，比如&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;class A:
+  def aaa(self):
+    pass
+class B(A):
+  def aaa(self):
+    A.aaa(self)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;这样有个缺点，万一基类要改名字的话，子类的代码也需要修改，如果有很多个子类，
+这将是一个麻烦且容易出错的事情，于是，在V2.2版本，增加了super函数，&amp;nbsp;现在可以这么写&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;class A(object):
+  def aaa(self):
+    pass
+class B(A):
+  def aaa(self):
+    super(B, self).aaa()
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;注意到，A的定义有一点不同，A要继承自object才行，如果不这样继承，
+运行到super这里会报错。这是因为，还是在以前，python的类经过一次升级，
+如果没有继承自object，认为是old-style，而继承的是new-style，&amp;nbsp;只有new-style才支持这种super的用法。&lt;/p&gt;
+&lt;p&gt;另外，在单继承的时候，上面两种方法都可以正常使用，但是在多继承的时候，&amp;nbsp;一般要用super。当然，最好的选择是不使用多继承&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;关于字符编码&lt;/p&gt;
+&lt;p&gt;在代码中如果出现了中文，那么必须要文件的&lt;strong&gt;第一或第二行&lt;/strong&gt;指明encoding，&amp;nbsp;否则运行会出错，不仅是代码，就算注释有中文，也必须写，格式是：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;# coding=utf-8
+# -*- coding: utf-8 -*-
+# vim: set fileencoding=utf-8
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;这三种语法都行，后两种是顺便可以给其他编辑器看&amp;nbsp;另外，utf-8可能有&lt;span class=&#34;caps&#34;&gt;BOM&lt;/span&gt;的存在，似乎这个问题python编译器会自己解决。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;python文件开头的&lt;code&gt;/usr/bin/env python&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;写过shell脚本的都知道，在开头写上&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;#!/bin/bash
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;可以使得脚本可以直接被执行，python文件要直接被执行，也可以用这种办法，&amp;nbsp;只要python文件的第一行写：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;#!/usr/bin/python
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;但是，有一个小问题，就是每个人安装python的时候，不一定会采用默认的安装位置，&amp;nbsp;也就是说，/usr/bin/python这个文件不一定存在。所以前面那种方法不太可靠。&lt;/p&gt;
+&lt;p&gt;而借助env命令，则可以不管代码文件所在位置，只要在&lt;span class=&#34;caps&#34;&gt;PATH&lt;/span&gt;里面，就能被找到。
+当然，也存在env命令的位置不正确的可能，但是一般来说，env命令是和系统一起安装的，
+很少会改变安装位置（和bash一样），而python一般都是用户自己安装的，
+所以安装位置可能会不同。也就是说，env命令改变位置的可能性存在，&amp;nbsp;但是比python命令改变位置的可能性小的多。&lt;/p&gt;
+&lt;p&gt;所以，一般python文件的第一行写的就是&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;#!/usr/bin/env python
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;还有另外一种方法，使用subshell的方法，也可以自动去&lt;span class=&#34;caps&#34;&gt;PATH&lt;/span&gt;里面搜索python的位置，&amp;nbsp;但是subshell比较浪费资源，不到万不得已，还是少用为好。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;删除和重新加载指定模块&lt;/p&gt;
+&lt;p&gt;验证模块是否已加载&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;import sys
+if &#39;sys&#39; in sys.modules:
+  print &#39;sys in modules&#39;
+if &#39;foo&#39; in sys.modules:
+  print &#39;foo in modules&#39;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;删除模块(经测试,&amp;nbsp;这里可以删除sys.modules里面的信息，但是模块还是没有被删除)&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;import sys
+if &#39;ModuleName&#39; in sys.modules:
+  del(sys.modules[&#39;ModuleName&#39;])
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;重新加载模块(可实现守护程序在某个模块更新后，自动加载这个模块)&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;import foo
+foo = reload(foo)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;函数参数的传递&lt;/p&gt;
+&lt;p&gt;最一般的做法，调用是必须给足3个参数，而且顺序不能修改&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;def foo(a, b, c)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;可以提供默认值，这时就可以用foo(b=1, c=2,&amp;nbsp;a=&amp;#8217;a&amp;#8217;)来调用了&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;def foo(a, b, c=1)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;如果参数个数不定，可以在参数前面加个*，则后面所有的参数，作为一个tuple传入&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;def foo(a, *b)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;比如上面的函数，如果用&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;foo(1, 2) 则a=1, b=(2, )
+foo(1) 则 a=1, b=()
+foo(1, 2, 3, 4) 则 a=1, b=(2, 3, 4)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;还有一种加两个*的，表示可以接受一个字典，比如&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;def foo(**a)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;则可以这么调用&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;foo(a=1, b=3, c=5), 则a的值为{a:1, b:3, c:5}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;注意这里虽然调用的时候，出现给a的赋值，和形参的名字一样，&amp;nbsp;但这只会作为字典的一个元素而已&lt;/p&gt;
+&lt;p&gt;结合以上几种方法，定义&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;foo(a, b=2, *c, **d)&lt;/code&gt;,&amp;nbsp;则下面的调用所传递的参数如后面所示&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;foo(1)                        a=1, b=2, c=(), d={}
+foo(1, 3)                     a=1, b=3, c=(), d={}
+foo(1, 2, 3)                  a=1, b=2, c=(3, ) d={}
+foo(x=2, b=&#39;0&#39;, d=&#39;&#39;, a=-1)   a=-1, b=&#39;0&#39;, c=(), d={&#39;x&#39;:2, &#39;d&#39;: &#39;&#39;}
+foo(1, 2, d=None, 5) 错误，有等号的参数后面不能再有没有等号的参数
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/li&gt;
+&lt;/ol&gt;            </content>
         </entry>
     </feed>

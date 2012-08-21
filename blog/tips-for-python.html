@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html>
+  <head>
+        <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Python小知识 | newk's blog</title>
+    <meta name="description" content="学习Python过程中, 一些小知识点的记录
+">
+    <meta name="author" content="newkedison">
+    <meta name="viewport" content="">
+    <meta name="keywords" content="python, tips, ">
+
+        <link href="/media/css/bootstrap.css" rel="stylesheet">
+    <link href="/media/css/style.css" rel="stylesheet">
+        
+
+
+            
+    
+    <script src="/media/js/libs/modernizr-2.5.3-respond-1.1.0.min.js"></script>
+    
+    <link rel="stylesheet" href="/media/css/styles/tomorrow-night.css">
+<script src="/media/js/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+  </head>
+
+  <body class="tips-for-python">
+<!--[if lt IE 7]><p class=chromeframe>Your browser is <em>ancient!</em> <a href="http://browsehappy.com/">Upgrade to a different browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to experience this site.</p><![endif]-->
+
+    
+    <div class="navbar navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+          <ul class="nav">
+            <li class="active">
+              <a class="brand" href="/index.html">newk's blog</a>
+            </li>
+                        <ul class="nav">
+<li><a href="/index.html">Home</a></li><li><a href="/blog/index.html">Blog</a></li><li><a href="/about.html">About</a></li></ul>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+      
+                
+<div class="popover-title">
+    <h1>
+    Python小知识      </h1>
+  </div>
+
+<div class="popover-content">
+  <div class="row">
+    <div class="span9">
+      <div class="content">
+        <p title="2011-12-07 Wed 15:13:40">
+            Posted: Wed, 2011-12-07
+        </p>
+
+                <div>
+          tags: 
+                      <a class="btn small" 
+               href="/blog/tags/python.html">
+              python
+            </a>
+                      <a class="btn small" 
+               href="/blog/tags/tips.html">
+              tips
+            </a>
+                  </div>
+        
+        <hr />
+
+        <ol>
+<li>
+<p><code>type(10) == types.IntType</code> 与 <code>type(10) is types.IntType</code></p>
+<p>这两句的结果是一致的, 但是思路不同</p>
+<p>首先要明确, <code>type</code>的返回值是一个"类型"(也可以说是"类", 因为从Python2.2开始, 
+这两者已经统一了), <code>types.IntType</code>也是一个"类型"</p>
+<p>其次, 两个类型在比较, 如果用==, 那么比较的是类型的值, 如果用<code>is</code>, 
+比较的是是否指向同一个对象.可以这么理解, 如果用==, 是对整个类进行比较, 
+如果用<code>is</code>, 是比较地址是否相等.显而易见, 比较地址的效率肯定是高的
+(另: <code>X is Y</code>等价于<code>id(X)==id(Y)</code>)</p>
+<p>再次, 因为<code>type</code>的返回值都是类型(类型的<code>__name__</code>就叫<code>type</code>), 
+这种类型总共就那么几个值, 这些值都是<code>types</code>这个模块里面.
+用一个小实验(<code>id(type(10)==id(types.IntType)</code>的结果为True), 就可以看出, 
+实际上<code>type</code>返回值, 就是<code>types</code>模块中几个类型的引用.</p>
+<p>那么, 就可以用<code>is</code>直接判断<code>type</code>的返回值, 这样的效率比==要高一些</p>
+</li>
+<li>
+<p><code>enumerate()</code>这个函数在for循环中很好用</p>
+<pre><code>a=(1, 22, 333, 444)
+for i, value in enumerate(a)
+    print '(%d)%d' % i % value
+</code></pre>
+<p>这样在循环中, 可以同时取出数值和序号, 不用自己定义一个变量, 用来算序号</p>
+</li>
+<li>
+<p>调试wxPython程序时, 由于错误信息已经给重定向了, 导致代码有错误时, 会一闪而过,
+解决的方法, 就是在定义App实例时, 设置参数<code>redirect=True</code>, 这样就能看到错误提示了.
+注意, 如果继承了wx.App, 那么是在调用父类的<code>__init__</code>中设置这个参数.</p>
+<p>另外, 在Windows中, <code>redirect</code>的默认值是True, 而在Linux/Unit中, 默认值是False, 
+所以最好手动赋值一下, 以免换平台时出错</p>
+</li>
+<li>
+<p>继承一个类之后, 如果不重定义<code>__init__</code>函数, 那么父类的<code>__init__</code>会被自动调用,
+如果重定义了<code>__init__</code>, 那么一定要记得在这个函数里面调用父类的<code>__init__</code>, 
+因为Python不像C++, 他不会再自动调用父类的<code>__init__</code>.</p>
+</li>
+<li>
+<p>判断一个变量是否已经定义，有三种方法</p>
+<ul>
+<li>
+<p>第一种方法：</p>
+<p>'var' in locals().keys()</p>
+</li>
+<li>
+<p>第二种方法：</p>
+<p>try: 
+  print var
+except NameError: 
+  print 'var not defined'</p>
+</li>
+<li>
+<p>第三种方法：</p>
+<p>'var' in dir()</p>
+</li>
+</ul>
+</li>
+<li>
+<p>关于PEP8</p>
+<p>PEP8是有关Python编程风格的一个推荐标准，详细的内容在网上很容易找到，
+官方还提供了测试工具，通过以下命令安装</p>
+<pre><code>$ sudo easy_install pep8
+</code></pre>
+<p>安装完成后，要测试一个文件是否符合PEP8，可以用以下命令</p>
+<pre><code>$ pep8 --show-source --show-pep8 --statistics --count --benchmark filename.py
+</code></pre>
+<p>看pep8 -h的介绍，可以很容易清楚上面那些参数是什么意思，
+另外还有一个--ignore的参数，可以指定忽略哪些错误，比如我一般加上--ignore=E111，
+忽略要求缩进4个空格，因为我习惯于缩进2个空格</p>
+</li>
+<li>
+<p>super()的用法</p>
+<p>super函数是用来让子类调用父类的同名方法的，在V2.2版本以前，要调用父类的方法，
+必须要写父类的类名，比如</p>
+<pre><code>class A:
+  def aaa(self):
+    pass
+class B(A):
+  def aaa(self):
+    A.aaa(self)
+</code></pre>
+<p>这样有个缺点，万一基类要改名字的话，子类的代码也需要修改，如果有很多个子类，
+这将是一个麻烦且容易出错的事情，于是，在V2.2版本，增加了super函数，
+现在可以这么写</p>
+<pre><code>class A(object):
+  def aaa(self):
+    pass
+class B(A):
+  def aaa(self):
+    super(B, self).aaa()
+</code></pre>
+<p>注意到，A的定义有一点不同，A要继承自object才行，如果不这样继承，
+运行到super这里会报错。这是因为，还是在以前，python的类经过一次升级，
+如果没有继承自object，认为是old-style，而继承的是new-style，
+只有new-style才支持这种super的用法。</p>
+<p>另外，在单继承的时候，上面两种方法都可以正常使用，但是在多继承的时候，
+一般要用super。当然，最好的选择是不使用多继承</p>
+</li>
+<li>
+<p>关于字符编码</p>
+<p>在代码中如果出现了中文，那么必须要文件的<strong>第一或第二行</strong>指明encoding，
+否则运行会出错，不仅是代码，就算注释有中文，也必须写，格式是：</p>
+<pre><code># coding=utf-8
+# -*- coding: utf-8 -*-
+# vim: set fileencoding=utf-8
+</code></pre>
+<p>这三种语法都行，后两种是顺便可以给其他编辑器看
+另外，utf-8可能有BOM的存在，似乎这个问题python编译器会自己解决。</p>
+</li>
+<li>
+<p>python文件开头的<code>/usr/bin/env python</code></p>
+<p>写过shell脚本的都知道，在开头写上</p>
+<pre><code>#!/bin/bash
+</code></pre>
+<p>可以使得脚本可以直接被执行，python文件要直接被执行，也可以用这种办法，
+只要python文件的第一行写：</p>
+<pre><code>#!/usr/bin/python
+</code></pre>
+<p>但是，有一个小问题，就是每个人安装python的时候，不一定会采用默认的安装位置，
+也就是说，/usr/bin/python这个文件不一定存在。所以前面那种方法不太可靠。</p>
+<p>而借助env命令，则可以不管代码文件所在位置，只要在PATH里面，就能被找到。
+当然，也存在env命令的位置不正确的可能，但是一般来说，env命令是和系统一起安装的，
+很少会改变安装位置（和bash一样），而python一般都是用户自己安装的，
+所以安装位置可能会不同。也就是说，env命令改变位置的可能性存在，
+但是比python命令改变位置的可能性小的多。</p>
+<p>所以，一般python文件的第一行写的就是</p>
+<pre><code>#!/usr/bin/env python
+</code></pre>
+<p>还有另外一种方法，使用subshell的方法，也可以自动去PATH里面搜索python的位置，
+但是subshell比较浪费资源，不到万不得已，还是少用为好。</p>
+</li>
+<li>
+<p>删除和重新加载指定模块</p>
+<p>验证模块是否已加载</p>
+<pre><code>import sys
+if 'sys' in sys.modules:
+  print 'sys in modules'
+if 'foo' in sys.modules:
+  print 'foo in modules'
+</code></pre>
+<p>删除模块(经测试, 这里可以删除sys.modules里面的信息，但是模块还是没有被删除)</p>
+<pre><code>import sys
+if 'ModuleName' in sys.modules:
+  del(sys.modules['ModuleName'])
+</code></pre>
+<p>重新加载模块(可实现守护程序在某个模块更新后，自动加载这个模块)</p>
+<pre><code>import foo
+foo = reload(foo)
+</code></pre>
+</li>
+<li>
+<p>函数参数的传递</p>
+<p>最一般的做法，调用是必须给足3个参数，而且顺序不能修改</p>
+<pre><code>def foo(a, b, c)
+</code></pre>
+<p>可以提供默认值，这时就可以用foo(b=1, c=2, a='a')来调用了</p>
+<pre><code>def foo(a, b, c=1)
+</code></pre>
+<p>如果参数个数不定，可以在参数前面加个*，则后面所有的参数，作为一个tuple传入</p>
+<pre><code>def foo(a, *b)
+</code></pre>
+<p>比如上面的函数，如果用</p>
+<pre><code>foo(1, 2) 则a=1, b=(2, )
+foo(1) 则 a=1, b=()
+foo(1, 2, 3, 4) 则 a=1, b=(2, 3, 4)
+</code></pre>
+<p>还有一种加两个*的，表示可以接受一个字典，比如</p>
+<pre><code>def foo(**a)
+</code></pre>
+<p>则可以这么调用</p>
+<pre><code>foo(a=1, b=3, c=5), 则a的值为{a:1, b:3, c:5}
+</code></pre>
+<p>注意这里虽然调用的时候，出现给a的赋值，和形参的名字一样，
+但这只会作为字典的一个元素而已</p>
+<p>结合以上几种方法，定义</p>
+<p><code>foo(a, b=2, *c, **d)</code>, 则下面的调用所传递的参数如后面所示</p>
+<pre><code>foo(1)                        a=1, b=2, c=(), d={}
+foo(1, 3)                     a=1, b=3, c=(), d={}
+foo(1, 2, 3)                  a=1, b=2, c=(3, ) d={}
+foo(x=2, b='0', d='', a=-1)   a=-1, b='0', c=(), d={'x':2, 'd': ''}
+foo(1, 2, d=None, 5) 错误，有等号的参数后面不能再有没有等号的参数
+</code></pre>
+</li>
+</ol>      </div>
+    </div>
+    <div class="span3">
+      <div class="sidebar">
+                <nav class="post_nav">
+        <a class="backlink" href="/blog">
+        &#x2190;返回文章列表</a>
+        <br /><br />
+        <div class="prev">
+        &#x00AB;前一篇文章<br />
+                <a title="2012-01-14"
+           href="/blog/useful-bash-commands.html">
+           Bash常用命令
+        </a>
+                </div>
+        <br />
+        <div class="next">
+        后一篇文章&#x00BB;<br />
+                没有文章了...
+                </div>
+            </div>
+    </div>
+  </div>
+</div>
+
+<hr>
+
+
+
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+var disqus_shortname = 'newk-blog';
+
+/* * * DON'T EDIT BELOW THIS LINE * * */
+(function() {
+ var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+ dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+ (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+ })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink" target=_blank>comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+
+      <footer>
+                <p>Created by <a href="http://newkedison.tk">newkedison</a></p>
+              </footer>
+
+          </div> <!-- /container -->
+
+        
+                        <script>window.jQuery || document.write('<script src="/media/js/libs/jquery-1.7.2.min.js">\x3C/script>')</script>
+    
+            
+        
+        <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-15769172-5']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+    
+      </body>
+</html>

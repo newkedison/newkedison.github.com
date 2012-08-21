@@ -7,7 +7,7 @@
         <link href="/"/>
     
         
-    <updated>2012-08-21T11:49:10Z</updated>
+    <updated>2012-08-21T13:34:24Z</updated>
 
     <id>/blog/excerpts.xml/</id>
 
@@ -70,5 +70,23 @@
             <content type="html">
                 
                 &lt;p&gt;some useful bash commands which I have used, not only command, &amp;gt; but also some useful&amp;nbsp;operator&lt;/p&gt;            </content>
+        </entry>
+            <entry>
+            <title type="html">Python小知识</title>
+            <author><name>newkedison</name></author>
+            <link href="/blog/tips-for-python.html"/>
+            <updated>2011-12-07T15:13:40Z</updated>
+            <published>2011-12-07T15:13:40Z</published>
+            <id>/blog/tips-for-python.html</id>
+                        <category   scheme="/blog/tags"
+                        term="python"
+                        label="Python" />
+                        <category   scheme="/blog/tags"
+                        term="tips"
+                        label="Tips" />
+            
+            <content type="html">
+                
+                &lt;p&gt;学习Python过程中,&amp;nbsp;一些小知识点的记录&lt;/p&gt;            </content>
         </entry>
     </feed>
