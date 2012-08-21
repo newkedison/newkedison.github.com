@@ -7,7 +7,7 @@
         <link href="/"/>
     
         
-    <updated>2012-08-21T13:34:24Z</updated>
+    <updated>2012-08-21T14:07:03Z</updated>
 
     <id>/blog/excerpts.xml/</id>
 
@@ -49,6 +49,21 @@
             <content type="html">
                 
                 &lt;p&gt;测试各种常用Markdown语法&lt;/p&gt;            </content>
+        </entry>
+            <entry>
+            <title type="html">gnome-terminal技巧</title>
+            <author><name>newkedison</name></author>
+            <link href="/blog/tips-for-gnome-terminal.html"/>
+            <updated>2012-02-06T14:32:54Z</updated>
+            <published>2012-02-06T14:32:54Z</published>
+            <id>/blog/tips-for-gnome-terminal.html</id>
+                        <category   scheme="/blog/tags"
+                        term="bash"
+                        label="Bash" />
+            
+            <content type="html">
+                
+                &lt;p&gt;some usual and useful tips for&amp;nbsp;gnome-terminal&lt;/p&gt;            </content>
         </entry>
             <entry>
             <title type="html">Bash常用命令</title>

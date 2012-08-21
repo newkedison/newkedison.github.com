@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html>
+  <head>
+        <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>gnome-terminal技巧 | newk's blog</title>
+    <meta name="description" content="some usual and useful tips for gnome-terminal">
+    <meta name="author" content="newkedison">
+    <meta name="viewport" content="">
+    <meta name="keywords" content="bash, ">
+
+        <link href="/media/css/bootstrap.css" rel="stylesheet">
+    <link href="/media/css/style.css" rel="stylesheet">
+        
+
+
+            
+    
+    <script src="/media/js/libs/modernizr-2.5.3-respond-1.1.0.min.js"></script>
+    
+    <link rel="stylesheet" href="/media/css/styles/tomorrow-night.css">
+<script src="/media/js/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+  </head>
+
+  <body class="tips-for-gnome-terminal">
+<!--[if lt IE 7]><p class=chromeframe>Your browser is <em>ancient!</em> <a href="http://browsehappy.com/">Upgrade to a different browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to experience this site.</p><![endif]-->
+
+    
+    <div class="navbar navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+          <ul class="nav">
+            <li class="active">
+              <a class="brand" href="/index.html">newk's blog</a>
+            </li>
+                        <ul class="nav">
+<li><a href="/index.html">Home</a></li><li><a href="/blog/index.html">Blog</a></li><li><a href="/about.html">About</a></li></ul>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+      
+                
+<div class="popover-title">
+    <h1>
+    gnome-terminal技巧      </h1>
+  </div>
+
+<div class="popover-content">
+  <div class="row">
+    <div class="span9">
+      <div class="content">
+        <p title="2012-02-06 Mon 14:32:54">
+            Posted: Mon, 2012-02-06
+        </p>
+
+                <div>
+          tags: 
+                      <a class="btn small" 
+               href="/blog/tags/bash.html">
+              bash
+            </a>
+                  </div>
+        
+        <hr />
+
+        <h2>基本用法</h2>
+<p>gnome-terminal命令用于打开一个新的终端，直接在命令行</p>
+<pre><code>$ gnome-terminal
+</code></pre>
+<p>就可以打开一个新的终端，有一些常用参数：</p>
+<p>打开后自动最大化</p>
+<pre><code>$ gnome-terminal --maximize
+</code></pre>
+<p>打开后全屏</p>
+<pre><code>$ gnome-terminal --full-screen
+</code></pre>
+<p>设置标题</p>
+<pre><code>$ gnome-terminal --title="new title"
+</code></pre>
+<p>打开多个终端，多个tab</p>
+<pre><code>$ gnome-terminal --window --window #打开两个
+$ gnome-terminal --window --tab --window --tab --tab #打开两个，第一个两个tab，第二个3个tab
+</code></pre>
+<p>设置打开的位置和大小(宽度x高度+左侧偏移量+上方偏移量)</p>
+<pre><code>$ gnome-terminal --geometry=80x25+10+10
+</code></pre>
+<h2>启动后自动执行命令</h2>
+<p>有两个参数可以实现这个功能，<code>-e</code>和<code>-x</code>，这两个区别在于：
+-e 可以出现多次，如果在所有--window前面，表示对所有window和tab起作用，
+   如果在--window或者--tab后面，表示只针对这个tab执行，要注意-e后面只能有一个参数
+   也就是说如果有空格，需要用引号，具体见后例
+-x 只能出现一次，在-x后面的所有内容，均认为是要执行的命令，所以可以出现空格
+   这些命令是针对所有tab都执行的</p>
+<p>比如：</p>
+<pre><code>$ gnome-terminal -e ls
+$ gnome-terminal -x ls
+</code></pre>
+<p>这两个的执行结果都一样，就是新的终端闪一下就没了，有几种办法：</p>
+<p>一种是修改terminal的配置，在terminal点右键，选择Profiles-&gt;Profile Preferences
+然后找到Title and Command，里面有一项When command exits，后面选择为
+Hold the terminal open，然后就可以了</p>
+<p>第二种是把结果重定向给less，这样less执行完之前，是不会退出的</p>
+<pre><code>$ gnome-terminal -x ls|less
+</code></pre>
+<p>第三种是在bash里面再启用一个bash</p>
+<pre><code>$ gnome-terminal -x bash -c "ls; exec bash"
+$ gnome-terminal -e 'bash -c "ls; exec bash"'
+</code></pre>
+<p>注意最后一个命令是exec bash，如果直接写bash也行，相当于开了一个子shell，这样有个
+缺点，就是直接按关闭按钮的话，会提示还有程序在运行</p>
+<p>需要注意的是，这里执行的命令，在调用.bashrc之前，所有.bashrc的所有配置都无效
+如果需要用到.bashrc里面的内容，有个变通的办法，在.bashrc最后加上一句</p>
+<pre><code>#其他内容
+#.....
+
+#最后加上这句
+evel "$RUN_AFTER_BASHRC"
+</code></pre>
+<p>然后在写命令的时候，修改<code>RUN_AFTER_BASHRC</code>这个变量，就可以实现让.bashrc调用这个命令</p>
+<pre><code>$ gnome-terminal -x bash -c 'export RUN_AFTER_BASHRC="ls --help"; exec bash'
+</code></pre>
+<p>或者下面的写法比较简单（注意对所有tab生效），也不会自动关闭了</p>
+<pre><code>$ RUN_AFTER_BASHRC="ls" gnome-terminal
+</code></pre>
+<p>来源：<a href="http://superuser.com/questions/198015/open-gnome-terminal-programmatically-and-execute-commands-after-bashrc-was-execu">这里</a></p>
+<h2>打开一个terminal并预先输好一段文字</h2>
+<p>来源：<a href="http://askubuntu.com/questions/5363/how-to-start-a-terminal-with-certain-text-already-input-on-the-command-line">这里</a></p>
+<p>这个需求比较偏门，解决方法不错，就是利用expect这个工具，最后的程序如下</p>
+<pre><code>#!/usr/bin/expect
+
+#trap sigwinch and pass it to the child we spawned
+#this allows the gnome-terminal window to be resized
+trap {
+  set rows [stty rows]
+  set cols [stty columns]
+  stty rows $rows columns $cols &lt; $spawn_out(slave,name)
+} WINCH
+
+set arg1 [lindex $argv 0]
+
+# Get a Bash shell
+spawn -noecho bash
+
+# Wait for a prompt
+expect "$ "
+
+# Type something
+send $arg1
+
+# Hand over control to the user
+interact
+
+exit
+</code></pre>
+<p>调用方法（注意文件的路径要写全）：</p>
+<pre><code>$ gnome-terminal -e "./myprompt \"my text to be posted\""
+</code></pre>
+<h2>添加一个”用vim打开“的脚本</h2>
+<p>研究这个gnome-terminal的目的，是为了写一个脚本，实现右键选一个文件，然后可以
+用vim打开</p>
+<p>最后的脚本文件如下（两种方法都写了）</p>
+<p>文件保存在: ~/.gnome2/nautilus-scripts/OpenWithVIM</p>
+<pre><code>#!/bin/bash
+
+gnome-terminal -x bash -c 'export RUN_AFTER_BASHRC="vim $NAUTILUS_SCRIPT_SELECTED_FILE_PATHS"; exec bash'
+#RUN_AFTER_BASHRC="vim $NAUTILUS_SCRIPT_SELECTED_FILE_PATHS" gnome-terminal
+</code></pre>
+<p>不过选中多个文件还不行，因为也没这个需要，所以暂时就这样了</p>      </div>
+    </div>
+    <div class="span3">
+      <div class="sidebar">
+                <nav class="post_nav">
+        <a class="backlink" href="/blog">
+        &#x2190;返回文章列表</a>
+        <br /><br />
+        <div class="prev">
+        &#x00AB;前一篇文章<br />
+                <a title="2012-08-18"
+           href="/blog/test-markdown.html">
+           Markdown测试
+        </a>
+                </div>
+        <br />
+        <div class="next">
+        后一篇文章&#x00BB;<br />
+                <a title="2012-01-14"
+           href="/blog/useful-bash-commands.html">
+           Bash常用命令
+        </a>
+                </div>
+            </div>
+    </div>
+  </div>
+</div>
+
+<hr>
+
+
+
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+var disqus_shortname = 'newk-blog';
+
+/* * * DON'T EDIT BELOW THIS LINE * * */
+(function() {
+ var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+ dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+ (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+ })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink" target=_blank>comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+
+      <footer>
+                <p>Created by <a href="http://newkedison.tk">newkedison</a></p>
+              </footer>
+
+          </div> <!-- /container -->
+
+        
+                        <script>window.jQuery || document.write('<script src="/media/js/libs/jquery-1.7.2.min.js">\x3C/script>')</script>
+    
+            
+        
+        <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-15769172-5']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+    
+      </body>
+</html>
