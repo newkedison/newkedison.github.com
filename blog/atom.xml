@@ -7,7 +7,7 @@
         <link href="/"/>
     
         
-    <updated>2012-08-21T14:07:03Z</updated>
+    <updated>2012-08-21T18:50:40Z</updated>
 
     <id>/blog/atom.xml/</id>
 
@@ -221,6 +221,284 @@ jinja2&amp;nbsp;的文档总是找不到说明&lt;/p&gt;
 &lt;p&gt;行内内嵌代码块, 可以使用反引号, 例如&lt;code&gt;printf()&lt;/code&gt;&lt;/p&gt;            </content>
         </entry>
             <entry>
+            <title type="html">快速建立一个hg服务器（hgserve）</title>
+            <author><name>newkedison</name></author>
+            <link href="/blog/how-to-use-hg-serve.html"/>
+            <updated>2012-04-08T21:25:06Z</updated>
+            <published>2012-04-08T21:25:06Z</published>
+            <id>/blog/how-to-use-hg-serve.html</id>
+                        <category   scheme="/blog/tags"
+                        term="hg"
+                        label="Hg" />
+                        <category   scheme="/blog/tags"
+                        term="server"
+                        label="Server" />
+            
+            <content type="html">
+                                &lt;p&gt;我们平时用的最多的，当然是hg的client操作，commit，push，pull，update等等，但是, 
+当我们需要在两个电脑之间同步版本库的时候，必然有一个要作为server，让另外一个push&amp;nbsp;或者pull。&lt;/p&gt;
+&lt;p&gt;hg建立一个server的方法有很多，在其&lt;a href=&#34;http://mercurial.selenic.com/wiki/PublishingRepositories?action=show&amp;amp;redirect=ServerInstall&#34;&gt;官网上列出了好几种方案&lt;/a&gt;，并比较了优劣&lt;/p&gt;
+&lt;p&gt;因为我们只是要在我们自己的两台电脑之间同步，所以可以采用最简单的方案hg serve，&amp;nbsp;这种方案的优点是配置极为简单，缺点是缺少用户验证，没有安全性可言&lt;/p&gt;
+&lt;p&gt;下面介绍hg&amp;nbsp;serve的使用方法&lt;/p&gt;
+&lt;p&gt;在Linux下：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;安装hg&lt;/li&gt;
+&lt;li&gt;找到一个版本库所在的文件夹（里面应该有一个.hg文件夹）
+        $ hg serve&amp;nbsp;即可启动，可以用-p指定端口，默认是8000&lt;/li&gt;
+&lt;li&gt;打开浏览器，查看&lt;a href=&#34;http://localhost:8000&#34;&gt;http://localhost:8000&lt;/a&gt;，如果能看到版本库的信息，则表示服务已经&amp;nbsp;启动&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;其他的电脑，就可以通过&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;$ hg clone http://ip:8000 .
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;来clone这个版本库，也可以从这个版本库pull更新。&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;在Windows下：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;安装TortoiseHg&lt;/li&gt;
+&lt;li&gt;找到一个版本库所在的文件夹（里面应该有一个.hg文件夹），右键，选择TortoiseHg
+下级菜单的Web&amp;nbsp;Server，然后就启动好了&lt;/li&gt;
+&lt;li&gt;剩下的同上面的linux操作&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;操作起来真的非常简单，没有什么额外的依赖，不过也有一个缺点，就是只能pull，不能
+push，如果要实现push，要在另外一台电脑开hg&amp;nbsp;serve，然后让中心版本库反过来pull&lt;/p&gt;
+&lt;p&gt;其实，hg serve是允许push的，只不过是默认关闭了而已，这也是为了安全性的考虑，打开&amp;nbsp;push功能可以如下操作&lt;/p&gt;
+&lt;p&gt;Linux：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;找个地方（比如版本库根目录或者.hg目录）编辑一个web.conf文件，内容如下：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;（假设文件放在版本库根目录）
+
+[web]
+allow_push=*
+push_ssl=false
+
+[paths]
+test=.
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;然后启动服务器的命令改为&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;$ hg serve --web-conf web.conf
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;这样，就允许push了，这段配置写在hgrc文件里面也可以，但是可以注意到这样对push是&amp;nbsp;没有任何限制的，非常的不安全，所以还是单独写一个文件，可以提醒注意。&lt;/p&gt;
+&lt;p&gt;另外要注意的就是paths段这么设置了之后，前面clone的命令要相应的改为&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;$ hg clone http://ip:8000/test .
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;才能访问了&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;上面的配置文件很容易看懂，但是只能这么写，我试过修改push_ssl为true，然后使用
+ssl来推送，始终是权限不足，而allow_push如果指定了用户名，会一直提示版本库不存在
+从stackoverflow上提问的来看，似乎hg serve是无法集成用户验证的，必须使用其他的&amp;nbsp;方案才能实现&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;Windows：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;启动Web Server后，先点停止，然后选设置，把里面的ssl加密推送改为False，把“允许&amp;nbsp;推送”改为*，然后选择&lt;span class=&#34;caps&#34;&gt;OK&lt;/span&gt;退出&lt;/li&gt;
+&lt;li&gt;然后启动服务器，就可以push了。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;再次提醒，hg serve配置简单，使用方便，但是安全性极低，所以一般需要的时候再启动，&amp;nbsp;平时还是关闭的好。&lt;/p&gt;            </content>
+        </entry>
+            <entry>
+            <title type="html">如何生成QR码</title>
+            <author><name>newkedison</name></author>
+            <link href="/blog/how-to-generate-qr-code.html"/>
+            <updated>2012-03-21T21:38:17Z</updated>
+            <published>2012-03-21T21:38:17Z</published>
+            <id>/blog/how-to-generate-qr-code.html</id>
+                        <category   scheme="/blog/tags"
+                        term="qrcode"
+                        label="Qrcode" />
+            
+            <content type="html">
+                                &lt;h2&gt;概述&lt;/h2&gt;
+&lt;p&gt;&lt;span class=&#34;caps&#34;&gt;QR&lt;/span&gt;码是二维码的一种，目前使用的非常广，几乎看到的所有二维码都是&lt;span class=&#34;caps&#34;&gt;QR&lt;/span&gt;码。现在有很多的
+软件或者在线工具，都可以根据我们输入的内容，自动生成&lt;span class=&#34;caps&#34;&gt;QR&lt;/span&gt;码，我花了一段时间来了解
+&lt;span class=&#34;caps&#34;&gt;QR&lt;/span&gt;码的生成算法，本来想写一个生成器，但是最后因为发现其规则还是比较复杂，而我暂时
+又没有非常的必要去研究这个内容，所以就没继续下去，下面记录我目前知道的生成步骤，&amp;nbsp;因为我自己也没实践过，所以错漏在所难免，但应该也八九不离十。&lt;/p&gt;
+&lt;h2&gt;模式和版本&lt;/h2&gt;
+&lt;p&gt;&lt;span class=&#34;caps&#34;&gt;QR&lt;/span&gt;码有两种模式，现在基本都是用第二种，所以第一种到底什么样子，我也不太清楚，然后
+所谓的版本，其实主要表示了点阵的多少，最小的版本1是21&lt;em&gt;21，然后版本2是25&lt;/em&gt;25，下面
+每个版本依次递增4行和4列，到最后版本40就是177*177的点阵了。还有个小区别是除了&amp;nbsp;版本1之外，其他的版本都有一个或以上的辅助定位图案&lt;/p&gt;
+&lt;p&gt;为了便于参考，一般定义左上角的格子的坐标是（0，0）&lt;/p&gt;
+&lt;h2&gt;纠错等级&lt;/h2&gt;
+&lt;p&gt;有4档，分别是L，M，Q，H，纠错能力依次递增，当然，纠错是以牺牲能表示的字符长度来
+换取的，所以在同样的版本（点阵大小一样），他们能容纳的最大字符数是依次递减的。
+这个纠错是一个非常强大的功能，可以使得图像在丢失或者错误部分内容的时候，依旧可以
+解析出正确的内容，那些在图案上添加各种花哨图样或者Logo的&lt;span class=&#34;caps&#34;&gt;QR&lt;/span&gt;码，就是利用了他的纠错&amp;nbsp;能力，使得即使错误了一些内容，依旧可以用软件读出来。&lt;/p&gt;
+&lt;h2&gt;编码类型&lt;/h2&gt;
+&lt;p&gt;wikipedia上说有4种编码方式：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;纯数字&lt;/li&gt;
+&lt;li&gt;字母+数字&lt;/li&gt;
+&lt;li&gt;8bit字符&lt;/li&gt;
+&lt;li&gt;日文字符&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;然后国标里面自己加了一个中文字符的定义&lt;/p&gt;
+&lt;p&gt;这些编码方式，有各自不同的规则，主要的目的有两个，一个是尽量标准，以方便解析，
+另一个是尽量压缩，以使得同样的大小可以容纳更多的信息。分成这四种编码就是在两者&amp;nbsp;之间找平衡。具体的编码规则就不摘录了，在国标里面有例子。&lt;/p&gt;
+&lt;p&gt;经过编码之后，原来的信息就变成了bit流&lt;/p&gt;
+&lt;h2&gt;bit流到图像的转换&lt;/h2&gt;
+&lt;p&gt;bit流在图片上的排列顺序，也不是那么的直观，而是从右下角开始，按照一定的顺序绕
+出来的，具体的绕法最好用图片来说明，在wikipedia上有一个
+&lt;a href=&#34;http://en.wikipedia.org/wiki/File:QR_Character_Placement.svg&#34;&gt;例子&lt;/a&gt;。&lt;/p&gt;
+&lt;h2&gt;掩模&lt;/h2&gt;
+&lt;p&gt;为了避免填充之后，出现大片的白色或者黑色，不利于识别，所以引入了掩模的概念，也&amp;nbsp;就是看到这里，我才开始准备放弃自己实现一个算法的初衷。&lt;/p&gt;
+&lt;p&gt;首先是定义了8种不同的掩模方式，然后要把原始的内容，和这个8种掩模&lt;span class=&#34;caps&#34;&gt;XOR&lt;/span&gt;一下，然后有
+一个评价函数，评价这8种掩模的结果哪种最好，这才能决定使用哪种方法，这个工作天生&amp;nbsp;就是为了用程序实现而来定义的，不过实现起来也没那么的容易。&lt;/p&gt;
+&lt;h2&gt;格式信息&lt;/h2&gt;
+&lt;p&gt;格式信息是记录纠错等级和掩模版本的信息，总共15bit，其实只要5bit就够了，后面10bit&amp;nbsp;是&lt;span class=&#34;caps&#34;&gt;BCH&lt;/span&gt;纠错码，看到这里我就完全放弃了，这个&lt;span class=&#34;caps&#34;&gt;BCH&lt;/span&gt;到底是啥我根本就没听说过。&lt;/p&gt;
+&lt;p&gt;格式信息在图像上保存了两份，以提供冗余，主要是因为这两个信息太重要了，如果有一点
+错误，都将影响整个图的解析。保存的位置在特定的地方，看wikipedia有图片演示，国标&amp;nbsp;里面也有&lt;/p&gt;
+&lt;h2&gt;版本信息&lt;/h2&gt;
+&lt;p&gt;和格式信息基本差不多，也是非常重要，所以有两份冗余，长度是18bit，里面6个有效数字
+12bit是&lt;span class=&#34;caps&#34;&gt;BCH&lt;/span&gt;纠错，但是要注意的是，版本1~6是没有版本信息的。版本信息也是保存在特定&amp;nbsp;的位置，具体参考国标和wikipedia&lt;/p&gt;
+&lt;h2&gt;生成的步骤&lt;/h2&gt;
+&lt;p&gt;以下的步骤是我根据前面的知识推测的，不保证百分百可行。&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;根据要编码数据的长度，数据类型，纠错需求，选择合适的版本（也就是点阵大小）
+    这个在国标里面有一个很长的对照表，每种版本每种纠错等级，每种编码方式，都列出了&amp;nbsp;最大表示长度。&lt;/p&gt;
+&lt;p&gt;这里要补充一下，就是在一个图上，可以不止是一种编码方式，可以混合多种，因为编码
+的时候，会把长度也写在里面，所以每段不同的编码方式可以连续保存在一起。当然，只有&amp;nbsp;在这样做真的能减少长度的时候才分段编码，一般基本是用不上的。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;先画那些固定的定位图案，只要版本定了，他们就是固定的&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;将内容按照合适的编码类型进行编码&lt;/li&gt;
+&lt;li&gt;根据纠错等级的定义，计算纠错码，接在实际内容的后面（实际内容后面可能会有几个&amp;nbsp;bit的0作为结束符，要跟在结束符后面）&lt;/li&gt;
+&lt;li&gt;根据一定的规则，把原始的bit流画到图像上&lt;/li&gt;
+&lt;li&gt;遍历8种掩模方式，根据评价函数选择一个最优的掩模算法，对原始图像进行掩模计算&lt;/li&gt;
+&lt;li&gt;在特定的位置，填写格式信息和版本信息，其中格式信息需要进行掩模，版本信息不用&lt;/li&gt;
+&lt;li&gt;生成完毕&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2&gt;拾遗&lt;/h2&gt;
+&lt;p&gt;上面讲了基本的知识，还有一些知识可能是不一定要用到，但是也是在&lt;span class=&#34;caps&#34;&gt;QR&lt;/span&gt;码的规范里面有&lt;/p&gt;
+&lt;p&gt;比如：&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;caps&#34;&gt;QR&lt;/span&gt;码的格式中规定了一种链接结构，可以使得多幅图像合并为一幅大图&lt;/p&gt;
+&lt;p&gt;还有一种&lt;span class=&#34;caps&#34;&gt;ECI&lt;/span&gt;扩充模式，不太了解是用来干啥的&lt;/p&gt;            </content>
+        </entry>
+            <entry>
+            <title type="html">Django 安装及使用</title>
+            <author><name>newkedison</name></author>
+            <link href="/blog/how-to-use-django.html"/>
+            <updated>2012-02-26T19:50:53Z</updated>
+            <published>2012-02-26T19:50:53Z</published>
+            <id>/blog/how-to-use-django.html</id>
+                        <category   scheme="/blog/tags"
+                        term="django"
+                        label="Django" />
+                        <category   scheme="/blog/tags"
+                        term="python"
+                        label="Python" />
+            
+            <content type="html">
+                                &lt;h2&gt;Windows下的安装&lt;/h2&gt;
+&lt;h3&gt;下载：&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;Python: &lt;a href=&#34;http://www.python.org&#34;&gt;http://www.python.org&lt;/a&gt;&lt;br /&gt;
+&lt;/li&gt;
+&lt;li&gt;Django: &lt;a href=&#34;https://www.djangoproject.com/download/&#34;&gt;https://www.djangoproject.com/download/&lt;/a&gt;&lt;br /&gt;
+&lt;/li&gt;
+&lt;li&gt;Apache: &lt;a href=&#34;http://www.apache.org&#34;&gt;http://www.apache.org&lt;/a&gt;这个是官网，
+        下载镜像列表在：&lt;a href=&#34;http://www.apache.org/dyn/closer.cgi&#34;&gt;http://www.apache.org/dyn/closer.cgi&lt;/a&gt;
+        一般选那个推荐的镜像，然后是一个&lt;span class=&#34;caps&#34;&gt;FTP&lt;/span&gt;列表，找到httpd里面的win32&amp;nbsp;然后下载需要的版本即可&lt;/li&gt;
+&lt;li&gt;MySQL-python：官网：&lt;a href=&#34;http://sourceforge.net/projects/mysql-python/&#34;&gt;http://sourceforge.net/projects/mysql-python/&lt;/a&gt;
+              但是没有对应于pyhton2.7的发布，可以到：
+              &lt;a href=&#34;http://www.lfd.uci.edu/~gohlke/pythonlibs/#mysql-python&#34;&gt;http://www.lfd.uci.edu/~gohlke/pythonlibs/#mysql-python&lt;/a&gt;下载&lt;/li&gt;
+&lt;li&gt;MySQL：&lt;a href=&#34;http://www.mysql.com/downloads/installer/&#34;&gt;http://www.mysql.com/downloads/installer/&lt;/a&gt;&lt;br /&gt;
+&lt;/li&gt;
+&lt;li&gt;mod_wsgi：&lt;a href=&#34;http://code.google.com/p/modwsgi/wiki/DownloadTheSoftware?tm=2&#34;&gt;http://code.google.com/p/modwsgi/wiki/DownloadTheSoftware?tm=2&lt;/a&gt;&lt;br /&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3&gt;安装Django：&lt;/h3&gt;
+&lt;p&gt;解压后，运行&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;python setup.py install
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;安装后，运行python命令，然后可以&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;&amp;gt;&amp;gt;&amp;gt; import django
+&amp;gt;&amp;gt;&amp;gt; django.VERSION
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;如果看到版本号，说明安装成功&lt;/p&gt;
+&lt;p&gt;把安装目录下（比如：D:\Python27\lib\site-packages\django）下面的bin文件夹&amp;nbsp;加入系统的path变量，这样以后使用其中的django-admin.py命令时，才不需要打路径&lt;/p&gt;
+&lt;h3&gt;安装Apache：&lt;/h3&gt;
+&lt;p&gt;直接运行下载下来的exe文件&lt;/p&gt;
+&lt;p&gt;安装后，用浏览器访问127.0.0.1，如果看到“It&amp;nbsp;works！”说明安装成功&lt;/p&gt;
+&lt;h2&gt;第一个项目&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;随便找一个文件夹，用命令行执行：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;django-admin.py startproject mysite
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;这样会生成mysite目录，里面有四个文件：&lt;/p&gt;
+&lt;p&gt;__init__.py 空文件，用来告诉python这个文件夹可以作为一个package&lt;br /&gt;
+settings.py 里面是一些设置，暂时不用管&lt;br /&gt;
+urls.py     url对应设置，暂时也不用管&lt;br /&gt;
+manage.py   一个纯python的Web Server，用于快速开发，因为我们有了apache，所以不管&lt;br /&gt;
+&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;在这个文件夹中，新建两个文件，内容如下：&lt;/p&gt;
+&lt;p&gt;假设刚才创建的文件夹在：C:\django_test\mysite\&lt;/p&gt;
+&lt;p&gt;文件名:&amp;nbsp;apache.conf&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;#这是apache配置的一部分，在apache的httpd.conf最后，要加上一句（不含前面的#号）
+#Include &#34;C:/django_test/mysite/apache.conf&#34;
+#修改此文件后，需要重启apache服务
+
+#把网站的访问导向mysite.wsgi文件，后面的事情就让django接管了
+WSGIScriptAlias / &#34;C:/django_test/mysite/mysite.wsgi&#34;
+#设定访问权限，这个项目比较简单，开放所有权限即可，实际的项目需要很小心的配置
+#这是属于apache的管辖范围，相关资料要查阅apache的配置文件写法
+&amp;lt;Directory &#34;C:/django_test/mysite&#34;&amp;gt;
+Allow from all
+&amp;lt;/Directory&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;文件名:&amp;nbsp;mysite.wsgi&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;import os, sys
+#这个路径会是C:\django_test\mysite，没什么用
+setting_path = os.path.dirname(__file__)
+#这个路径会是C:\django_test，后面一句把它加入path环境变量
+#这样django才能找到需要的文件
+project_path = os.path.dirname(setting_path)
+sys.path.append(project_path)
+
+#这句必须有，指定配置文件的位置，因为上面把C:\django_test加入path环境变量
+#所以这里是mysite.settings，如果上面把C:\django_test\mysite加入path，
+#那么这里就写settings
+os.environ[&#39;DJANGO_SETTINGS_MODULE&#39;] = &#39;mysite.settings&#39;
+#启动django，开始显示网页
+import django.core.handlers.wsgi
+application = django.core.handlers.wsgi.WSGIHandler()
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;现在，访问&lt;a href=&#34;http://127.0.0.1/&#34;&gt;http://127.0.0.1/&lt;/a&gt;，如无意外，应可以看到一个“It&amp;nbsp;worked!”页面&lt;/p&gt;
+&lt;p&gt;当然，如果出现意外，那也是正常的，调试的技巧参考&amp;#8221;[调试技巧]&amp;#8221;小节&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2&gt;调试技巧&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;无敌的print&lt;/p&gt;
+&lt;p&gt;据称，无论任何语言编写的程序，只要能输出调试语句，那么90%以上的问题都可以解决&lt;/p&gt;
+&lt;p&gt;在python+django+apache的环境下，可以利用apache的错误日志来辅助调试&lt;/p&gt;
+&lt;p&gt;在任何可以执行到的代码中，使用：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;print &amp;gt;&amp;gt; sys.stderr, &#34;this is debug info&#34;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;就可以在apache的错误日志中找到该行输出。apache的错误日志可以通过httpd.conf配置，&amp;nbsp;默认的位置在安装目录下的logs\error.log&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;利用出错页面&lt;/p&gt;
+&lt;p&gt;django默认是开启调试模式的，如果代码出现异常，会出现一个包含丰富调试信息的页面，
+这个页面包括了错误的位置，调用堆栈，还有当前局部变量的值，所以，有时候我们可以
+自己引发一个错误，然后到错误页面查看需要的信息，和打断点差不多，不过就是不能继续&amp;nbsp;执行&lt;/p&gt;
+&lt;p&gt;引发错误的方法有很多，使用assert算是比较方便的，在需要停止的地方，加入：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;assert False
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;然后就去分析错误页面的数据吧&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;            </content>
+        </entry>
+            <entry>
             <title type="html">gnome-terminal技巧</title>
             <author><name>newkedison</name></author>
             <link href="/blog/tips-for-gnome-terminal.html"/>
@@ -331,6 +609,299 @@ gnome-terminal -x bash -c &#39;export RUN_AFTER_BASHRC=&#34;vim $NAUTILUS_SCRIPT
 #RUN_AFTER_BASHRC=&#34;vim $NAUTILUS_SCRIPT_SELECTED_FILE_PATHS&#34; gnome-terminal
 &lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;不过选中多个文件还不行，因为也没这个需要，所以暂时就这样了&lt;/p&gt;            </content>
+        </entry>
+            <entry>
+            <title type="html">inline的相关知识</title>
+            <author><name>newkedison</name></author>
+            <link href="/blog/how-to-use-inline.html"/>
+            <updated>2012-01-17T17:54:10Z</updated>
+            <published>2012-01-17T17:54:10Z</published>
+            <id>/blog/how-to-use-inline.html</id>
+                        <category   scheme="/blog/tags"
+                        term="c"
+                        label="C" />
+                        <category   scheme="/blog/tags"
+                        term="gcc"
+                        label="Gcc" />
+            
+            <content type="html">
+                                &lt;h2&gt;inline的作用&lt;/h2&gt;
+&lt;p&gt;为了解决c语言的宏的类型不安全性，又要保留宏能提高运行效率的优点，C++定义了inline关键字&lt;/p&gt;
+&lt;p&gt;这个关键字会&lt;strong&gt;建议&lt;/strong&gt;编译器将这个函数在调用的地方直接展开，节约了函数调用的开销，对一些短的函数，会有较明显的提升效果&lt;/p&gt;
+&lt;p&gt;和宏的不同点就在于，inline函数在展开的时候，会进行类型检查，避免了宏的安全性问题&lt;/p&gt;
+&lt;h2&gt;如何证明一个函数是否inline&lt;/h2&gt;
+&lt;p&gt;前面已经提到，inline关键字是&lt;strong&gt;建议&lt;/strong&gt;，至于编译器是否听从这个建议，我们需要如何验证呢？&lt;/p&gt;
+&lt;p&gt;这个问题是整篇文章的基础，因为如果无法验证一个&lt;strong&gt;号称&lt;/strong&gt;inline的函数是否真的inline，那么就无从验证各种用法对inline效果的影响&lt;/p&gt;
+&lt;p&gt;我一开始考虑用map文件，在编译的时候加上&lt;code&gt;-Wl,-Map=name.map&lt;/code&gt;就可以生成一个map文件，但是从这个文件里面，无法看出一个函数是否真的是inline的&lt;/p&gt;
+&lt;p&gt;后来经过搜索，找到了nm和objdump这两个命令，都可以来验证，下面是用于验证的源码&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;#include &amp;lt;stdio.h&amp;gt;
+inline static void will_inline()
+{
+  printf(&#34;this function will be inline&#34;);
+}
+inline static void will_not_inline(int i)
+{
+  if(i &amp;gt; 0)
+    will_not_inline(i - 1);
+  printf(&#34;%d &#34;, i);
+}
+int main (int argc, char const* argv[])
+{
+  will_inline();
+  will_not_inline(5);
+  return 0;
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;编译成inline.o文件后，执行nm和objdump的结果如下：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;$ nm inline.o
+00000000 t _ZL15will_not_inlinei
+U __printf_chk
+00000181 T main
+
+$ objdump -t inline.o
+
+inline.o:     file format elf32-i386
+
+SYMBOL TABLE:
+00000000 l    df *ABS*ABS00000000 inline.cpp
+00000000 l    d  .text00000000 .text
+00000000 l    d  .data00000000 .data
+00000000 l    d  .bss00000000 .bss
+00000000 l    d  .rodata.str1.100000000 .rodata.str1.1
+00000000 l     F .text00000181 _ZL15will_not_inlinei
+00000000 l    d  .note.GNU-stack00000000 .note.GNU-stack
+00000000 l    d  .eh_frame00000000 .eh_frame
+00000000 l    d  .comment00000000 .comment
+00000000         *UND*UND00000000 __printf_chk
+00000181 g     F .text000001810000002e main
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;从上面的结果可以看到，will_inline函数没有出现在nm和objdump的结果中，而will_not_inline则出现了（虽然头尾加了一些字符，这些是c++的特点）&lt;/p&gt;
+&lt;p&gt;通过以上测试，证实这两个命令可以用来验证一个函数是否被inline&lt;/p&gt;
+&lt;p&gt;另外，还可以通过生成汇编码来查看，比如用&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;$ g++ -S inline.cpp
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;可以生成inline.s这个汇编文件，在里面可以找到will_no_inline函数，但是找不到will_inline这个函数&lt;/p&gt;
+&lt;h2&gt;会inline和不会inline的一般规则&lt;/h2&gt;
+&lt;p&gt;下面这些规则是我从看的资料总结出来的，有待逐个验证&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;有可能会被inline的情况&lt;ol&gt;
+&lt;li&gt;在函数定义的时候，加上inline关键字&lt;/li&gt;
+&lt;li&gt;函数较短，没有循环或递归，用-O2或-O3编译&lt;/li&gt;
+&lt;li&gt;类成员函数，在类定义的时候，直接写了函数体，而且函数体较短&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/li&gt;
+&lt;li&gt;肯定不会被inline的情况（只要满足任一条件，不管上足上面多少个条件，都不会inline）&lt;ol&gt;
+&lt;li&gt;直接或间接递归调用到了本身&lt;/li&gt;
+&lt;li&gt;函数内有循环&lt;/li&gt;
+&lt;li&gt;函数较长（具体多长我暂时不清楚，好像是和一个-finline-limit参数有关）&lt;/li&gt;
+&lt;li&gt;函数体的定义在当前函数的后面（也就是先声明，后使用，最后定义的函数）&lt;/li&gt;
+&lt;li&gt;用gcc编译时，没有加上任何-O参数&lt;/li&gt;
+&lt;li&gt;用了-no-inlie参数&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;static和extern对inline的影响&lt;/h2&gt;
+&lt;p&gt;以下还是看资料的，待测试&lt;/p&gt;
+&lt;p&gt;在一个文件里面，如果函数同时有inline和static，一般会inline，而且只要该文件中没有明确用到这个inline函数的指针，那么这个函数就没有地址&lt;/p&gt;
+&lt;p&gt;如果没有static，编译器会把当前文件中的调用展开，同时也会给一个函数地址，以供其他文件使用，在其它文件中，就不是直接展开的了&lt;/p&gt;
+&lt;p&gt;如果加了extern，那么无论什么情况，如果这个函数可以inline，那么就不会有地址了&lt;/p&gt;
+&lt;h2&gt;部分和inline相关的编译参数&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;-O&lt;/p&gt;
+&lt;p&gt;不论是-O， -O2， -O3，&amp;nbsp;-Os等优化，如果没有任何优化参数，那么无论任何函数，都不会inline&lt;/p&gt;
+&lt;p&gt;所以，要发挥inline的作用，必须加上一个优化参数&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;-Wall或-Winline&lt;/p&gt;
+&lt;p&gt;如果有声明为inline的函数，但是编译器拒绝inline，那么会发出一个warning，这样我们就可以知道哪些函数没有被inline了&lt;/p&gt;
+&lt;p&gt;这里需要注意，必须同时有优化选项，否则是没有warning的，因为所有函数都不会被inline&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;-fno-inline&lt;/p&gt;
+&lt;p&gt;让编译器忽略那些inline关键字，也就是在有优化的情况下，忽略所有inline建议，不过自动的inline还是会有的（“待验证”）&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;-finline-functions&lt;/p&gt;
+&lt;p&gt;让编译器自动inline那些较短的函数，在-O2的时候会开启&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;            </content>
+        </entry>
+            <entry>
+            <title type="html">在Excel中调用dll</title>
+            <author><name>newkedison</name></author>
+            <link href="/blog/how-to-use-dll-in-excel.html"/>
+            <updated>2012-01-14T18:18:15Z</updated>
+            <published>2012-01-14T18:18:15Z</published>
+            <id>/blog/how-to-use-dll-in-excel.html</id>
+                        <category   scheme="/blog/tags"
+                        term="Excel"
+                        label="Excel" />
+                        <category   scheme="/blog/tags"
+                        term="dll"
+                        label="Dll" />
+                        <category   scheme="/blog/tags"
+                        term="cpp"
+                        label="Cpp" />
+            
+            <content type="html">
+                                &lt;h2&gt;概述&lt;/h2&gt;
+&lt;p&gt;在Excel中可以通过&lt;span class=&#34;caps&#34;&gt;VBA&lt;/span&gt;来定义自己需要的函数，以实现复杂的功能，但是存在不少缺点：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;运行速度慢&lt;/li&gt;
+&lt;li&gt;&lt;span class=&#34;caps&#34;&gt;VB&lt;/span&gt;的语法太久没用过，都忘光了，而且和无论C/Pascal/C#比，实现简单的功能是比较&amp;nbsp;方便，但是实现复杂的功能就很纠结了&lt;/li&gt;
+&lt;li&gt;保密性不强，&lt;span class=&#34;caps&#34;&gt;VBA&lt;/span&gt;的加密很容易就找到破解了&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;所以，在完成一些复杂的功能的时候，还是通过调用外部工具的方法来实现比较好，就目前
+我知道的，最方便的方法有两种，一种是调用外部程序，另一种是调用外部dll，这里主要&amp;nbsp;记录调用dll的方法，也顺便先提一下调用外部程序&lt;/p&gt;
+&lt;h2&gt;调用外部程序&lt;/h2&gt;
+&lt;p&gt;调用外部程序的优点，是可以启动一些不是我们自己写的软件，或者是启动一些&lt;span class=&#34;caps&#34;&gt;GUI&lt;/span&gt;软件，&amp;nbsp;但是缺点就是很难实现安静的调用一些功能，这个后面具体讲&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;基本调用方法&lt;/p&gt;
+&lt;p&gt;在&lt;span class=&#34;caps&#34;&gt;VBA&lt;/span&gt;里面，有三种方法可以来调用一个外部程序&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;shell&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;shell &#34;notepad.exe&#34;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;这种方法一般都是用来启动一些&lt;span class=&#34;caps&#34;&gt;GUI&lt;/span&gt;程序的&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;WSCript.Shell&amp;nbsp;Exec&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;Set obj = CreateObject(&#34;WSCript.Shell&#34;)
+Set ret = obj.Exec(&#34;dir&#34;)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;这种方法一般用于执行一个&lt;span class=&#34;caps&#34;&gt;DOS&lt;/span&gt;命令，运行的时候会弹出一个命令行的黑窗口，&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;WSCript.Shell&amp;nbsp;run&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;Set obj = CreateObject(&#34;WSCript.Shell&#34;)
+Set ret = obj.run(&#34;dir&#34;, 0, True)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;这种方法和上面的类似，不过通过后面两个参数，可以实现一些额外的控制&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;上面第二种和第三种方法的区别，主要有几个方面&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Exec方法的返回值是一个对象，可以通过其StdOut.ReadAll()取得标准输出，以及
+StdErr.ReadAll()取得错误输出，而Run方法的返回值是该命令的返回值，不能取得标准&amp;nbsp;输出和标准错误&lt;/li&gt;
+&lt;li&gt;Run方法可以通过第二个参数控制窗口的显示，一般设置为0，也就是隐藏&lt;/li&gt;
+&lt;li&gt;Run方法可以通过第三个参数控制函数返回的行为，也就是是否等待执行结束再返回&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;不足之处&lt;/p&gt;
+&lt;p&gt;从上面的方法，可以看到，如果是启动外部程序，然后让用户自己去操作的，那用shell就
+最方便了，如果是要调用一些命令行的程序，最好用后两种，但是不知道M$是出于什么考虑
+居然设计了这么两个纠结的函数，当我想实现获取标准输出，又想隐藏窗口的时候，就完全
+无语了。当然，有一种方法是用Run，然后在命令里面把输出重定向到文件，再用文件操作&amp;nbsp;把他读出来，但是这样做的效率就可想而知了。&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2&gt;调用外部dll&lt;/h2&gt;
+&lt;p&gt;这里主要介绍通过&lt;span class=&#34;caps&#34;&gt;VC6&lt;/span&gt;写dll，然后在Excel的&lt;span class=&#34;caps&#34;&gt;VBA&lt;/span&gt;中调用的方法，用其他工具也能生成dll，&amp;nbsp;等需要的时候再去了解&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;用&lt;span class=&#34;caps&#34;&gt;VC6&lt;/span&gt;写dll&lt;/p&gt;
+&lt;p&gt;函数什么的和其他的Console程序没啥区别，主要是要在又有的函数上，封装出来一个dll的&amp;nbsp;接口函数，当然，直接把原来的函数改成dll接口函数也行。接口的函数要注意几点：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;在返回值后面要加上&lt;code&gt;__stdcall&lt;/code&gt;，也就是把原来的
+&lt;code&gt;int foo()&lt;/code&gt;;改成
+&lt;code&gt;int __stdcall foo();&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;要新建一个.def文件，声明接口函数，比如foo.def&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;LIBRARY MyFoo
+  EXPORTS
+    foo
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;其中MyFoo是dll文件的名字，最好是和文件名（去掉.dll）一致，这样可以少一个warning&amp;nbsp;最后的foo是导出的函数名&lt;/p&gt;
+&lt;p&gt;下面讲一下具体的操作：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;在&lt;span class=&#34;caps&#34;&gt;VC6&lt;/span&gt;新建一个Win32 Dynamic-Link&amp;nbsp;Library工程，选择那个empty的工程就行&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;把原有的程序文件加进来，当然如果还没写，那就随便写个sum函数测试一下也行，&amp;nbsp;比如： &lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;int sum(int a, int b){return a + b;}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;封装dll接口，比如：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;//foo.h
+int __stdcall foo(int a, int b);
+//foo.cpp
+int __stdcall foo(int a, int b){return sum(a, b)}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;这里也可以直接修改sum函数，加上&lt;code&gt;__stdcall&lt;/code&gt;就行，不过我还是喜欢封装一层&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;写def文件，上面已经写过了&lt;/li&gt;
+&lt;li&gt;在菜单Project-&amp;gt;Settings-&amp;gt;Link-&amp;gt;Output file name下面，修改dll的文件名，比如&amp;nbsp;Debug/MyFoo.dll，这里当然不改也可以&lt;/li&gt;
+&lt;li&gt;编译，如果程序没错误的话，就可以到Debug文件夹找到生成的dll文件了&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;在Excel的&lt;span class=&#34;caps&#34;&gt;VBA&lt;/span&gt;里面调用&lt;/p&gt;
+&lt;p&gt;在&lt;span class=&#34;caps&#34;&gt;VBA&lt;/span&gt;里面调用，首先是要声明从外部dll导入函数，这个和&lt;span class=&#34;caps&#34;&gt;VB&lt;/span&gt;其实一模一样，所以参考很多&amp;nbsp;&lt;span class=&#34;caps&#34;&gt;VB&lt;/span&gt;的教程就可以了，具体步骤如下：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;按Alt+F11打开&lt;span class=&#34;caps&#34;&gt;VBA&lt;/span&gt;编辑器，看起来就是一个内嵌的&lt;span class=&#34;caps&#34;&gt;VB&lt;/span&gt;&lt;/li&gt;
+&lt;li&gt;在左边找到“模块1”双击，在右边可以打开模块的代码窗口，下面的代码都写在这里&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;首先声明从dll导入的函数，比如&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;Private Declare Function foo Lib &#34;dll文件全路径&#34; (ByVal a as Integer, ByVal b as Integer) as Integer
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;这个声明有几个要点：第一是必须用&lt;code&gt;private&lt;/code&gt;，第二是dll文件必须给出全路径，这个有个
+变通方法，下面再讲，第三是函数参数在&lt;span class=&#34;caps&#34;&gt;VC&lt;/span&gt;里面如果不是指针，都必须加上&lt;code&gt;ByVal&lt;/code&gt;，如果是
+指针，那么最好也写上&lt;code&gt;ByRef&lt;/code&gt;
+1.&amp;nbsp;下面就像调用普通的&lt;span class=&#34;caps&#34;&gt;VB&lt;/span&gt;函数调用就可以了&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;注意点&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;span class=&#34;caps&#34;&gt;VB&lt;/span&gt;和C的变量类型，很多不是完全对应的，我用了int和double都还可以，其他的那些&amp;nbsp;我没测试，不过网上有很多对照的表格，如果需要的话，再搜索好了。&lt;/li&gt;
+&lt;li&gt;如果是函数参数是传值的，&lt;span class=&#34;caps&#34;&gt;VB&lt;/span&gt;声明时必须加上&lt;code&gt;ByVal&lt;/code&gt;，如果是指针，&lt;span class=&#34;caps&#34;&gt;VB&lt;/span&gt;里面用&lt;code&gt;ByRef&lt;/code&gt;，
+然后用数组的某个元素作为实参，一般是&lt;code&gt;arr(0)&lt;/code&gt;或者&lt;code&gt;arr(1)&lt;/code&gt;，这个看个人需要了&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;实用技巧&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;调用外部程序时使用相对路径&lt;/p&gt;
+&lt;p&gt;在用上面提到的三种方法调用外部文件时，都需要指明程序的绝对路径，否则是找不到的，
+但是我们一般希望，这个程序就是Excel文件放在一起，最好是可以用相对路径来引用。这
+时候需要用到ThisWorkBook.Path这个变量，这里保存的就是Excel文件所在的目录，所以，
+我们可以用&lt;code&gt;Shell ThisWorkBook.Path &lt;span class=&#34;amp&#34;&gt;&amp;amp;&lt;/span&gt; &#34;\foo.exe&#34;&lt;/code&gt;来调用当前文件夹的foo.exe文件。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;调用外部dll时使用相对路径&lt;/p&gt;
+&lt;p&gt;还上面同样的问题，调用dll的时候，也需要指明绝对路径，这个也是很不方便，因为dll的
+位置是在声明的时候就要指定，那里用不了&lt;code&gt;ThisWorkBook.Path&lt;/code&gt;，所以要用另外一个方法，&amp;nbsp;首先双击左边的ThisWorkBook节点，右边会打开另外一个代码窗口。然后添加以下函数&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;Private Sub Workbook_Open()
+  Dim drv as String
+  Dim path as String
+  path = ThisWorkbook.Path
+  drv = Left(path, 3)
+  ChDrive drv
+  ChDir path
+End Sub
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;这个函数在打开Excel的时候，会被自动执行，他的功能就是把当前目录切换到当前的文件&amp;nbsp;夹，这样直接给出dll的名字的时候，就会在当前文件夹找到匹配的dll文件&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;有个叫QuickView的工具，在Win2000前系统有自带，但是现在没有了，不过网上很
+容易可以找到&lt;span class=&#34;caps&#34;&gt;XP&lt;/span&gt;能用的版本。这个工具，把dll文件直接拖进去，可以看到里面的导出函数&amp;nbsp;这样在写dll的时候，就可以看看导出是否正确了，类似的工具应该还有不少&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;span class=&#34;caps&#34;&gt;VBA&lt;/span&gt;的函数，有一种数据类型是Range，可以用来接受一个范围的单元格，然后用其
+&lt;code&gt;Cells(i, j).Value&lt;/code&gt;，可以获得其中的单元格数据，用来计算&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/li&gt;
+&lt;/ol&gt;            </content>
         </entry>
             <entry>
             <title type="html">Bash常用命令</title>
@@ -478,6 +1049,692 @@ fread需要的字节数直接到一个整型变量中，后面就可以根据需
 &lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;这样可以查看所有含有bash的命令，已经他的父进程和子进程&lt;/p&gt;
 &lt;p&gt;&lt;code&gt;-p&lt;/code&gt;参数表示同时列出&lt;span class=&#34;caps&#34;&gt;PID&lt;/span&gt;，然后要kill还是要干嘛就方便了&lt;/p&gt;            </content>
+        </entry>
+            <entry>
+            <title type="html">Git常用命令及使用心得</title>
+            <author><name>newkedison</name></author>
+            <link href="/blog/how-to-use-git.html"/>
+            <updated>2012-01-14T18:18:15Z</updated>
+            <published>2012-01-14T18:18:15Z</published>
+            <id>/blog/how-to-use-git.html</id>
+                        <category   scheme="/blog/tags"
+                        term="git"
+                        label="Git" />
+                        <category   scheme="/blog/tags"
+                        term="SourceControl"
+                        label="Sourcecontrol" />
+            
+            <content type="html">
+                                &lt;h2&gt;本文约定&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;如无特别说明，“git add“， ”git-add“，”add“都指的是”git&amp;nbsp;add“这个命令，其他类似&lt;/li&gt;
+&lt;li&gt;所有$开头的行，都是指命令行输入的内容&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2&gt;一般提交流程&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;首先把当前改动的内容，先加入暂存区（后文详述）&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;$ git add .
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;也可以指定文件名以实现只加入部分改变&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;提交到本地仓库，用-m参数指定提交说明，不能为空，否则提交失败&lt;/p&gt;
+&lt;p&gt;如果不用-m，则会调用文本输入工具，让我们输入，反正就是不允许没有任何说明的提交&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;$ git commit -m &#34;.....&#34;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;如果决定要同步到中心库，则用git-push&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;$ git push
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;输入密码后，正常来说就可以提交成功了。&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;注意：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;可以多次commit后，一次性push&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;用以下命令，可以省略git-add，-a是和&amp;#8212;all等效，表示把所有修改放入暂存区&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;$ git commit -a -m &#34;....&#34;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2&gt;暂存区（staging&amp;nbsp;area）&lt;/h2&gt;
+&lt;p&gt;git在提交的时候，有一个暂存区的概念，所有的修改，不会自动放入暂存区，必须手动使用git-add命令，才能把修改加入暂存区，而只有在暂存区的修改，才会在下一次commit时被提交到本地仓库&lt;/p&gt;
+&lt;p&gt;所以，git-add的概念和&lt;span class=&#34;caps&#34;&gt;SVN&lt;/span&gt;以及Hg不同，并不只是把原来没有在版本库中的文件加入版本管理，即使是修改过的文件，也需要add，另外，在merge的时候，add可以把解决好的冲突加入暂存区&lt;/p&gt;
+&lt;p&gt;使用git-status命令，可以看到，如果是新增文件，状态是untracked，而如果是修改了文件，状态是not&amp;nbsp;staged，这两种状态，都可以通过git-add，将其加入暂存区&lt;/p&gt;
+&lt;p&gt;另外，使用git add&amp;nbsp;-i命令，可以交互式的进行add操作，省却输文件名的麻烦&lt;/p&gt;
+&lt;p&gt;如果是新增的文件，一开始状态是Untracked，执行git-add后，状态是staged，如果要取消，可以用&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;$ git reset HEAD &amp;lt;文件名&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;如果是修改文件，一开始状态是Unstaged，执行git-add后，变成staged，如果要取消，也是用上面的命令&lt;/p&gt;
+&lt;p&gt;另外，如果文件已修改，但是还没add，状态是unstaged的时候，想放弃修改，恢复原来的版本，也就是实现revert的功能，则用&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;$ git checkout &amp;lt;文件名&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;如果是误删除的文件, 也是通过checkout来恢复, 直接&lt;code&gt;git checkout .&lt;/code&gt;就可以了&lt;/p&gt;
+&lt;p&gt;暂时发现暂存区的一个作用&lt;/p&gt;
+&lt;p&gt;在提交之前，可能我们修改了多个文件，这些修改可能不是针对同一个问题的修改，我们不希望这些文件被一次性commit，那么可以先将部分文件加入暂存区，先commit，然后再把剩下的全部或者部分文件加入暂存区，继续commit。&lt;/p&gt;
+&lt;h2&gt;使用vim编写提交说明&lt;/h2&gt;
+&lt;p&gt;默认的编写提交说明的工具，是古董级的nano，相当不好用，所以有必要换成vim&lt;/p&gt;
+&lt;p&gt;参考&lt;a href=&#34;http://imtx.me/archives/1201.html&#34;&gt;这里&lt;/a&gt;有好几种办法,&amp;nbsp;我用的是&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;$ export EDITOR=vim
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;另外还可以修改.git/config文件，在core段，加入editor=vim这一句（我还没测试过，不过应该好使）&lt;/p&gt;
+&lt;p&gt;如果使用&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;$ git commit --verbose
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;提交，还可以在提交的内容上，同时显示diff的结果，不过要注意，这些结果是没有被注释的&amp;nbsp;也就是说，提交的时候，也会作为提交说明，如果这不是需要的行为，必须把这些内容注释掉&lt;/p&gt;
+&lt;h2&gt;让Git记住Google&amp;nbsp;Code的用户名和密码&lt;/h2&gt;
+&lt;p&gt;在git-push的时候，需要输入用户名和密码，每次输入相当的麻烦，这时候可以借助~/.netrc文件，让git记住我们在Google&amp;nbsp;Code上的密码&lt;/p&gt;
+&lt;p&gt;其实Google&amp;nbsp;Code的Source的CheckOut页面，上面已经写了方法，不过我一开始没有完全按照上面的步骤操作，导致总是没测试成功&lt;/p&gt;
+&lt;p&gt;首先要在~/.netrc文件添加以下内容（局部手工打码）&lt;/p&gt;
+&lt;p&gt;文件:&amp;nbsp;~/.netrc&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;machine code.google.com
+login **********@gmail.com 
+password *****************
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;login后面是邮箱名，password后面是密码，这个密码可以是邮箱密码，也可以是另外一个Googe生成的，专用于Google&amp;nbsp;Code的密码&lt;/p&gt;
+&lt;p&gt;因为这个文件是明文，Google为了保护我们的邮箱密码，专门为Google&amp;nbsp;Code自动生成一个随机密码，&lt;/p&gt;
+&lt;p&gt;只要登陆着，然后访问&lt;a href=&#34;https://code.google.com/hosting/settings&#34;&gt;https://code.google.com/hosting/settings&lt;/a&gt;, 就可以看到这个随机密码，我们访问Google&amp;nbsp;Code的时候，这个密码的作用和邮箱密码一样&lt;/p&gt;
+&lt;p&gt;如果这个随机密码泄露，也没必要担心，只要点击“Regenerate”按钮，即可重新生成一个，前面的那个自动作废&lt;/p&gt;
+&lt;p&gt;我一开始这么设置了之后，发现每次push的时候，还是要密码，后来检查&amp;#8221;.git/config&amp;#8221;文件，里面有这么一行(局部手工打码)&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;url = https://**********@code.google.com/p/my-study-notes/
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;里面已经写了我的邮箱名，这样本来是可以省去填写用户名，但是带来的副作用就是密码就不会自动读取~/.netrc的设置了，所以，把这行改为&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;url = https://code.google.com/p/my-study-notes/
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;这样用户名就没有了，git会自动先去~/.netrc中寻找&lt;/p&gt;
+&lt;h2&gt;git-diff&lt;/h2&gt;
+&lt;p&gt;git-diff用于比较当前的文件有哪些改变，通过不同的参数，可以比较不同的内容：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;$ git diff [filename]
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;比较暂存区中的内容和暂时没有放到暂存区的内容的区别，也就是从上一次git-add过后被修改过的内容&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;$ git diff --cached [filename]
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;比较暂存区中和上一次commit的内容，也就是执行$git&amp;nbsp;commit时会提交的内容&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;$ git diff HEAD [filename]
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;比较当前文件和上一次commit的内容，也就是执行$git commit&amp;nbsp;-a时会提交的内容&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;$ git diff test
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;不是和当前分支比较，而是和test分支比较&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;$ git diff HEAD^ HEAD
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;比较当前分支前面两次commit之间改变了什么，也就是上一次commit修改了什么&lt;/p&gt;
+&lt;p&gt;另外，还有一些参数，可以配合上面的命令&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&amp;#8212;diff-filter=[(A|C|D|M|R|T|U|X|B)]&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;仅列出（增加|复制|删除|修改|重命名|类型变化（比如文件变成文件夹）|未合并（Unmerge）|未知（Unknown）|损坏（Broken））的变化，这些字母可以任意多少个以任意顺序组合&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&amp;#8212;name-status&lt;/p&gt;
+&lt;p&gt;仅用一个字母表示每个文件的状态，不列出具体修改，字母的意思和上面的一样&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&amp;#8212;ignore-space-at-eol&lt;/p&gt;
+&lt;p&gt;忽略行尾的空格&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;-b,&amp;nbsp;&amp;#8212;ignore-space-change&lt;/p&gt;
+&lt;p&gt;忽略行尾空格，而且连续多个空格均认为是一个空格&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;-w,&amp;nbsp;&amp;#8212;ignore-all-space&lt;/p&gt;
+&lt;p&gt;忽略所有空格&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&amp;#8212;exit-code&lt;/p&gt;
+&lt;p&gt;设定git-diff的返回值与diff命令一致，1表示有区别，0表示没有区别&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&amp;#8212;quiet&lt;/p&gt;
+&lt;p&gt;不产生任何输出，同时自动定义&amp;#8212;exit-code&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;span class=&#34;caps&#34;&gt;PS&lt;/span&gt;：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;有时候为了避免歧义，区分是分支名字还是文件名，在文件名前面加上&amp;#8221; &amp;#8212;&amp;nbsp;&amp;#8221;，注意和文件名之间要有空格&lt;/li&gt;
+&lt;li&gt;可以比较任意两个历史commit之间的区别，先要用git-log看这两个commit的hash值，然后用
+        $ git diff 0123456&amp;nbsp;abcdef0&lt;/li&gt;
+&lt;/ol&gt;            </content>
+        </entry>
+            <entry>
+            <title type="html">共享库的生成与使用</title>
+            <author><name>newkedison</name></author>
+            <link href="/blog/how-to-use-shared-library.html"/>
+            <updated>2012-01-02T20:27:21Z</updated>
+            <published>2012-01-02T20:27:21Z</published>
+            <id>/blog/how-to-use-shared-library.html</id>
+                        <category   scheme="/blog/tags"
+                        term="sharedlibrary"
+                        label="Sharedlibrary" />
+                        <category   scheme="/blog/tags"
+                        term="so"
+                        label="So" />
+            
+            <content type="html">
+                                &lt;h2&gt;参考资料&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&#34;http://tldp.org/HOWTO/Program-Library-HOWTO/shared-libraries.html&#34;&gt;英文版&lt;/a&gt;
+&lt;span class=&#34;amp&#34;&gt;&amp;amp;&lt;/span&gt;
+&lt;a href=&#34;http://blog.csdn.net/benben85/article/details/4161130&#34;&gt;不太完整的翻译&lt;/a&gt;&lt;/p&gt;
+&lt;h2&gt;简介&lt;/h2&gt;
+&lt;p&gt;共享库（Shared&amp;nbsp;Library）是Linux下的通用函数库，与Windows的dll非常类似&lt;/p&gt;
+&lt;p&gt;但是通过良好的机制，尽量避免了dll的版本升级问题（dll&amp;nbsp;hell）&lt;/p&gt;
+&lt;p&gt;一般在Linux下，共享库使用so（Shared&amp;nbsp;Object）作为扩展名，后面还会跟上版本号&lt;/p&gt;
+&lt;h2&gt;共享库的三个名字&lt;/h2&gt;
+&lt;p&gt;Linux为了解决版本问题，使用了一种特殊的机制，要理解这个机制，首先要了解共享库的三个名字&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;“real&amp;nbsp;name”：实际的文件名，这是实际生成的库文件，一般命名为libXXX.so.&lt;span class=&#34;caps&#34;&gt;X.Y.&lt;/span&gt;Z&lt;/p&gt;
+&lt;p&gt;其中&lt;span class=&#34;caps&#34;&gt;XXX&lt;/span&gt;是自定义的名字，后面的X，Y，Z是用数字表示的版本号&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;X是主版本号，一般在库的接口发生改变，无法兼容的时候，更新这个数字&lt;/li&gt;
+&lt;li&gt;Y是次版本号，如果接口没有改变，只是升级算法，或者增加新接口，更新这个数字&lt;/li&gt;
+&lt;li&gt;Z是build版本号，一般每升级一次加1，也可以省略&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;“soname”：共享库的一个特殊的名字，在每个共享库生成的时候，一般会指定这个名字&lt;/p&gt;
+&lt;p&gt;一般命名为libXXX.so.X，其实就是上面的real&amp;nbsp;name去掉最后两个版本号&lt;/p&gt;
+&lt;p&gt;每一个程序，在编译的时候，会指定一个他需要的共享库的soname，程序在启动的时候，由系统自动找到一个合适的共享库来使用&lt;/p&gt;
+&lt;p&gt;从前面可以看出，X是主版本号，一般接口有改变，无法保持兼容，才会更改这个数字，所以，soname就要指定这个数字，避免由于接口改变导致运行错误&lt;/p&gt;
+&lt;p&gt;一个程序需要那些共享库，每个共享库的soname，以及运行这个程序时，实际使用的库名字，可以使用ldd命令查看，比如&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;$ ldd /bin/ls
+linux-gate.so.1 =&amp;gt;  (0x0091c000)
+libselinux.so.1 =&amp;gt; /lib/i386-linux-gnu/libselinux.so.1 (0x0077b000)
+librt.so.1 =&amp;gt; /lib/i386-linux-gnu/librt.so.1 (0x00424000)
+libacl.so.1 =&amp;gt; /lib/i386-linux-gnu/libacl.so.1 (0x00944000)
+libc.so.6 =&amp;gt; /lib/i386-linux-gnu/libc.so.6 (0x00110000)
+libdl.so.2 =&amp;gt; /lib/i386-linux-gnu/libdl.so.2 (0x00867000)
+/lib/ld-linux.so.2 (0x00e32000)
+libpthread.so.0 =&amp;gt; /lib/i386-linux-gnu/libpthread.so.0 (0x00730000)
+libattr.so.1 =&amp;gt; /lib/i386-linux-gnu/libattr.so.1 (0x009fc000)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;看libc.so.6一行，这是c的共享库，目前主版本是6，ls命令在执行的时候，需要这个文件&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;$ ll /lib/i386-linux-gnu/libc.so.6
+lrwxrwxrwx 1 root root 12 2011-10-23 09:04 /lib/i386-linux-gnu/libc.so.6 -&amp;gt; libc-2.13.so*
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;从上面可以看出，这个文件其实就是一个符号链接，实际的文件其实是/lib/i386-linux-gnu/libc-2.13.so&lt;/p&gt;
+&lt;p&gt;这个libc-2.13.so就是real name，而libc.so.6是soname，虽然这里的real&amp;nbsp;name没有按照上面的规则，不过也是一样的意思，可能是Ubuntu的开发者喜欢这么起名字吧。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;“link&amp;nbsp;name”：这个是在编译可执行程序的时候，使用的名字，如果要自己编译程序，就需要关心这个名字&lt;/p&gt;
+&lt;p&gt;比如我们在编译需要用到数学库的程序时，需要加上-lm参数，这个参数的意义就是，编译器会去寻找libm.so这个共享库（或者libm.a这个静态库，这个不是本文重点），这里的libm.so就是link&amp;nbsp;name，命名的规则很明显，就是把soname后面的版本也去掉，只保留libXXX.so&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;从上面可以看出，与其说一个共享库有三个名字，不如说有3个文件，只不过其中real name一般是实际编译生成的文件名，而soname是一个到real name的符号链接，然后link name是一个到soname的符号链接（只有在需要编译程序的时候，才需要link&amp;nbsp;name，如果仅需要运行程序，只要有soname就行）&lt;/p&gt;
+&lt;p&gt;一般来说，我们自己写一个共享库，用real name，然后自己用ln&amp;nbsp;-s，再生成两个符号链接，就完成了一个共享库的安装，当然，实际使用的时候，还牵涉到一个共享库搜索路径的问题&lt;/p&gt;
+&lt;h2&gt;共享库的搜索路径&lt;/h2&gt;
+&lt;p&gt;这里要分两种情况：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;编译程序时的搜索路径&lt;/p&gt;
+&lt;p&gt;gcc默认的共享库搜索路径是/lib和/usr/lib，如果自己写的共享库，要么放在这两个文件夹里面，要么需要用-L参数指定搜索路径&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;执行程序时的搜索路径&lt;/p&gt;
+&lt;p&gt;前面用ldd命令，箭头后面的内容就是实际上搜索到的文件，Linux在执行程序的时候，会通过ld.so在一些路径中查找需要的共享库&lt;/p&gt;
+&lt;p&gt;搜索的依据是/etc/ld.so.cache文件，这个文件不是我们写的，而是用ldconfig命令生成的，实际上决定搜索路径的是/etc/ld.so.conf文件，ldconfig就是读取这个文件，然后生成/etc/ld.so.cache，以提高搜索共享库的速度&lt;/p&gt;
+&lt;p&gt;我们自己写的库，可以放在/lib或者/usr/lib，也可以在/etc/ld.so.conf中添加一行搜索路径&lt;/p&gt;
+&lt;p&gt;在Ubuntu里面，/etc/ld.so.conf里面只有一句话，就是加载/etc/ld.so.conf.d文件夹中的所有文件，这招在Ubuntu里面随处可见。&lt;/p&gt;
+&lt;p&gt;所以，我觉得比较好的方法，是在/etc/ld.so.conf.d文件中新建一个符号链接，链接到用户目录中的一个配置文件（比如$(&lt;span class=&#34;caps&#34;&gt;HOME&lt;/span&gt;)/userlib.conf），这样我们就可以根据需要添加自己的搜索目录，而不需要root权限了。&lt;/p&gt;
+&lt;p&gt;这些写在配置文件中的搜索路径，都是全局有效的，另外，还有一个环境变量LD_LIBRARY_PATH可以增加搜索路径，比如&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;$ LD_LIBRARY_PATH=$(pwd) ./a.out
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;这样可以把当前目录加入搜索路径，LD_LIBRARY_PATH可以写多个路径，用冒号分隔，可以在.bashrc中用export定义&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;这里，还要引入另一个环境变量LD_PRELOAD，这个变量可以指定优先加载一些共享库，优先使用这些库里面的函数，比如我们自己写了一个libm.so.6，那么可以&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;$ LD_PRELOAD=/path/to/libm.so.6 some-command
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;这样程序会优先使用我们自己写的共享库。&lt;/p&gt;
+&lt;p&gt;当然，我们不可能改写整个libm.so.6，但是假设我们写了一个更好的sqrt函数，只要生成libm.so.6，然后用上面的命令，那么这个程序用到sqrt函数的地方，就会调用我们写的sqrt函数，而不是linux提供的那个。也就是说，LD_PRELOAD这个环境变量，可用来替换指定共享库或共享库里面的函数。&lt;/p&gt;
+&lt;p&gt;使用的时候，要注意LD_PRELOAD后面必须是so文件的完整路径，如果多个so文件，用冒号隔开&lt;/p&gt;
+&lt;p&gt;实现同样的功能，还可以使用/etc/ld.so.preload文件，和前面的/etc/ld.so.conf文件一样的用法，在Ubuntu下，/etc/ld.so.preload可能会不存在，自己手动建立就好。&lt;/p&gt;
+&lt;p&gt;另外要注意，/etc/ld.so.preload里面的设置是全局的，所以一般还是不要用的好&lt;/p&gt;
+&lt;h2&gt;共享库的建议位置&lt;/h2&gt;
+&lt;p&gt;根据&lt;span class=&#34;caps&#34;&gt;GNU&lt;/span&gt;建议，还有一个文件系统标准的建议，一般如果是开发中的程序（不稳定版），共享库一般放在/usr/local/lib，&lt;/p&gt;
+&lt;p&gt;稳定版的发布程序，一般把共享库放在/usr/lib，如果是系统启动需要的库，放在/lib，然后一些插件一类的库，放在/usr/local/lib&lt;/p&gt;
+&lt;h2&gt;共享库的生成和使用&lt;/h2&gt;
+&lt;p&gt;假设有test.h&amp;nbsp;test.cpp用于生成一个共享库，还有一个main.cpp来使用这个库&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;$ g++ -c test.cpp -o test.o
+$ g++ -shared -fPIC -Wl,-soname,libtest.so.1 -o libtest.so.1.0 test.o
+$ ln -s libtest.so.1.0 libtest.so.1
+$ ln -s libtest.so.1 libtest.so
+$ g++ main.cpp -L. -ltest -o test
+$ LD_LIBRARY_PATH=$(pwd) ./test
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;上面就是从生成共享库到链接程序，到使用程序的过程，主要看其中的一些参数&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;-shared 表示生成共享库，必须加这个参数
+-fPIC 表示生成的共享库，使用独立地址，具体意义我也没去深究，反正也是必须的
+-Wl,-soname,libtest.so.1 -Wl是把逗号后面的内容，作为链接器（ld）的参数，用逗号代替必要的空格
+    -soname libtest.so.1 这个参数给ld的话，是指定生成的so文件的soname，这个soname可以用readelf命令看到
+-L. 把当前目录加入链接时搜索共享库的路径
+-ltest 生成程序时，搜索libtest.so或者libtest.a，链接为可执行程序
+LD_LIBRARY_PATH=$(pwd) 执行后面的命令时，临时改变LD_LIBRARY_PATH为当前路径
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2&gt;共享库的动态加载&lt;/h2&gt;
+&lt;p&gt;前面的用法是在链接的时候，已经指定好了要加载哪些共享库，加载的动作是系统做的，这可以称之为静态加载&lt;/p&gt;
+&lt;p&gt;在程序中，也可以通过dlopen等一系列的函数，动态的加载指定的共享库，这样可以实现自动加载插件的功能&lt;/p&gt;
+&lt;p&gt;因为暂时还用不到，具体用法以后再研究&lt;/p&gt;
+&lt;h2&gt;拾遗&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;/usr/local/lib在Ubuntu里面，默认不在共享库的搜索路径，如果需要，要自己修改/etc/ld.so.conf文件&lt;/li&gt;
+&lt;li&gt;LD_DEBUG这个环境变量，用于辅助调试，可以要求在使用共享库的时候，显示出来很多的信息，一般除非真的需要调试，否则还是留空，具体参数有很多，需要时再Google&lt;/li&gt;
+&lt;li&gt;-fPIC还有小写格式-fpic，功能基本一样，就是-fPIC生成的库比较大，比较通用，-fpic生成的可能受平台限制较大&lt;/li&gt;
+&lt;li&gt;ldconfig这个命令需要root权限，因为要修改/etc/ld.so.cache文件，一般在把共享库放在任一搜索路径下面之后，或者改变过搜索路径只有，都要执行一次，否则程序还是会找不到共享库的，所以，如果没有root权限，唯一的办法就是修改LD_LIBRARY_PATH&lt;/li&gt;
+&lt;li&gt;一般用readelf -d libXXX.so.&lt;span class=&#34;caps&#34;&gt;X.Y.&lt;/span&gt;Z来查看一个共享库文件的soname，其实real&amp;nbsp;name和soname真正的对应关系是用这个命令来看的&lt;/li&gt;
+&lt;li&gt;如果一个libXXX.so.&lt;span class=&#34;caps&#34;&gt;X.Y.&lt;/span&gt;Z里面可以看到soname，那么执行ldconfig的时候，会在同一目录自动生成一个对应的libXXX.so.X的文件，作为它的符号链接，如果存在多个X相同的共享库，那么链接到Y最大的那一个&lt;/li&gt;
+&lt;/ol&gt;            </content>
+        </entry>
+            <entry>
+            <title type="html">安装VIM</title>
+            <author><name>newkedison</name></author>
+            <link href="/blog/install-vim.html"/>
+            <updated>2011-12-11T21:33:03Z</updated>
+            <published>2011-12-11T21:33:03Z</published>
+            <id>/blog/install-vim.html</id>
+                        <category   scheme="/blog/tags"
+                        term="vim"
+                        label="Vim" />
+            
+            <content type="html">
+                                &lt;h2&gt;前言&lt;/h2&gt;
+&lt;p&gt;第四次编译安装vim，这次是在一个&lt;span class=&#34;caps&#34;&gt;VPS&lt;/span&gt;上全新安装的，和以前的不同点在于：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;span class=&#34;caps&#34;&gt;VPS&lt;/span&gt;是通过&lt;span class=&#34;caps&#34;&gt;SSH&lt;/span&gt;登陆的，没有&lt;span class=&#34;caps&#34;&gt;GUI&lt;/span&gt;，所以gvim就不需要了（其实即使在现在的系统，gvim我&amp;nbsp;也已经好久没用过了，下一次其实不安装也可以）&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;为了减少麻烦，&lt;span class=&#34;caps&#34;&gt;LUA&lt;/span&gt;和Perl接口都不编译了，反正我近期是不可能用这两个的&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;由于系统是Ubuntu10.04，apt-get能安装的最新版本居然只有7.2，所以必须自己用&amp;nbsp;源码来装&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2&gt;下载源码&lt;/h2&gt;
+&lt;p&gt;还是通过hg把整个版本库clone下来了，好像有80多M，不过&lt;span class=&#34;caps&#34;&gt;VPS&lt;/span&gt;下载速度很快，可能是因为&amp;nbsp;主机在美国的原因吧。&lt;/p&gt;
+&lt;p&gt;这次的版本是V7.3.496&lt;/p&gt;
+&lt;h2&gt;改Makefile&lt;/h2&gt;
+&lt;p&gt;修改src/Makefile，修改项如下：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;327c327
+&amp;lt; #CONF_OPT_GUI = --disable-gui
+---
+&amp;gt; CONF_OPT_GUI = --disable-gui
+395c395
+&amp;lt; #CONF_OPT_FAIL = --enable-fail-if-missing
+---
+&amp;gt; CONF_OPT_FAIL = --enable-fail-if-missing
+422c422
+&amp;lt; #CONF_OPT_PYTHON = --enable-pythoninterp
+---
+&amp;gt; CONF_OPT_PYTHON = --enable-pythoninterp
+442c442
+&amp;lt; #CONF_OPT_CSCOPE = --enable-cscope
+---
+&amp;gt; CONF_OPT_CSCOPE = --enable-cscope
+460c460
+&amp;lt; #CONF_OPT_MULTIBYTE = --enable-multibyte
+---
+&amp;gt; CONF_OPT_MULTIBYTE = --enable-multibyte
+501c501
+&amp;lt; #CONF_OPT_FEAT = --with-features=huge
+---
+&amp;gt; CONF_OPT_FEAT = --with-features=huge
+504c504
+&amp;lt; #CONF_OPT_COMPBY = &#34;--with-compiledby=John Doe &amp;lt;JohnDoe@yahoo.com&amp;gt;&#34;
+---
+&amp;gt; #CONF_OPT_COMPBY = &#34;--with-compiledby=newkedison &amp;lt;newkedison@gmail.com&amp;gt;&#34;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;主要的区别是打开了这两个配置&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;CONF_OPT_GUI = --disable-gui
+CONF_OPT_FAIL = --enable-fail-if-missing
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;第一个是取消gui，也就是不安装gvim，第二个是如果哪些接口不满足的话，就停止编译，
+这个选项很好，省了我很多的事情，因为默认的情况下，如果一些接口找不到，只要不影响
+编译，还是会继续编译下去，然后最后就少了这个接口，这还不如在编译的时候就提示，我
+才能明确的知道缺哪些接口，而不需要去那长的要命的config.log里面找&amp;nbsp;其他的和以前没区别&lt;/p&gt;
+&lt;h2&gt;编译&lt;/h2&gt;
+&lt;p&gt;执行&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;$ make
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;编译，提示找不到编译器，我晕，居然连gcc都还没装，于是&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;$ sudo apt-get install gcc
+$ sudo apt-get install g++
+$ sudo apt-get install build-essential
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;原来装gcc时不会自动赠送g++，所以要再装g++，后来搜了一下，说用最后一个就可以了，&amp;nbsp;反正我这三个都执行了一遍&lt;/p&gt;
+&lt;p&gt;第二次make，提示找不到python接口，我的python是装了，但python-dev没装，于是&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;$ sudo apt-get install python-dev
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;第三次make，提示找不到ncurses，于是&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;$ sudo apt-get install ncurses-dev
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;第四次make成功，然后&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;$ sudo make install
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;也成功&lt;/p&gt;
+&lt;h2&gt;测试&lt;/h2&gt;
+&lt;p&gt;执行&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;$ vim
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;虽然能打开，但是提示了一堆错误。&lt;/p&gt;
+&lt;p&gt;这个时候，我已经用git把我自己用的.vim同步下来放好了，仔细看看提示的信息，都是在&amp;nbsp;报一些插件的错误，主要引起错误的原因是续行符，大量出现这样的错误提示&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;E10: \ should be followed by /, ? or &lt;span class=&#34;amp&#34;&gt;&amp;amp;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;搜索了一下，原来是忘记关闭兼容模式了，而原因是我光把.vim弄好了，没有把.vimrc放好&amp;nbsp;所以把.vimrc放在正确的位置后，那些错误就没有了&lt;/p&gt;
+&lt;p&gt;但是出现了另外一个错误，因为&lt;span class=&#34;caps&#34;&gt;VPS&lt;/span&gt;上没有装中文包，所以.vimrc里面一些zh_CN的就有问题&amp;nbsp;我把他们都去掉了&lt;/p&gt;
+&lt;h2&gt;总结&lt;/h2&gt;
+&lt;p&gt;这次安装很顺利，可能是已经多次安装，没什么挑战性了吧。&lt;/p&gt;
+&lt;hr /&gt;
+&lt;p&gt;以下是以前第三次安装时写的心得&lt;/p&gt;
+&lt;hr /&gt;
+&lt;h2&gt;前言&lt;/h2&gt;
+&lt;p&gt;这次应该是第三次编译安装&lt;span class=&#34;caps&#34;&gt;VIM&lt;/span&gt;了，以前第一次编译的时候写了一篇文章，这次也写一下吧&amp;nbsp;重新编译的动机，是因为&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;$ vim --version | grep python
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;看到居然python特性没有编译进来，这当然不行，&amp;nbsp;另外，考虑到上一次安装的时候，把vim安装到了~/share的各种不方便，决定再次编译安装&lt;/p&gt;
+&lt;p&gt;由于最近在研究版本管理系统，因此相当有自信可以获取到最新的源码，所以决定获取最新的原来进行编译&lt;/p&gt;
+&lt;h2&gt;获取源码&lt;/h2&gt;
+&lt;p&gt;vim的源码托管在了Google&amp;nbsp;Code，用的是Hg，在官网上，也明明白白，清清楚楚的写了如何clone源码，只要按照上面的操作，就可以轻松下载到最新的源码，命令如下：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;$ hg clone https://vim.googlecode.com/hg/ vim
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;耐心的等待一段时间，版本库clone完成，然后可以cd到vim目录，用&lt;code&gt;hg log | head&lt;/code&gt;看一下最近一次提交的信息&amp;nbsp;我看到最新版本是V7.3.372，3天前提交的&lt;/p&gt;
+&lt;h2&gt;备份原有插件&lt;/h2&gt;
+&lt;p&gt;实际上，即使不备份，也不会有问题，但是毕竟是第一次操作（以前两次都是全新的安装），而且以前的文件放的位置不太合适，
+以前我把自己下载的工具，放在了和vim73同级的vimfiles里面，这其实是windows下的做法，在Linux下，用户脚本一般是放在$(&lt;span class=&#34;caps&#34;&gt;HOME&lt;/span&gt;)/.vim里面的&amp;nbsp;所以，我把以前vimfiles文件夹里面的内容，复制一份放在~/.vim里面了&lt;/p&gt;
+&lt;p&gt;另外还要注意.vimrc文件，这个以前就放在~/.vimrc，这就是常用的位置，不需要移动了&lt;/p&gt;
+&lt;p&gt;这里必须要赞一下vim这种文件组织方式，把升级版本的成本降到极低，风险降到0&lt;/p&gt;
+&lt;p&gt;无论是安装到/usr/share还是~/share，都有一个顶级目录vim，如果是Windows，里面就是一个vimXX（后面两位数字表示版本号），以及一个vimfiles文件夹，安装或者卸载的时候，vimXX文件夹会被改变，但是vimfiles文件夹永远不会被安装程序改变。在Linux，默认是使用~/.vim文件夹来代替vimfiles文件夹，但是如果觉得有必要的话（比如为所有用户统一安装一些插件），可以自己手动建立这个目录。&lt;/p&gt;
+&lt;p&gt;这样的文件结构，使得用户只要保证把自己的插件，放在这个文件夹里面，那么每次重新安装vim的时候，根本无需担心自己的插件会丢失。另外，如果希望同时存在多个不同的vim版本，也没关系，这些不同的版本，都可以共用这些用户插件。&lt;/p&gt;
+&lt;p&gt;vim还有一个巧妙的地方，可以打开vim，然后用&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;:set runtimepath
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;可以看到好几个目录，vim在查找脚本的时候，会依次在这些文件夹里面查找，而且排在后面的脚本将可以覆盖前面的内容，可以看到，第一个目录是~/.vim，最后一个目录，是~/.vim/after，这样做的目的是，使得用户可以在自己的配置文件中，控制所有的定义，排除其他目录中配置的干扰。&lt;/p&gt;
+&lt;h2&gt;卸载以前安装的vim&lt;/h2&gt;
+&lt;p&gt;这个没什么好说的，找到以前的Makefile，然后&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;$ make uninstall
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;即可&lt;/p&gt;
+&lt;p&gt;之所以要找以前的Makefile，是因为我改了安装的路径到~/share，如果没改过，那么只要用对应vim版本的Makefile就可以了&lt;/p&gt;
+&lt;h2&gt;配置选项&lt;/h2&gt;
+&lt;p&gt;配置选项是一个很开心，也很纠结的事情，开心是因为可以自己完全定制这个软件的功能，哪些功能要，哪些功能不要，我说了算，这有一种掌控感&amp;nbsp;纠结在于总归要经过多次摸索，才能弄出一个满足我要求的配置&lt;/p&gt;
+&lt;p&gt;其实配置很简单，因为文件中已经写的非常详细了，只要打开那些需要的特性就行&amp;nbsp;找到刚才下载的源码，进入src目录，编辑Makefile文件，我修改的内容如下&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;379c379
+&amp;lt; CONF_OPT_LUA = --enable-luainterp
+---
+&amp;gt; #CONF_OPT_LUA = --enable-luainterp
+403c403
+&amp;lt; CONF_OPT_PERL = --enable-perlinterp
+---
+&amp;gt; #CONF_OPT_PERL = --enable-perlinterp
+417c417
+&amp;lt; CONF_OPT_PYTHON = --enable-pythoninterp
+---
+&amp;gt; #CONF_OPT_PYTHON = --enable-pythoninterp
+437c437
+&amp;lt; CONF_OPT_CSCOPE = --enable-cscope
+---
+&amp;gt; #CONF_OPT_CSCOPE = --enable-cscope
+455c455
+&amp;lt; CONF_OPT_MULTIBYTE = --enable-multibyte
+---
+&amp;gt; #CONF_OPT_MULTIBYTE = --enable-multibyte
+496c496
+&amp;lt; CONF_OPT_FEAT = --with-features=huge
+---
+&amp;gt; #CONF_OPT_FEAT = --with-features=huge
+499c499
+&amp;lt; CONF_OPT_COMPBY = &#34;--with-compiledby=newkedison&#34;
+---
+&amp;gt; #CONF_OPT_COMPBY = &#34;--with-compiledby=John Doe &amp;lt;JohnDoe@yahoo.com&amp;gt;&#34;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;主要是打开perl，lua，python，cscope支持，编译模式为huge，最后死皮赖脸的署上我的名字&amp;nbsp;但是，如果这样编译的话（具体编译步骤见后文），有可能lua还是安装不了&lt;/p&gt;
+&lt;p&gt;后来查看了configure的输出，原来是找不到lua.h这个文件，然后我就&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;$ sudo apt-get install liblua5.1*
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;把整个lua的开发库还有一些杂七杂八的东西都安装了，再编译，就可以加上lua的接口了&lt;/p&gt;
+&lt;p&gt;同理，如果经过上面的配置，python和perl的接口还是没有，那么要先装上他们的开发包&lt;/p&gt;
+&lt;h2&gt;编译安装&lt;/h2&gt;
+&lt;p&gt;在顶层目录（或者src目录里面也一样），运行&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;$ make
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;然后等啊等，毫无意外的编译完成，真是谢天谢地，记得前两次，在编译的时候，会出现各种问题，可能是因为需要解决的问题，前面一次编译已经都解决了，所以这次的编译非常顺利&lt;/p&gt;
+&lt;p&gt;然后接着&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;$ sudo make install
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;一小会儿，安装完成，无论是vim还是gvim，都可以正常打开，用&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;$ vim --version | grep python
+$ vim --version | grep lua
+$ vim --version | grep perl
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;看到现在这三种接口都已经支持了,&amp;nbsp;大功告成&lt;/p&gt;
+&lt;h2&gt;拾遗&lt;/h2&gt;
+&lt;p&gt;在实际使用中，还经常使用到了以下命令&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;$ make clean
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;这个是删除编译出来的.o文件，但是要注意，不会重新执行&lt;code&gt;./configure&lt;/code&gt;&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;$ make reconfig
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;这个命令涵盖了上面的clean，另外还会重新执行&lt;code&gt;./configure&lt;/code&gt;，以更新配置，然后还会自动执行&lt;code&gt;make&lt;/code&gt;
+所以，每次修改了Makefile后，就只要执行一次这个命令，然后再执行uninstall和install就可以了&lt;/p&gt;
+&lt;p&gt;安装完成后，运行时候，发现打开一个新的buffer的时候，会提示一个ActivateBuffer函数里面有错误，经过Google，这个函数是BufferExplorer.vim插件里面的，检查这个插件，的确有这个函数，但是我尝试了一下，无法修正这个问题，然后跑到vim.org下载了这个插件的最新版本，覆盖后，问题解决&lt;/p&gt;
+&lt;p&gt;由此事，我想到应该有必要装一个插件管理的工具，搜索了一下，目标锁定了vim-addon-manager这个插件，在多种同类工具中，大部分人都推荐这个。&amp;nbsp;不过暂时没时间，等以后再折腾。&lt;/p&gt;
+&lt;p&gt;偶然在看hg的log时，发现每次更新时，都会更新src/version.c文件，很显然这个文件里面包含了版本号。经过diff，原来这个文件中的include_patches数组中，记录了当前版本包含的补丁数，其实也就是最后一位版本号的来源。&lt;/p&gt;
+&lt;hr /&gt;
+&lt;p&gt;下面这篇是以前写的，转录于此&lt;/p&gt;
+&lt;hr /&gt;
+&lt;h2&gt;第一次编译安装&lt;span class=&#34;caps&#34;&gt;VIM&lt;/span&gt;&lt;/h2&gt;
+&lt;p&gt;摘要:为了使用vimgdb,于是开始尝试编译&lt;span class=&#34;caps&#34;&gt;VIM7&lt;/span&gt;.2的源码,碰到了不少问题,也都一一解决,记录下来,以备后用&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;解压并打完补丁后,执行make,跑了一会儿后,提示&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;checking for tgetent in -lcurses... no
+no terminal library found
+checking for tgetent()... configure: error: NOT FOUND!
+      You need to install a terminal library; for example ncurses.
+      Or specify the name of the library with --with-tlib.
+make[1]: *** [auto/config.mk] 错误 1
+make[1]:正在离开目录 `/home/newk/install/vim72/src&#39;
+make: *** [first] 错误 2
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;经过网上搜索,碰到的似乎不多,后来找到一个网页:http://linux.chinaunix.net/bbs/archiver/?tid-1009812.html
+里面有人提到了,要安装apt-get install&amp;nbsp;libncurses5-dev,于是打开新立得,找libncurses5,把dev和dbg全装上了,检查通过&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;然后就是make和make&amp;nbsp;install,大概几分钟,安装完成&lt;/p&gt;
+&lt;p&gt;运行gvim,说找不到命令,运行vim,先是出来一大堆错误,然后显示一下界面,然后自动结束,回到shell.&lt;/p&gt;
+&lt;p&gt;回到一开始,找出错语句,写的是&lt;code&gt;*** buffer overflow detected ***: gvim terminated&lt;/code&gt;,&lt;/p&gt;
+&lt;p&gt;于是Google到了&lt;a href=&#34;http://forum.ubuntu.com.cn/viewtopic.php?f=122&amp;amp;t=240806&amp;amp;start=0&#34;&gt;这里&lt;/a&gt;,里面提到了这是gcc新版本的一个&lt;span class=&#34;caps&#34;&gt;BUG&lt;/span&gt;,可以这么解决,在make的时候,后面加一个参数,也就是&lt;code&gt;make CFLAGS=&#34;-O2 -D_FORTIFY_SOURCE=1&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;我就测试了一下,的确可以解决这个问题.后来我想把vim72/src/Makefile里面的&lt;span class=&#34;caps&#34;&gt;CFLAGS&lt;/span&gt;的赋值直接改成那个参数,结果在检查的时候就报错,原因未知,因为关系不大,也就没去研究了&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;安装完后,vim可以运行,但是gvim还是不行,于是开始改源码包中的vim72/src/Makefile,按照网上说的,再加上我自己的想法,总共去掉了下面几条的注释符号(也就是启用这些功能)&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;CONF_OPT_CSCOPE = --enable-cscope
+CONF_OPT_GDB = --enable-gdb
+CONF_OPT_MULTIBYTE = --enable-multibyte
+CONF_OPT_INPUT = --enable-xim
+CONF_OPT_FEAT = --with-features=huge
+CONF_OPT_COMPBY = &#34;--with-compiledby=newk&#34;(这个是在输入:version后可以看到是谁编译的)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;有一个选项是&lt;code&gt;CONF_OPT_OUTPUT = --enable-fontset&lt;/code&gt;,网上有人说是要打开,不过我没打开,也没啥问题&lt;/p&gt;
+&lt;p&gt;还有一个选项是选择用哪个图形库,我没选,文件的注释里面说了,如果不选,那么会用第一个找到的图形库,我反正不知道那个好,于是让他自己选好了&lt;/p&gt;
+&lt;p&gt;安装路径没改,就放在/usr/local里面&lt;/p&gt;
+&lt;p&gt;保存后再次安装(先make uninstall,再重复解压,打补丁,make,make&amp;nbsp;install的过程),结果还是没有gvim&lt;/p&gt;
+&lt;p&gt;又是去google,找到了&lt;a href=&#34;http://easwy.com/blog/archives/advanced-vim-skills-solve-compile-problem/&#34;&gt;这里&lt;/a&gt;,去打开源码中的vim72/src/auto/config.log,里面一大堆东西,也有提到缺少一些头文件的,我也去搜索了一下,找了两三个库装了.后来又在文件里面搜索error,找到了一句是说gtk的版本太老,所以找不到可以用的图形库,于是不安装gvim.但是我用的是gnome,理论上来说,gtk不可能是太老的版本,后来又找了一些资料,然后发现gtk2.0没装,又跑去新立得装了libgtk2.0-dev&lt;/p&gt;
+&lt;p&gt;现在配置里面又加了一句&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;CONF_OPT_GUI = --enable-gui=gtk2
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;也就是指定用gtk2,我想估计用&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;#CONF_OPT_GUI = --enable-gui=gtk --disable-gtktest
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;应该也可以,就是不检查gtk版本,直接用.反正gtk2能用,我也就不去测试了&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;现在gvim也能运行了,不过运行前会出现几个错误,都是&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;** (gvim:14356): CRITICAL **: gtk_form_set_static_gravity: assertion `static_gravity_supported&#39; failed
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;继续google,说这个是gtk库的一个&lt;span class=&#34;caps&#34;&gt;BUG&lt;/span&gt;,不影响使用,并且有人提供了屏蔽的方法,我没用人家说的方法,而是在~/.bashrc里面,把gvim给alias了一下,将错误重定向到~/.xesssion-errors里面,现在gvim不报错了,当然这只是掩盖了问题,并没有解决.我又继续搜索彻底解决的办法,也有人说了,要更新源,但是我照做了,也没有把错误解决掉,还是只能用屏蔽的办法.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;鉴于前面多次重复劳动,进行安装,而且还经常忘记加上make后面的参数.,于是写了一个install.sh文件,和两个压缩包放在一起,直接运行就可以完成安装,一开始的内容是这样的&lt;/p&gt;
+&lt;p&gt;文件名:&amp;nbsp;install.sh&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;rm -R vim72
+rm -R vimgdb
+tar xjf vim-7.2.tar.bz2
+tar xzf vimgdb72-1.14.tar.gz
+patch -d vim72 --backup -p0 &amp;lt; vimgdb/vim72.diff
+cp Makefile vim72/src
+cd vim72/src
+make CFLAGS=&#34;-O2 -D_FORTIFY_SOURCE=1&#34;
+make install
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;目前vim和gvim都可以正常使用了,又发现一个问题,标题和提示语句全部都是英文,一旦出现中文,那就是乱码,而菜单始终是英文.&lt;/p&gt;
+&lt;p&gt;又是一顿google,找到&lt;a href=&#34;http://blog.csdn.net/Purking/archive/2010/05/30/5635064.aspx&#34;&gt;这里&lt;/a&gt;,也按照里面说的改了,但是问题依旧.&lt;/p&gt;
+&lt;p&gt;又去&lt;code&gt;:h langmenu&lt;/code&gt;,原来这里设置的值,要在$&lt;span class=&#34;caps&#34;&gt;VIMRUNTIME&lt;/span&gt;/lang里面找到对应的文件,才能进行转换,而在/usr/local/share/vim72/lang里面的中文文件名叫menu_zh_cn.utf-8.vim,但是我原来设置的是langmenu=zh-cn.utf8,所以找不到,只要改成zh_cn.utf-8就行了.现在菜单已经是中文了&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;标题和提示语句汉化的问题,又让我头疼了,无论怎么改选项,都没用,按说应该设置一句language&amp;nbsp;messages=zh_cn.utf-8就&lt;span class=&#34;caps&#34;&gt;OK&lt;/span&gt;了,可是设置已经起作用了,但是没有效果,这回google了半天,也没人说这个问题,在lang文件夹中,有一个&lt;span class=&#34;caps&#34;&gt;README&lt;/span&gt;.txt,里面有提到如果要改变提示的语言,要找src/po里面,make一下就行,可是我无论去哪里,都找不到po这个文件夹.后来想想,似乎在下载&lt;span class=&#34;caps&#34;&gt;VIM&lt;/span&gt;源码的时候,里面是有提到和lang有关的内容,赶快上去看,原来真的还有一个语言包,于是又下载了那个语言包,和前面下载的两个压缩包放在一起,在install.sh里面加了一句&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;tar xzf vim-7.2-lang.tar.gz
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;然后重新开始一次新的安装,等了几分钟,安装完成.&lt;/p&gt;
+&lt;p&gt;这回打开gvim,全中文的啦.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;            </content>
+        </entry>
+            <entry>
+            <title type="html">ln命令使用</title>
+            <author><name>newkedison</name></author>
+            <link href="/blog/how-to-use-ln-command.html"/>
+            <updated>2011-12-07T21:20:21Z</updated>
+            <published>2011-12-07T21:20:21Z</published>
+            <id>/blog/how-to-use-ln-command.html</id>
+                        <category   scheme="/blog/tags"
+                        term="shell"
+                        label="Shell" />
+            
+            <content type="html">
+                                &lt;h2&gt;基本语法&lt;/h2&gt;
+&lt;pre&gt;&lt;code&gt;$ ln source dest
+$ ln -s source dest
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;ln可以建立两种不同的链接，分别是：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;硬链接（Hard&amp;nbsp;Link）&lt;/p&gt;
+&lt;p&gt;如果ln后面不加-s，那么建立的是硬链接，硬链接弄出来的文件，和原来的文件其实是同一个文件，只不过是文件名不同而已，他们的inode是相同的，比如：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;$ echo test &amp;gt; f1
+$ ln f1 f2
+$ ll -i
+总用量 16
+6947817 drwxrwxr-x  2 user user 4096 2011-12-07 20:12 ./
+5242881 drwx------ 99 user user 4096 2011-12-07 20:11 ../
+6947818 -rw-rw-r--  2 user user    5 2011-12-07 20:11 f1
+6947818 -rw-rw-r--  2 user user    5 2011-12-07 20:11 f2
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;可以看到，f1和f2这两个文件的所有属性都是一样的（除了文件名）,
+现在这两个文件是完全等价，完全一样的，对其中一个进行修改，另外一个也会跟着改变,&amp;nbsp;但是假设删除了f1，并不会把f2也删除了，比如：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;$ echo test again &amp;gt;&amp;gt; f1
+$ cat f2
+test
+test again
+$ rm f1
+$ cat f2
+test
+test again
+$ ll -i
+总用量 12
+6947817 drwxrwxr-x  2 user user 4096 2011-12-07 20:16 ./
+5242881 drwx------ 99 user user 4096 2011-12-07 20:11 ../
+6947818 -rw-rw-r--  1 user user   16 2011-12-07 20:16 f2
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;可以看到，f2依旧存在，但是和上面的一组结果比较，可以看到，有一个数字从2变成了1,&amp;nbsp;这个数字表示的就是同一个inode，到底有多少个文件名&lt;/p&gt;
+&lt;p&gt;比如上面的“./”有两个，而“../”有99个“.”我们知道，表示当前文件夹，“..”表示上一级文件夹，其实这个功能，就是通过硬链接来实现的，我们新建一个文件夹的时候，系统会自动帮我们建立这两个硬链接，上面的“..”之所以有99个硬链接，是因为那个文件夹里面有大量的子文件夹，所以就相当于有了很多个硬链接。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;软链接（Symbolic&amp;nbsp;Link，也叫符号链接）&lt;/p&gt;
+&lt;p&gt;当ln命令加上-s参数时，创建的就是软链接了，比如（还接上面的环境）：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;$ ln -s f2 f3
+$ ll
+总用量 12
+drwxrwxr-x  2 user user 4096 2011-12-07 20:26 ./
+drwx------ 99 user user 4096 2011-12-07 20:11 ../
+-rw-rw-r--  1 user user   16 2011-12-07 20:16 f2
+lrwxrwxrwx  1 user user    2 2011-12-07 20:26 f3 -&amp;gt; f2
+$ echo again and again &amp;gt;&amp;gt; f2
+$ cat f3
+test
+test again
+again and again
+$ ll
+总用量 12
+drwxrwxr-x  2 user user 4096 2011-12-07 20:26 ./
+drwx------ 99 user user 4096 2011-12-07 20:11 ../
+-rw-rw-r--  1 user user   32 2011-12-07 20:27 f2
+lrwxrwxrwx  1 user user    2 2011-12-07 20:26 f3 -&amp;gt; f2
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;从上面可以看出几点：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;软链接的权限默认是777的，而且前面有个l，表示这是一个链接，可以看到刚才硬链接的时候，没有这个符号&lt;/li&gt;
+&lt;li&gt;软链接后面的文件名，会有一个箭头，表示他链接到了哪个文件&lt;/li&gt;
+&lt;li&gt;如果修改f2，然后查看f3的内容，可以看到有改变，这和硬链接是一样的，但是要注意到，f2的大小和修改时间都改变了，而f3的却没有改变，这和硬链接是不一样的。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2&gt;类比&lt;/h2&gt;
+&lt;p&gt;我觉得可以用C++做一个类比&lt;/p&gt;
+&lt;p&gt;软链接：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;int a = 1;
+int&amp;amp; b = a;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;软链接就像引用，虽然他们都访问同一个空间，但是b的存在是以a为前提的&lt;/p&gt;
+&lt;p&gt;硬链接：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;int value = 1;
+int* a = &amp;amp;value;
+int* b = &amp;amp;value;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;硬链接像指向同一个变量的两个指针，这两个指针并无主次之分，当然这里有点不太恰当的地方，就是硬链接的话，如果所有相同inode的文件都被删除了，那么这个文件就真的是被删除了，而在上面的语句中，没有这个效果。&lt;/p&gt;
+&lt;p&gt;如果还要和Windows的快捷方式比较的话，那快捷方式就类似于指针了&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;int a = 1;
+int* b = &amp;amp;a;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;软链接和快捷方式很相似，但是有区别，快捷方式实际上是一个扩展名是lnk的特殊文件，比如，如果用程序直接读取快捷方式，那么读取到的是这个lnk文件，而如果读取一个软链接，那么和读取实际的文件是完全等效的。&lt;/p&gt;
+&lt;h2&gt;软链接和硬链接的比较&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;硬链接出来的文件，和原来的文件共享一个inode，只增加了引用计数，而软链接出来的文件，inode不一样。&lt;/li&gt;
+&lt;li&gt;虽然硬链接出来的文件，实际并不会多增加占用的空间，但看起来的文件大小是和原来的文件一样的，而且是永远一样。软链接的文件大小一直是固定的，与原文件的大小无关&lt;/li&gt;
+&lt;li&gt;硬链接只能局限在同一个分区，同一种文件系统内部，不能跨分区进行硬链接，而软链接则没有这个限制&lt;/li&gt;
+&lt;li&gt;硬链接只能针对文件，而软链接可以针对文件夹。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2&gt;两种链接的使用场合&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;在大部分情况下，都建议使用软链接，因为限制较少，而且链接到哪很清晰&lt;/li&gt;
+&lt;li&gt;我想到的可能需要硬链接的地方&lt;ul&gt;
+&lt;li&gt;重要文件为了避免误删除，用硬链接到几个地方，只要至少一个地方存在，则文件就存在（当然，因为硬链接局限于同一分区，实际上这样弄的可靠性也有限，还是云存储比较靠谱）&lt;/li&gt;
+&lt;li&gt;将一些文件链接到dropbox文件夹，在同步的时候可以自动同步（这个不知道用软链接行不行，没测试过）&lt;/li&gt;
+&lt;li&gt;硬链接可以用于改变文件的目录，比如vim的Persistent&amp;nbsp;Undo，如果设置为将撤销树保存在和文件同一个目录，那么每次修改文件的时候，会有另外一个文件也跟着修改，这个撤销树的文件如果不希望放在当前文件夹，用软链接是没办法的，只能用硬链接。将其链接到其他的地方，那么撤销树文件，也将在那个新的目录。这样做的好处是，比如用DropBox同步一个文件夹，我们主要是为了同步实际的文件，其他辅助的文件并不重要，那么就可以用这种方法。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2&gt;其他&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;根据inode查找文件&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;$ find . -inum 1234567
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;软链接的注意点&lt;/p&gt;
+&lt;p&gt;一般最好cd到软链接所要放的位置，然后用&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;$ ln -s path/to/file .
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;因为等会在创建软链接时候，是直接复制&amp;#8221;/path/to/file&amp;#8221;这一段内容，不会自动改变成相对地址。所以要么写绝对地址，要么就用上面的方法&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;            </content>
         </entry>
             <entry>
             <title type="html">Python小知识</title>
@@ -664,5 +1921,230 @@ foo(1, 2, d=None, 5) 错误，有等号的参数后面不能再有没有等号�
 &lt;/code&gt;&lt;/pre&gt;
 &lt;/li&gt;
 &lt;/ol&gt;            </content>
+        </entry>
+            <entry>
+            <title type="html">Google Code使用介绍</title>
+            <author><name>newkedison</name></author>
+            <link href="/blog/how-to-use-google-code.html"/>
+            <updated>2011-12-04T20:58:10Z</updated>
+            <published>2011-12-04T20:58:10Z</published>
+            <id>/blog/how-to-use-google-code.html</id>
+                        <category   scheme="/blog/tags"
+                        term="google"
+                        label="Google" />
+                        <category   scheme="/blog/tags"
+                        term="SourceControl"
+                        label="Sourcecontrol" />
+            
+            <content type="html">
+                                &lt;p&gt;在Google Code上整了一个&lt;a href=&#34;https://code.google.com/p/newk-vimrc/&#34;&gt;项目&lt;/a&gt;试了一下，虽然过程还算坎坷，但是回想起来其实还是挺方便的。&lt;/p&gt;
+&lt;p&gt;目前暂时只有我自己的一个vimrc（&lt;span class=&#34;caps&#34;&gt;VIM&lt;/span&gt;的配置文件），以后考虑把自己用的一些插件放上去。&lt;/p&gt;
+&lt;p&gt;咱从头唠起吧：&lt;/p&gt;
+&lt;h2&gt;建立项目&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;首先，至少要有个Google账户吧，这个简单，申请个GMail邮箱就可以了。&lt;/li&gt;
+&lt;li&gt;然后打开：&lt;a href=&#34;https://code.google.com/hosting/&#34;&gt;https://code.google.com/hosting/&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;然后Google会提醒你，最好先搜索一下是否有类似的项目，加入一个现有项目会比新建一个项目更好，但是我们是要自己弄个项目来玩玩的，所以无视他，点击下面的”Create a new project&amp;nbsp;&amp;#8221;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;然后就是开始填表，简单的内容就不翻译了，注意其中两个地方&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Version control&amp;nbsp;system，就是选择用什么版本管理系统，&lt;span class=&#34;caps&#34;&gt;SVN&lt;/span&gt;我已经玩的比较熟了，Git据说比较复杂，所以最后我选择了Mercurial（中文是“汞”的意思，所以大家一般都是叫Hg），这个可以根据个人需要随便选择&lt;/li&gt;
+&lt;li&gt;还有一个Source code license ，让我们选用什么开源协议，反正这个属于自娱自乐的，所以选择什么协议都无所谓，我选的是&lt;span class=&#34;caps&#34;&gt;GNU&lt;/span&gt; Lesser&amp;nbsp;&lt;span class=&#34;caps&#34;&gt;GPL&lt;/span&gt;，也就是&lt;span class=&#34;caps&#34;&gt;LGPL&lt;/span&gt;，这是一种相对比较宽松的协议，好像&lt;span class=&#34;caps&#34;&gt;BSD&lt;/span&gt;协议也是比较宽松的，反正随便选吧。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;填好表后，项目就建立好了，可以跑到我们自己的项目主页看看了。这里说一下怎么打开自己的主页，最简单（最笨？）的办法，当然是记域名了，其实也还是很好记的。另外一种方法，就是在Google登陆后，打开code.google.com，在右上角的“ My&amp;nbsp;favorites&amp;#8221;上点击右侧向下的箭头，就可以看到项目的链接&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2&gt;项目主页介绍&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;Project&amp;nbsp;Home&lt;/p&gt;
+&lt;p&gt;这个页面是项目的主页，一般就是写一些这个项目的介绍，然后左侧也有一些信息，反正一看就懂&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Downloads&lt;/p&gt;
+&lt;p&gt;自己上传一些东西，给其他人下载，一般放的是每个Release版本的整个打包，这样可以方便别人下载，当然这不是必须的，我碰到几个开源项目就是没有提供打包好的版本下载，这个我个人觉得还是比较有必要的，虽然&lt;span class=&#34;caps&#34;&gt;SVN&lt;/span&gt;和Hg用起来都很简单（Git没用过不太清楚），但是很多Windows下的人还是没怎么用过这些版本控制软件，像我以前一样，有种天然的恐惧，所以提供每个Release版本的下载还是比较有必要的。&lt;/p&gt;
+&lt;p&gt;要上传的话，点击左上角“New&amp;nbsp;Download”按钮（这个名字起的太隐晦，导致一开始我老是找不到哪里可以上传），然后就可以上传文件了。上传时要注意文件名要先改好，一般就是项目名称+版本号，因为要求整个项目所有上传的文件名必须是唯一的，而且不能修改，所以一定要起好名字再上传，省得待会传错还得删除重传。&lt;/p&gt;
+&lt;p&gt;说到删除，点击一个已有的上传文件，然后可以找到“Delete&amp;nbsp;Download”按钮，点击后会再确认一次，Google建议一般不要删除文件，而是采用“标记为过时“的方法，这样，文件不会出现在默认的下载列表中，除非用户选择显示所有可下载内容，这样做的好处是，便于用户下载以前的版本。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Wiki&lt;/p&gt;
+&lt;p&gt;Wiki是一种很好的知识分享平台，在这里，项目中的所有人，可以把自己的一些心得体会写出来，然后其他人可以在后面评论。关于Wiki，我也只是有个大概的概念，不甚了解。&lt;/p&gt;
+&lt;p&gt;点击”New Page“按钮， 可以新建一个内容，要注意Page&amp;nbsp;name只能是大小写字母和数字，不能有空格，连字符等，这样做的目的，是为了方便以后创建链接（这个具体的操作我暂时还没试过），一般会在第一行写：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;#summary 这里写一句内容介绍
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;这样在Wiki列表中，就可以看到一个简短的介绍&lt;/p&gt;
+&lt;p&gt;Wiki是可以编辑的，在右上角有Edit按钮和Delete按钮。&lt;/p&gt;
+&lt;p&gt;另外，Wiki虽然是纯文本的，但是可以通过一些特殊的字符组合，来显示各种文字效果，具体的在写的时候，旁边有介绍，或者看&lt;a href=&#34;http://code.google.com/p/support/wiki/WikiSyntax&#34;&gt;这个网址&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Issue&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;这个其实就是一个Bug List或者Bug&amp;nbsp;Trace，用户可以在这里提交问题，提交错误，提交建议，然后管理员可以根据需要，接受，关闭或者其他操作，这些主要反映在issue的状态上，管理员可以修改这个状态，以表示当前的处理进度。已经处理完的issue，会自动隐藏，要看的话可以通过选择显示所有issue来查看。&lt;/p&gt;            </content>
+        </entry>
+            <entry>
+            <title type="html">nmap命令的使用及相关端口信息</title>
+            <author><name>newkedison</name></author>
+            <link href="/blog/how-to-use-nmap.html"/>
+            <updated>2011-12-03T14:13:38Z</updated>
+            <published>2011-12-03T14:13:38Z</published>
+            <id>/blog/how-to-use-nmap.html</id>
+                        <category   scheme="/blog/tags"
+                        term="bash"
+                        label="Bash" />
+                        <category   scheme="/blog/tags"
+                        term="command"
+                        label="Command" />
+            
+            <content type="html">
+                                &lt;p&gt;今天主要是想解决根据&lt;span class=&#34;caps&#34;&gt;IP&lt;/span&gt;如何找到对应的主机名，试了几个命令未果，然后找到了nmap命令，发现这个命令可以满足要求，而且同时还具有了很多我用不到的强大功能，可以说是一个万能的扫描软件，只要自己组合合适的命令，可以作为任何网络攻击的前期准备。&lt;/p&gt;
+&lt;p&gt;由于nmap参数太多，man太长，我又没有攻击别人的需要，所以这里只是记录一下我了解到的功能，弱水三千，我取这一瓢即可&lt;/p&gt;
+&lt;p&gt;一开始试了命令&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;$ nmap -A 192.168.1.88
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;等了大半天，终于出来结果(手工局部加码)：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;Starting Nmap 5.21 ( http://nmap.org ) at 2011-12-03 14:49 CST
+Nmap scan report for 192.168.1.88
+Host is up (0.019s latency).
+Not shown: 991 closed ports
+PORT     STATE SERVICE       VERSION
+80/tcp   open  http          Microsoft IIS webserver 5.1
+|_html-title: 
+135/tcp  open  msrpc         Microsoft Windows RPC
+139/tcp  open  netbios-ssn
+443/tcp  open  https?
+445/tcp  open  microsoft-ds  Microsoft Windows XP microsoft-ds
+873/tcp  open  rsync?
+1025/tcp open  msrpc         Microsoft Windows RPC
+2869/tcp open  http          Microsoft HTTPAPI httpd 1.0 (SSDP/UPnP)
+|_html-title: Site doesn&#39;t have a title (text/html).
+3389/tcp open  microsoft-rdp Microsoft Terminal Service
+Service Info: OS: Windows
+
+Host script results:
+|_nbstat: NetBIOS name: L, NetBIOS user: &amp;lt;unknown&amp;gt;, NetBIOS MAC: **:**:**:**:**:**
+|_smbv2-enabled: Server doesn&#39;t support SMBv2 protocol
+| smb-os-discovery:  
+|   OS: Windows XP (Windows 2000 LAN Manager)
+|   Name: USER\L
+|_  System time: 2011-12-03 14:54:05 UTC+8
+
+Service detection performed. Please report any incorrect results at http://nmap.org/submit/ .
+Nmap done: 1 IP address (1 host up) scanned in 133.46 seconds
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;可以看到，前面列出了这台电脑的可用端口，后面有一行&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;|_nbstat: NetBIOS name: L, NetBIOS user: &amp;lt;unknown&amp;gt;, NetBIOS MAC: **:**:**:**:**:**
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;NetBIOS name:&amp;nbsp;L说明这台电脑的主机名是L，我的要求实现了，但是存在一个缺点，速度太慢，可以看到，时间花了133秒才扫描出来，找一个主机名根本不需要这么久，大部分的时间都浪费在前面扫描端口上了&lt;/p&gt;
+&lt;p&gt;为了提高速度，我开始&lt;span class=&#34;caps&#34;&gt;RTFM&lt;/span&gt;，发现man实在太长，没心情看完，又开始Google，找到了不少资料，我觉得有用的有：
+&lt;a href=&#34;http://www.91ri.org/891.html&#34;&gt;这里&lt;/a&gt; &lt;span class=&#34;amp&#34;&gt;&amp;amp;&lt;/span&gt; &lt;a href=&#34;http://nmap.org/man/zh/index.html#man-description&#34;&gt;这篇man的中文翻译&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;看了这些资料，我对nmap的功能倒是了解的不少，但是可惜的是，我需要的功能（解析&lt;span class=&#34;caps&#34;&gt;IP&lt;/span&gt;对应的主机）还是找不到答案，还是只有-A参数能满足要求。&lt;/p&gt;
+&lt;p&gt;回头看看前面的提示，我注意到了这么一段&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;Host script results:
+|_nbstat: NetBIOS name: L, NetBIOS user: &amp;lt;unknown&amp;gt;, NetBIOS MAC: **:**:**:**:**:**
+|_smbv2-enabled: Server doesn&#39;t support SMBv2 protocol
+| smb-os-discovery:  
+|   OS: Windows XP (Windows 2000 LAN Manager)
+|   Name: USER\L
+|_  System time: 2011-12-03 14:54:05 UTC+8
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;第一句：Host script&amp;nbsp;results，这说明了下面的内容，不是nmap本身输出的，而是一个script输出的，所以理所当然的，nmap肯定没有对应的参数&lt;/p&gt;
+&lt;p&gt;但是，nmap有一个&amp;#8212;script的参数，可以指定执行某个script，这下看到了曙光，执行：&lt;/p&gt;
+&lt;p&gt;$ nmap &amp;#8212;script nbstat&amp;nbsp;192.168.1.88&lt;/p&gt;
+&lt;p&gt;结果如下(手工局部加码)：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;Starting Nmap 5.21 ( http://nmap.org ) at 2011-12-03 15:08 CST
+NSE: Script Scanning completed.
+Nmap scan report for 192.168.1.88
+Host is up (0.0074s latency).
+Not shown: 991 closed ports
+PORT     STATE SERVICE
+80/tcp   open  http
+135/tcp  open  msrpc
+139/tcp  open  netbios-ssn
+443/tcp  open  https
+445/tcp  open  microsoft-ds
+873/tcp  open  rsync
+1025/tcp open  NFS-or-IIS
+2869/tcp open  unknown
+3389/tcp open  ms-term-serv
+
+Host script results:
+| nbstat:  
+|   NetBIOS name: L, NetBIOS user: &amp;lt;unknown&amp;gt;, NetBIOS MAC: **:**:**:**:**:**
+|   Names
+|     L&amp;lt;00&amp;gt;                Flags: &amp;lt;unique&amp;gt;&amp;lt;active&amp;gt;
+|     USER&amp;lt;00&amp;gt;             Flags: &amp;lt;group&amp;gt;&amp;lt;active&amp;gt;
+|     L&amp;lt;20&amp;gt;                Flags: &amp;lt;unique&amp;gt;&amp;lt;active&amp;gt;
+|     USER&amp;lt;1e&amp;gt;             Flags: &amp;lt;group&amp;gt;&amp;lt;active&amp;gt;
+|     USER&amp;lt;1d&amp;gt;             Flags: &amp;lt;unique&amp;gt;&amp;lt;active&amp;gt;
+|_    \x01\x02__MSBROWSE__\x02&amp;lt;01&amp;gt;  Flags: &amp;lt;group&amp;gt;&amp;lt;active&amp;gt;
+
+Nmap done: 1 IP address (1 host up) scanned in 2.63 seconds
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;看时间，2.63秒，这速度很可以了，一般都可以接受，但是，前面在测试nmap命令的时候，已经发现了几个可以提高速度的办法，于是再试(为了节省篇幅，突出重点，下面只列出执行的命令，是否满足要求已经执行时间)：&lt;/p&gt;
+&lt;p&gt;(这个命令指定扫描80端口，是可以扫，但是无法列出主机名，失败)&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;$ nmap -p80 --script nbstat 192.168.1.88
+80/tcp open  http
+Nmap done: 1 IP address (1 host up) scanned in 1.17 seconds
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;(然后注意到了上面139端口的服务是netbios-ssn，所以扫一下139端口试试，这下可以满足要求了，时间也非常快)&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;$ nmap -p139 --script nbstat 192.168.1.88
+139/tcp open  netbios-ssn
+|   NetBIOS name: L, NetBIOS user: &amp;lt;unknown&amp;gt;, NetBIOS MAC: **:**:**:**:**:**
+Nmap done: 1 IP address (1 host up) scanned in 0.11 seconds
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;（又试扫了一下135，也同样成功）&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;$ nmap -p135 --script nbstat 192.168.1.88
+135/tcp open  msrpc
+|   NetBIOS name: L, NetBIOS user: &amp;lt;unknown&amp;gt;, NetBIOS MAC: **:**:**:**:**:**
+Nmap done: 1 IP address (1 host up) scanned in 0.16 seconds
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;（netBIOS也支持&lt;span class=&#34;caps&#34;&gt;UDP&lt;/span&gt;的，所以使用-sU参数进行&lt;span class=&#34;caps&#34;&gt;UDP&lt;/span&gt;扫描，同样可以扫到，但是因为没有指定端口，所以耗时较长，另外，-sU参数需要root权限才能执行，可以注意到，137端口的服务是netbios-ns，那么下面就只扫137）&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;$ sudo nmap -sU --script nbstat 192.168.1.88
+137/udp  open          netbios-ns
+|   NetBIOS name: L, NetBIOS user: &amp;lt;unknown&amp;gt;, NetBIOS MAC: **:**:**:**:**:**
+Nmap done: 1 IP address (1 host up) scanned in 4.07 seconds
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;（只扫137的&lt;span class=&#34;caps&#34;&gt;UDP&lt;/span&gt;，同样可以，速度也快）&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;$ sudo nmap -sU -p137 --script nbstat 192.168.1.88
+137/udp open  netbios-ns
+|   NetBIOS name: L, NetBIOS user: &amp;lt;unknown&amp;gt;, NetBIOS MAC: **:**:**:**:**:**
+Nmap done: 1 IP address (1 host up) scanned in 0.32 seconds
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;（比较下来，还是用&lt;span class=&#34;caps&#34;&gt;TCP&lt;/span&gt;扫139合适，速度快，还不需要root，现在再加上其他参数提速，-P0使得nmap不测试指定&lt;span class=&#34;caps&#34;&gt;IP&lt;/span&gt;是否存在，直接开始扫，-sT指定只用&lt;span class=&#34;caps&#34;&gt;TCP&lt;/span&gt;协议，从结果来看，反而比刚才慢，但是实际上是不慢的，因为不连续执行，差个几十毫秒也是正常，而且nmap可能有一定的缓存时间，第一次用nmap确认一个ip存在后，一段时间内不会再去确认，就和加上-P0参数的效果是一样的，这里手动加上-P0，可以确保在任何时候都一样快）&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;$ nmap -P0 -sT -p139 --script nbstat 192.168.1.88
+139/tcp open  netbios-ssn
+|   NetBIOS name: L, NetBIOS user: &amp;lt;unknown&amp;gt;, NetBIOS MAC: **:**:**:**:**:**
+Nmap done: 1 IP address (1 host up) scanned in 0.13 seconds
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;（再加一个参数-T4，我也没太搞明白这个参数是干嘛用的，但是在所有nmap命令上加上这个参数后，速度都有一定的提高，所以就加上吧）&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;$ nmap -P0 -sT -p139 -T4 --script nbstat 192.168.1.88
+139/tcp open  netbios-ssn
+|   NetBIOS name: L, NetBIOS user: &amp;lt;unknown&amp;gt;, NetBIOS MAC: **:**:**:**:**:**
+Nmap done: 1 IP address (1 host up) scanned in 0.09 seconds
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;好了，到目前为止，已经完全满足要求了，下面再补充一些在解决问题的过程中，学习到的知识&lt;/p&gt;
+&lt;h2&gt;139，135端口&lt;/h2&gt;
+&lt;p&gt;这两个端口都是netbios协议占用的，只要windows主机，安装了NetBIOS协议，或者说只要可以访问共享文件，那这两个端口一般是打开的，&lt;/p&gt;
+&lt;p&gt;139是&lt;span class=&#34;caps&#34;&gt;TCP&lt;/span&gt;，135的&lt;span class=&#34;caps&#34;&gt;UDP&lt;/span&gt;，具体的作用我懒的去复制，反正就是和共享文件有关，通过这两个端口，可以查询共享文件，登录用户名，操作系统等信息，&lt;/p&gt;
+&lt;p&gt;网上也有好多貌似专业的135，139漏洞攻击方法，实际上大部分都是在危言耸听，这两个端口如果设置的不好，确实会有安全漏洞，但是，&lt;span class=&#34;caps&#34;&gt;XP&lt;/span&gt;的默认配置应该安全性还是可以的，不可能说只要开放这个端口，计算机就有危险，&lt;/p&gt;
+&lt;p&gt;那些所谓教程，都是需要很高的权限才能实现，但是如果有这么高的权限，那随便怎么弄，都是可以轻松入侵的。就跟你把家里的钥匙贴在大门上（还贴个字条说这是我的钥匙），然后忘记关窗户一样，正常的小偷肯定是开门进来而不会去翻窗户的&lt;/p&gt;
+&lt;h2&gt;nmap的其他参数&lt;/h2&gt;
+&lt;p&gt;-sS 使用半开&lt;span class=&#34;caps&#34;&gt;TCP&lt;/span&gt;进行测试，关于半开连接，可以参考有关资料（我大概了解，但是写起来太浪费时间），半开连接的好处是可以避免大部分系统把这个连接记录到系统日至，这对入侵者当然很重要了，总不能去别人家里偷东西，还留个手机号码吧。如果使用这个参数，需要root权限，我估计应该是用raw socket实现的，所以需要root权限
+-v 这个参数可以出现多次，表示需要nmap现实更详细的报告，还是更更详细的报告，还是更更更详细的报告
+另外，&lt;span class=&#34;caps&#34;&gt;IP&lt;/span&gt;的表示方法有很多种，比如
+     192.168.1.88这种是单个&lt;span class=&#34;caps&#34;&gt;IP&lt;/span&gt;，
+     192.168.1,2.88表示192.168.1.88和192.168.2.88
+     192.168.1-254.88表示254个&lt;span class=&#34;caps&#34;&gt;IP&lt;/span&gt;
+     192.168.1-2,4-100.2,3,12-15表示很多个&lt;span class=&#34;caps&#34;&gt;IP&lt;/span&gt;（-.-!)
+     192.168.1.0/24是另一种表示方法，和192.168.1.0-255等效，后面的24表示这个&lt;span class=&#34;caps&#34;&gt;IP&lt;/span&gt;的前24bit保持不变，后面的8bit遍历所有可能
+     192.168.1.0/0&amp;nbsp;这个将扫描整个网络，相信没谁有时间等到扫描完&lt;/p&gt;
+&lt;h2&gt;nmap部分示例&lt;/h2&gt;
+&lt;p&gt;扫描192.168.1和192.168.18这两个网段哪些&lt;span class=&#34;caps&#34;&gt;IP&lt;/span&gt;开着&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;$ nmap -sP -T4 192.168.1,18.1-254
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;这里-sP表示仅进行ping测试，即使主机存在，也不进行端口扫描，这样可以节省时间&lt;/p&gt;            </content>
         </entry>
     </feed>

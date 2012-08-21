@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html>
+  <head>
+        <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Git常用命令及使用心得 | newk's blog</title>
+    <meta name="description" content="Git陡峭的学习曲线，使得我实在无法光靠脑子记住那么多的命令，未免同样的问题一遍又一遍的Google，还是记录下来比较好">
+    <meta name="author" content="newkedison">
+    <meta name="viewport" content="">
+    <meta name="keywords" content="git, SourceControl, ">
+
+        <link href="/media/css/bootstrap.css" rel="stylesheet">
+    <link href="/media/css/style.css" rel="stylesheet">
+        
+
+
+            
+    
+    <script src="/media/js/libs/modernizr-2.5.3-respond-1.1.0.min.js"></script>
+    
+    <link rel="stylesheet" href="/media/css/styles/tomorrow-night.css">
+<script src="/media/js/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+  </head>
+
+  <body class="how-to-use-git">
+<!--[if lt IE 7]><p class=chromeframe>Your browser is <em>ancient!</em> <a href="http://browsehappy.com/">Upgrade to a different browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to experience this site.</p><![endif]-->
+
+    
+    <div class="navbar navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+          <ul class="nav">
+            <li class="active">
+              <a class="brand" href="/index.html">newk's blog</a>
+            </li>
+                        <ul class="nav">
+<li><a href="/index.html">Home</a></li><li><a href="/blog/index.html">Blog</a></li><li><a href="/about.html">About</a></li></ul>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+      
+                
+<div class="popover-title">
+    <h1>
+    Git常用命令及使用心得      </h1>
+  </div>
+
+<div class="popover-content">
+  <div class="row">
+    <div class="span9">
+      <div class="content">
+        <p title="2012-01-14 Sat 18:18:15">
+            Posted: Sat, 2012-01-14
+        </p>
+
+                <div>
+          tags: 
+                      <a class="btn small" 
+               href="/blog/tags/git.html">
+              git
+            </a>
+                      <a class="btn small" 
+               href="/blog/tags/SourceControl.html">
+              SourceControl
+            </a>
+                  </div>
+        
+        <hr />
+
+        <h2>本文约定</h2>
+<ol>
+<li>如无特别说明，“git add“， ”git-add“，”add“都指的是”git add“这个命令，其他类似</li>
+<li>所有$开头的行，都是指命令行输入的内容</li>
+</ol>
+<h2>一般提交流程</h2>
+<ol>
+<li>
+<p>首先把当前改动的内容，先加入暂存区（后文详述）</p>
+<pre><code>$ git add .
+</code></pre>
+<p>也可以指定文件名以实现只加入部分改变</p>
+</li>
+<li>
+<p>提交到本地仓库，用-m参数指定提交说明，不能为空，否则提交失败</p>
+<p>如果不用-m，则会调用文本输入工具，让我们输入，反正就是不允许没有任何说明的提交</p>
+<pre><code>$ git commit -m "....."
+</code></pre>
+</li>
+<li>
+<p>如果决定要同步到中心库，则用git-push</p>
+<pre><code>$ git push
+</code></pre>
+<p>输入密码后，正常来说就可以提交成功了。</p>
+</li>
+</ol>
+<p>注意：</p>
+<ol>
+<li>可以多次commit后，一次性push</li>
+<li>
+<p>用以下命令，可以省略git-add，-a是和--all等效，表示把所有修改放入暂存区</p>
+<pre><code>$ git commit -a -m "...."
+</code></pre>
+</li>
+</ol>
+<h2>暂存区（staging area）</h2>
+<p>git在提交的时候，有一个暂存区的概念，所有的修改，不会自动放入暂存区，必须手动使用git-add命令，才能把修改加入暂存区，而只有在暂存区的修改，才会在下一次commit时被提交到本地仓库</p>
+<p>所以，git-add的概念和SVN以及Hg不同，并不只是把原来没有在版本库中的文件加入版本管理，即使是修改过的文件，也需要add，另外，在merge的时候，add可以把解决好的冲突加入暂存区</p>
+<p>使用git-status命令，可以看到，如果是新增文件，状态是untracked，而如果是修改了文件，状态是not staged，这两种状态，都可以通过git-add，将其加入暂存区</p>
+<p>另外，使用git add -i命令，可以交互式的进行add操作，省却输文件名的麻烦</p>
+<p>如果是新增的文件，一开始状态是Untracked，执行git-add后，状态是staged，如果要取消，可以用</p>
+<pre><code>$ git reset HEAD &lt;文件名&gt;
+</code></pre>
+<p>如果是修改文件，一开始状态是Unstaged，执行git-add后，变成staged，如果要取消，也是用上面的命令</p>
+<p>另外，如果文件已修改，但是还没add，状态是unstaged的时候，想放弃修改，恢复原来的版本，也就是实现revert的功能，则用</p>
+<pre><code>$ git checkout &lt;文件名&gt;
+</code></pre>
+<p>如果是误删除的文件, 也是通过checkout来恢复, 直接<code>git checkout .</code>就可以了</p>
+<p>暂时发现暂存区的一个作用</p>
+<p>在提交之前，可能我们修改了多个文件，这些修改可能不是针对同一个问题的修改，我们不希望这些文件被一次性commit，那么可以先将部分文件加入暂存区，先commit，然后再把剩下的全部或者部分文件加入暂存区，继续commit。</p>
+<h2>使用vim编写提交说明</h2>
+<p>默认的编写提交说明的工具，是古董级的nano，相当不好用，所以有必要换成vim</p>
+<p>参考<a href="http://imtx.me/archives/1201.html">这里</a>有好几种办法, 我用的是</p>
+<pre><code>$ export EDITOR=vim
+</code></pre>
+<p>另外还可以修改.git/config文件，在core段，加入editor=vim这一句（我还没测试过，不过应该好使）</p>
+<p>如果使用</p>
+<pre><code>$ git commit --verbose
+</code></pre>
+<p>提交，还可以在提交的内容上，同时显示diff的结果，不过要注意，这些结果是没有被注释的
+也就是说，提交的时候，也会作为提交说明，如果这不是需要的行为，必须把这些内容注释掉</p>
+<h2>让Git记住Google Code的用户名和密码</h2>
+<p>在git-push的时候，需要输入用户名和密码，每次输入相当的麻烦，这时候可以借助~/.netrc文件，让git记住我们在Google Code上的密码</p>
+<p>其实Google Code的Source的CheckOut页面，上面已经写了方法，不过我一开始没有完全按照上面的步骤操作，导致总是没测试成功</p>
+<p>首先要在~/.netrc文件添加以下内容（局部手工打码）</p>
+<p>文件: ~/.netrc</p>
+<pre><code>machine code.google.com
+login **********@gmail.com 
+password *****************
+</code></pre>
+<p>login后面是邮箱名，password后面是密码，这个密码可以是邮箱密码，也可以是另外一个Googe生成的，专用于Google Code的密码</p>
+<p>因为这个文件是明文，Google为了保护我们的邮箱密码，专门为Google Code自动生成一个随机密码，</p>
+<p>只要登陆着，然后访问<a href="https://code.google.com/hosting/settings">https://code.google.com/hosting/settings</a>, 就可以看到这个随机密码，我们访问Google Code的时候，这个密码的作用和邮箱密码一样</p>
+<p>如果这个随机密码泄露，也没必要担心，只要点击“Regenerate”按钮，即可重新生成一个，前面的那个自动作废</p>
+<p>我一开始这么设置了之后，发现每次push的时候，还是要密码，后来检查".git/config"文件，里面有这么一行(局部手工打码)</p>
+<pre><code>url = https://**********@code.google.com/p/my-study-notes/
+</code></pre>
+<p>里面已经写了我的邮箱名，这样本来是可以省去填写用户名，但是带来的副作用就是密码就不会自动读取~/.netrc的设置了，所以，把这行改为</p>
+<pre><code>url = https://code.google.com/p/my-study-notes/
+</code></pre>
+<p>这样用户名就没有了，git会自动先去~/.netrc中寻找</p>
+<h2>git-diff</h2>
+<p>git-diff用于比较当前的文件有哪些改变，通过不同的参数，可以比较不同的内容：</p>
+<pre><code>$ git diff [filename]
+</code></pre>
+<p>比较暂存区中的内容和暂时没有放到暂存区的内容的区别，也就是从上一次git-add过后被修改过的内容</p>
+<pre><code>$ git diff --cached [filename]
+</code></pre>
+<p>比较暂存区中和上一次commit的内容，也就是执行$git commit时会提交的内容</p>
+<pre><code>$ git diff HEAD [filename]
+</code></pre>
+<p>比较当前文件和上一次commit的内容，也就是执行$git commit -a时会提交的内容</p>
+<pre><code>$ git diff test
+</code></pre>
+<p>不是和当前分支比较，而是和test分支比较</p>
+<pre><code>$ git diff HEAD^ HEAD
+</code></pre>
+<p>比较当前分支前面两次commit之间改变了什么，也就是上一次commit修改了什么</p>
+<p>另外，还有一些参数，可以配合上面的命令</p>
+<ul>
+<li>--diff-filter=[(A|C|D|M|R|T|U|X|B)]</li>
+</ul>
+<p>仅列出（增加|复制|删除|修改|重命名|类型变化（比如文件变成文件夹）|未合并（Unmerge）|未知（Unknown）|损坏（Broken））的变化，这些字母可以任意多少个以任意顺序组合</p>
+<ul>
+<li>
+<p>--name-status</p>
+<p>仅用一个字母表示每个文件的状态，不列出具体修改，字母的意思和上面的一样</p>
+</li>
+<li>
+<p>--ignore-space-at-eol</p>
+<p>忽略行尾的空格</p>
+</li>
+<li>
+<p>-b, --ignore-space-change</p>
+<p>忽略行尾空格，而且连续多个空格均认为是一个空格</p>
+</li>
+<li>
+<p>-w, --ignore-all-space</p>
+<p>忽略所有空格</p>
+</li>
+<li>
+<p>--exit-code</p>
+<p>设定git-diff的返回值与diff命令一致，1表示有区别，0表示没有区别</p>
+</li>
+<li>
+<p>--quiet</p>
+<p>不产生任何输出，同时自动定义--exit-code</p>
+</li>
+</ul>
+<p>PS：</p>
+<ol>
+<li>有时候为了避免歧义，区分是分支名字还是文件名，在文件名前面加上" -- "，注意和文件名之间要有空格</li>
+<li>可以比较任意两个历史commit之间的区别，先要用git-log看这两个commit的hash值，然后用
+        $ git diff 0123456 abcdef0</li>
+</ol>      </div>
+    </div>
+    <div class="span3">
+      <div class="sidebar">
+                <nav class="post_nav">
+        <a class="backlink" href="/blog">
+        &#x2190;返回文章列表</a>
+        <br /><br />
+        <div class="prev">
+        &#x00AB;前一篇文章<br />
+                <a title="2012-01-14"
+           href="/blog/useful-bash-commands.html">
+           Bash常用命令
+        </a>
+                </div>
+        <br />
+        <div class="next">
+        后一篇文章&#x00BB;<br />
+                <a title="2012-01-02"
+           href="/blog/how-to-use-shared-library.html">
+           共享库的生成与使用
+        </a>
+                </div>
+            </div>
+    </div>
+  </div>
+</div>
+
+<hr>
+
+
+
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+var disqus_shortname = 'newk-blog';
+
+/* * * DON'T EDIT BELOW THIS LINE * * */
+(function() {
+ var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+ dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+ (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+ })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink" target=_blank>comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+
+      <footer>
+                <p>Created by <a href="http://newkedison.tk">newkedison</a></p>
+              </footer>
+
+          </div> <!-- /container -->
+
+        
+                        <script>window.jQuery || document.write('<script src="/media/js/libs/jquery-1.7.2.min.js">\x3C/script>')</script>
+    
+            
+        
+        <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-15769172-5']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+    
+      </body>
+</html>

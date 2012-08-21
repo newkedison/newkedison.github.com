@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html>
+  <head>
+        <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Django 安装及使用 | newk's blog</title>
+    <meta name="description" content="Django 安装及使用">
+    <meta name="author" content="newkedison">
+    <meta name="viewport" content="">
+    <meta name="keywords" content="django, python, ">
+
+        <link href="/media/css/bootstrap.css" rel="stylesheet">
+    <link href="/media/css/style.css" rel="stylesheet">
+        
+
+
+            
+    
+    <script src="/media/js/libs/modernizr-2.5.3-respond-1.1.0.min.js"></script>
+    
+    <link rel="stylesheet" href="/media/css/styles/tomorrow-night.css">
+<script src="/media/js/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+  </head>
+
+  <body class="how-to-use-django">
+<!--[if lt IE 7]><p class=chromeframe>Your browser is <em>ancient!</em> <a href="http://browsehappy.com/">Upgrade to a different browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to experience this site.</p><![endif]-->
+
+    
+    <div class="navbar navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+          <ul class="nav">
+            <li class="active">
+              <a class="brand" href="/index.html">newk's blog</a>
+            </li>
+                        <ul class="nav">
+<li><a href="/index.html">Home</a></li><li><a href="/blog/index.html">Blog</a></li><li><a href="/about.html">About</a></li></ul>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+      
+                
+<div class="popover-title">
+    <h1>
+    Django 安装及使用      </h1>
+  </div>
+
+<div class="popover-content">
+  <div class="row">
+    <div class="span9">
+      <div class="content">
+        <p title="2012-02-26 Sun 19:50:53">
+            Posted: Sun, 2012-02-26
+        </p>
+
+                <div>
+          tags: 
+                      <a class="btn small" 
+               href="/blog/tags/django.html">
+              django
+            </a>
+                      <a class="btn small" 
+               href="/blog/tags/python.html">
+              python
+            </a>
+                  </div>
+        
+        <hr />
+
+        <h2>Windows下的安装</h2>
+<h3>下载：</h3>
+<ul>
+<li>Python: <a href="http://www.python.org">http://www.python.org</a><br />
+</li>
+<li>Django: <a href="https://www.djangoproject.com/download/">https://www.djangoproject.com/download/</a><br />
+</li>
+<li>Apache: <a href="http://www.apache.org">http://www.apache.org</a>这个是官网，
+        下载镜像列表在：<a href="http://www.apache.org/dyn/closer.cgi">http://www.apache.org/dyn/closer.cgi</a>
+        一般选那个推荐的镜像，然后是一个FTP列表，找到httpd里面的win32
+        然后下载需要的版本即可</li>
+<li>MySQL-python：官网：<a href="http://sourceforge.net/projects/mysql-python/">http://sourceforge.net/projects/mysql-python/</a>
+              但是没有对应于pyhton2.7的发布，可以到：
+              <a href="http://www.lfd.uci.edu/~gohlke/pythonlibs/#mysql-python">http://www.lfd.uci.edu/~gohlke/pythonlibs/#mysql-python</a>下载</li>
+<li>MySQL：<a href="http://www.mysql.com/downloads/installer/">http://www.mysql.com/downloads/installer/</a><br />
+</li>
+<li>mod_wsgi：<a href="http://code.google.com/p/modwsgi/wiki/DownloadTheSoftware?tm=2">http://code.google.com/p/modwsgi/wiki/DownloadTheSoftware?tm=2</a><br />
+</li>
+</ul>
+<h3>安装Django：</h3>
+<p>解压后，运行</p>
+<pre><code>python setup.py install
+</code></pre>
+<p>安装后，运行python命令，然后可以</p>
+<pre><code>&gt;&gt;&gt; import django
+&gt;&gt;&gt; django.VERSION
+</code></pre>
+<p>如果看到版本号，说明安装成功</p>
+<p>把安装目录下（比如：D:\Python27\lib\site-packages\django）下面的bin文件夹
+加入系统的path变量，这样以后使用其中的django-admin.py命令时，才不需要打路径</p>
+<h3>安装Apache：</h3>
+<p>直接运行下载下来的exe文件</p>
+<p>安装后，用浏览器访问127.0.0.1，如果看到“It works！”说明安装成功</p>
+<h2>第一个项目</h2>
+<ol>
+<li>
+<p>随便找一个文件夹，用命令行执行：</p>
+<pre><code>django-admin.py startproject mysite
+</code></pre>
+<p>这样会生成mysite目录，里面有四个文件：</p>
+<p>__init__.py 空文件，用来告诉python这个文件夹可以作为一个package<br />
+settings.py 里面是一些设置，暂时不用管<br />
+urls.py     url对应设置，暂时也不用管<br />
+manage.py   一个纯python的Web Server，用于快速开发，因为我们有了apache，所以不管<br />
+</p>
+</li>
+<li>
+<p>在这个文件夹中，新建两个文件，内容如下：</p>
+<p>假设刚才创建的文件夹在：C:\django_test\mysite\</p>
+<p>文件名: apache.conf</p>
+<pre><code>#这是apache配置的一部分，在apache的httpd.conf最后，要加上一句（不含前面的#号）
+#Include "C:/django_test/mysite/apache.conf"
+#修改此文件后，需要重启apache服务
+
+#把网站的访问导向mysite.wsgi文件，后面的事情就让django接管了
+WSGIScriptAlias / "C:/django_test/mysite/mysite.wsgi"
+#设定访问权限，这个项目比较简单，开放所有权限即可，实际的项目需要很小心的配置
+#这是属于apache的管辖范围，相关资料要查阅apache的配置文件写法
+&lt;Directory "C:/django_test/mysite"&gt;
+Allow from all
+&lt;/Directory&gt;
+</code></pre>
+<p>文件名: mysite.wsgi</p>
+<pre><code>import os, sys
+#这个路径会是C:\django_test\mysite，没什么用
+setting_path = os.path.dirname(__file__)
+#这个路径会是C:\django_test，后面一句把它加入path环境变量
+#这样django才能找到需要的文件
+project_path = os.path.dirname(setting_path)
+sys.path.append(project_path)
+
+#这句必须有，指定配置文件的位置，因为上面把C:\django_test加入path环境变量
+#所以这里是mysite.settings，如果上面把C:\django_test\mysite加入path，
+#那么这里就写settings
+os.environ['DJANGO_SETTINGS_MODULE'] = 'mysite.settings'
+#启动django，开始显示网页
+import django.core.handlers.wsgi
+application = django.core.handlers.wsgi.WSGIHandler()
+</code></pre>
+<p>现在，访问<a href="http://127.0.0.1/">http://127.0.0.1/</a>，如无意外，应可以看到一个“It worked!”页面</p>
+<p>当然，如果出现意外，那也是正常的，调试的技巧参考"[调试技巧]"小节</p>
+</li>
+</ol>
+<h2>调试技巧</h2>
+<ol>
+<li>
+<p>无敌的print</p>
+<p>据称，无论任何语言编写的程序，只要能输出调试语句，那么90%以上的问题都可以解决</p>
+<p>在python+django+apache的环境下，可以利用apache的错误日志来辅助调试</p>
+<p>在任何可以执行到的代码中，使用：</p>
+<pre><code>print &gt;&gt; sys.stderr, "this is debug info"
+</code></pre>
+<p>就可以在apache的错误日志中找到该行输出。apache的错误日志可以通过httpd.conf配置，
+默认的位置在安装目录下的logs\error.log</p>
+</li>
+<li>
+<p>利用出错页面</p>
+<p>django默认是开启调试模式的，如果代码出现异常，会出现一个包含丰富调试信息的页面，
+这个页面包括了错误的位置，调用堆栈，还有当前局部变量的值，所以，有时候我们可以
+自己引发一个错误，然后到错误页面查看需要的信息，和打断点差不多，不过就是不能继续
+执行</p>
+<p>引发错误的方法有很多，使用assert算是比较方便的，在需要停止的地方，加入：</p>
+<pre><code>assert False
+</code></pre>
+<p>然后就去分析错误页面的数据吧</p>
+</li>
+</ol>      </div>
+    </div>
+    <div class="span3">
+      <div class="sidebar">
+                <nav class="post_nav">
+        <a class="backlink" href="/blog">
+        &#x2190;返回文章列表</a>
+        <br /><br />
+        <div class="prev">
+        &#x00AB;前一篇文章<br />
+                <a title="2012-03-21"
+           href="/blog/how-to-generate-qr-code.html">
+           如何生成QR码
+        </a>
+                </div>
+        <br />
+        <div class="next">
+        后一篇文章&#x00BB;<br />
+                <a title="2012-02-06"
+           href="/blog/tips-for-gnome-terminal.html">
+           gnome-terminal技巧
+        </a>
+                </div>
+            </div>
+    </div>
+  </div>
+</div>
+
+<hr>
+
+
+
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+var disqus_shortname = 'newk-blog';
+
+/* * * DON'T EDIT BELOW THIS LINE * * */
+(function() {
+ var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+ dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+ (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+ })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink" target=_blank>comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+
+      <footer>
+                <p>Created by <a href="http://newkedison.tk">newkedison</a></p>
+              </footer>
+
+          </div> <!-- /container -->
+
+        
+                        <script>window.jQuery || document.write('<script src="/media/js/libs/jquery-1.7.2.min.js">\x3C/script>')</script>
+    
+            
+        
+        <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-15769172-5']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+    
+      </body>
+</html>

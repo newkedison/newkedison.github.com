@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html>
+  <head>
+        <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>安装VIM | newk's blog</title>
+    <meta name="description" content="编译安装vim7.3的心得记录">
+    <meta name="author" content="newkedison">
+    <meta name="viewport" content="">
+    <meta name="keywords" content="vim, ">
+
+        <link href="/media/css/bootstrap.css" rel="stylesheet">
+    <link href="/media/css/style.css" rel="stylesheet">
+        
+
+
+            
+    
+    <script src="/media/js/libs/modernizr-2.5.3-respond-1.1.0.min.js"></script>
+    
+    <link rel="stylesheet" href="/media/css/styles/tomorrow-night.css">
+<script src="/media/js/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+  </head>
+
+  <body class="install-vim">
+<!--[if lt IE 7]><p class=chromeframe>Your browser is <em>ancient!</em> <a href="http://browsehappy.com/">Upgrade to a different browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to experience this site.</p><![endif]-->
+
+    
+    <div class="navbar navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+          <ul class="nav">
+            <li class="active">
+              <a class="brand" href="/index.html">newk's blog</a>
+            </li>
+                        <ul class="nav">
+<li><a href="/index.html">Home</a></li><li><a href="/blog/index.html">Blog</a></li><li><a href="/about.html">About</a></li></ul>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+      
+                
+<div class="popover-title">
+    <h1>
+    安装VIM      </h1>
+  </div>
+
+<div class="popover-content">
+  <div class="row">
+    <div class="span9">
+      <div class="content">
+        <p title="2011-12-11 Sun 21:33:03">
+            Posted: Sun, 2011-12-11
+        </p>
+
+                <div>
+          tags: 
+                      <a class="btn small" 
+               href="/blog/tags/vim.html">
+              vim
+            </a>
+                  </div>
+        
+        <hr />
+
+        <h2>前言</h2>
+<p>第四次编译安装vim，这次是在一个VPS上全新安装的，和以前的不同点在于：</p>
+<ol>
+<li>
+<p>VPS是通过SSH登陆的，没有GUI，所以gvim就不需要了（其实即使在现在的系统，gvim我
+也已经好久没用过了，下一次其实不安装也可以）</p>
+</li>
+<li>
+<p>为了减少麻烦，LUA和Perl接口都不编译了，反正我近期是不可能用这两个的</p>
+</li>
+<li>
+<p>由于系统是Ubuntu10.04，apt-get能安装的最新版本居然只有7.2，所以必须自己用
+源码来装</p>
+</li>
+</ol>
+<h2>下载源码</h2>
+<p>还是通过hg把整个版本库clone下来了，好像有80多M，不过VPS下载速度很快，可能是因为
+主机在美国的原因吧。</p>
+<p>这次的版本是V7.3.496</p>
+<h2>改Makefile</h2>
+<p>修改src/Makefile，修改项如下：</p>
+<pre><code>327c327
+&lt; #CONF_OPT_GUI = --disable-gui
+---
+&gt; CONF_OPT_GUI = --disable-gui
+395c395
+&lt; #CONF_OPT_FAIL = --enable-fail-if-missing
+---
+&gt; CONF_OPT_FAIL = --enable-fail-if-missing
+422c422
+&lt; #CONF_OPT_PYTHON = --enable-pythoninterp
+---
+&gt; CONF_OPT_PYTHON = --enable-pythoninterp
+442c442
+&lt; #CONF_OPT_CSCOPE = --enable-cscope
+---
+&gt; CONF_OPT_CSCOPE = --enable-cscope
+460c460
+&lt; #CONF_OPT_MULTIBYTE = --enable-multibyte
+---
+&gt; CONF_OPT_MULTIBYTE = --enable-multibyte
+501c501
+&lt; #CONF_OPT_FEAT = --with-features=huge
+---
+&gt; CONF_OPT_FEAT = --with-features=huge
+504c504
+&lt; #CONF_OPT_COMPBY = "--with-compiledby=John Doe &lt;JohnDoe@yahoo.com&gt;"
+---
+&gt; #CONF_OPT_COMPBY = "--with-compiledby=newkedison &lt;newkedison@gmail.com&gt;"
+</code></pre>
+<p>主要的区别是打开了这两个配置</p>
+<pre><code>CONF_OPT_GUI = --disable-gui
+CONF_OPT_FAIL = --enable-fail-if-missing
+</code></pre>
+<p>第一个是取消gui，也就是不安装gvim，第二个是如果哪些接口不满足的话，就停止编译，
+这个选项很好，省了我很多的事情，因为默认的情况下，如果一些接口找不到，只要不影响
+编译，还是会继续编译下去，然后最后就少了这个接口，这还不如在编译的时候就提示，我
+才能明确的知道缺哪些接口，而不需要去那长的要命的config.log里面找
+其他的和以前没区别</p>
+<h2>编译</h2>
+<p>执行</p>
+<pre><code>$ make
+</code></pre>
+<p>编译，提示找不到编译器，我晕，居然连gcc都还没装，于是</p>
+<pre><code>$ sudo apt-get install gcc
+$ sudo apt-get install g++
+$ sudo apt-get install build-essential
+</code></pre>
+<p>原来装gcc时不会自动赠送g++，所以要再装g++，后来搜了一下，说用最后一个就可以了，
+反正我这三个都执行了一遍</p>
+<p>第二次make，提示找不到python接口，我的python是装了，但python-dev没装，于是</p>
+<pre><code>$ sudo apt-get install python-dev
+</code></pre>
+<p>第三次make，提示找不到ncurses，于是</p>
+<pre><code>$ sudo apt-get install ncurses-dev
+</code></pre>
+<p>第四次make成功，然后</p>
+<pre><code>$ sudo make install
+</code></pre>
+<p>也成功</p>
+<h2>测试</h2>
+<p>执行</p>
+<pre><code>$ vim
+</code></pre>
+<p>虽然能打开，但是提示了一堆错误。</p>
+<p>这个时候，我已经用git把我自己用的.vim同步下来放好了，仔细看看提示的信息，都是在
+报一些插件的错误，主要引起错误的原因是续行符，大量出现这样的错误提示</p>
+<pre><code>E10: \ should be followed by /, ? or &amp;
+</code></pre>
+<p>搜索了一下，原来是忘记关闭兼容模式了，而原因是我光把.vim弄好了，没有把.vimrc放好
+所以把.vimrc放在正确的位置后，那些错误就没有了</p>
+<p>但是出现了另外一个错误，因为VPS上没有装中文包，所以.vimrc里面一些zh_CN的就有问题
+我把他们都去掉了</p>
+<h2>总结</h2>
+<p>这次安装很顺利，可能是已经多次安装，没什么挑战性了吧。</p>
+<hr />
+<p>以下是以前第三次安装时写的心得</p>
+<hr />
+<h2>前言</h2>
+<p>这次应该是第三次编译安装VIM了，以前第一次编译的时候写了一篇文章，这次也写一下吧
+重新编译的动机，是因为</p>
+<pre><code>$ vim --version | grep python
+</code></pre>
+<p>看到居然python特性没有编译进来，这当然不行，
+另外，考虑到上一次安装的时候，把vim安装到了~/share的各种不方便，决定再次编译安装</p>
+<p>由于最近在研究版本管理系统，因此相当有自信可以获取到最新的源码，所以决定获取最新的原来进行编译</p>
+<h2>获取源码</h2>
+<p>vim的源码托管在了Google Code，用的是Hg，在官网上，也明明白白，清清楚楚的写了如何clone源码，只要按照上面的操作，就可以轻松下载到最新的源码，命令如下：</p>
+<pre><code>$ hg clone https://vim.googlecode.com/hg/ vim
+</code></pre>
+<p>耐心的等待一段时间，版本库clone完成，然后可以cd到vim目录，用<code>hg log | head</code>看一下最近一次提交的信息
+我看到最新版本是V7.3.372，3天前提交的</p>
+<h2>备份原有插件</h2>
+<p>实际上，即使不备份，也不会有问题，但是毕竟是第一次操作（以前两次都是全新的安装），而且以前的文件放的位置不太合适，
+以前我把自己下载的工具，放在了和vim73同级的vimfiles里面，这其实是windows下的做法，在Linux下，用户脚本一般是放在$(HOME)/.vim里面的
+所以，我把以前vimfiles文件夹里面的内容，复制一份放在~/.vim里面了</p>
+<p>另外还要注意.vimrc文件，这个以前就放在~/.vimrc，这就是常用的位置，不需要移动了</p>
+<p>这里必须要赞一下vim这种文件组织方式，把升级版本的成本降到极低，风险降到0</p>
+<p>无论是安装到/usr/share还是~/share，都有一个顶级目录vim，如果是Windows，里面就是一个vimXX（后面两位数字表示版本号），以及一个vimfiles文件夹，安装或者卸载的时候，vimXX文件夹会被改变，但是vimfiles文件夹永远不会被安装程序改变。在Linux，默认是使用~/.vim文件夹来代替vimfiles文件夹，但是如果觉得有必要的话（比如为所有用户统一安装一些插件），可以自己手动建立这个目录。</p>
+<p>这样的文件结构，使得用户只要保证把自己的插件，放在这个文件夹里面，那么每次重新安装vim的时候，根本无需担心自己的插件会丢失。另外，如果希望同时存在多个不同的vim版本，也没关系，这些不同的版本，都可以共用这些用户插件。</p>
+<p>vim还有一个巧妙的地方，可以打开vim，然后用</p>
+<pre><code>:set runtimepath
+</code></pre>
+<p>可以看到好几个目录，vim在查找脚本的时候，会依次在这些文件夹里面查找，而且排在后面的脚本将可以覆盖前面的内容，可以看到，第一个目录是~/.vim，最后一个目录，是~/.vim/after，这样做的目的是，使得用户可以在自己的配置文件中，控制所有的定义，排除其他目录中配置的干扰。</p>
+<h2>卸载以前安装的vim</h2>
+<p>这个没什么好说的，找到以前的Makefile，然后</p>
+<pre><code>$ make uninstall
+</code></pre>
+<p>即可</p>
+<p>之所以要找以前的Makefile，是因为我改了安装的路径到~/share，如果没改过，那么只要用对应vim版本的Makefile就可以了</p>
+<h2>配置选项</h2>
+<p>配置选项是一个很开心，也很纠结的事情，开心是因为可以自己完全定制这个软件的功能，哪些功能要，哪些功能不要，我说了算，这有一种掌控感
+纠结在于总归要经过多次摸索，才能弄出一个满足我要求的配置</p>
+<p>其实配置很简单，因为文件中已经写的非常详细了，只要打开那些需要的特性就行
+找到刚才下载的源码，进入src目录，编辑Makefile文件，我修改的内容如下</p>
+<pre><code>379c379
+&lt; CONF_OPT_LUA = --enable-luainterp
+---
+&gt; #CONF_OPT_LUA = --enable-luainterp
+403c403
+&lt; CONF_OPT_PERL = --enable-perlinterp
+---
+&gt; #CONF_OPT_PERL = --enable-perlinterp
+417c417
+&lt; CONF_OPT_PYTHON = --enable-pythoninterp
+---
+&gt; #CONF_OPT_PYTHON = --enable-pythoninterp
+437c437
+&lt; CONF_OPT_CSCOPE = --enable-cscope
+---
+&gt; #CONF_OPT_CSCOPE = --enable-cscope
+455c455
+&lt; CONF_OPT_MULTIBYTE = --enable-multibyte
+---
+&gt; #CONF_OPT_MULTIBYTE = --enable-multibyte
+496c496
+&lt; CONF_OPT_FEAT = --with-features=huge
+---
+&gt; #CONF_OPT_FEAT = --with-features=huge
+499c499
+&lt; CONF_OPT_COMPBY = "--with-compiledby=newkedison"
+---
+&gt; #CONF_OPT_COMPBY = "--with-compiledby=John Doe &lt;JohnDoe@yahoo.com&gt;"
+</code></pre>
+<p>主要是打开perl，lua，python，cscope支持，编译模式为huge，最后死皮赖脸的署上我的名字
+但是，如果这样编译的话（具体编译步骤见后文），有可能lua还是安装不了</p>
+<p>后来查看了configure的输出，原来是找不到lua.h这个文件，然后我就</p>
+<pre><code>$ sudo apt-get install liblua5.1*
+</code></pre>
+<p>把整个lua的开发库还有一些杂七杂八的东西都安装了，再编译，就可以加上lua的接口了</p>
+<p>同理，如果经过上面的配置，python和perl的接口还是没有，那么要先装上他们的开发包</p>
+<h2>编译安装</h2>
+<p>在顶层目录（或者src目录里面也一样），运行</p>
+<pre><code>$ make
+</code></pre>
+<p>然后等啊等，毫无意外的编译完成，真是谢天谢地，记得前两次，在编译的时候，会出现各种问题，可能是因为需要解决的问题，前面一次编译已经都解决了，所以这次的编译非常顺利</p>
+<p>然后接着</p>
+<pre><code>$ sudo make install
+</code></pre>
+<p>一小会儿，安装完成，无论是vim还是gvim，都可以正常打开，用</p>
+<pre><code>$ vim --version | grep python
+$ vim --version | grep lua
+$ vim --version | grep perl
+</code></pre>
+<p>看到现在这三种接口都已经支持了, 大功告成</p>
+<h2>拾遗</h2>
+<p>在实际使用中，还经常使用到了以下命令</p>
+<pre><code>$ make clean
+</code></pre>
+<p>这个是删除编译出来的.o文件，但是要注意，不会重新执行<code>./configure</code></p>
+<pre><code>$ make reconfig
+</code></pre>
+<p>这个命令涵盖了上面的clean，另外还会重新执行<code>./configure</code>，以更新配置，然后还会自动执行<code>make</code>
+所以，每次修改了Makefile后，就只要执行一次这个命令，然后再执行uninstall和install就可以了</p>
+<p>安装完成后，运行时候，发现打开一个新的buffer的时候，会提示一个ActivateBuffer函数里面有错误，经过Google，这个函数是BufferExplorer.vim插件里面的，检查这个插件，的确有这个函数，但是我尝试了一下，无法修正这个问题，然后跑到vim.org下载了这个插件的最新版本，覆盖后，问题解决</p>
+<p>由此事，我想到应该有必要装一个插件管理的工具，搜索了一下，目标锁定了vim-addon-manager这个插件，在多种同类工具中，大部分人都推荐这个。
+不过暂时没时间，等以后再折腾。</p>
+<p>偶然在看hg的log时，发现每次更新时，都会更新src/version.c文件，很显然这个文件里面包含了版本号。经过diff，原来这个文件中的include_patches数组中，记录了当前版本包含的补丁数，其实也就是最后一位版本号的来源。</p>
+<hr />
+<p>下面这篇是以前写的，转录于此</p>
+<hr />
+<h2>第一次编译安装VIM</h2>
+<p>摘要:为了使用vimgdb,于是开始尝试编译VIM7.2的源码,碰到了不少问题,也都一一解决,记录下来,以备后用</p>
+<ol>
+<li>
+<p>解压并打完补丁后,执行make,跑了一会儿后,提示</p>
+<pre><code>checking for tgetent in -lcurses... no
+no terminal library found
+checking for tgetent()... configure: error: NOT FOUND!
+      You need to install a terminal library; for example ncurses.
+      Or specify the name of the library with --with-tlib.
+make[1]: *** [auto/config.mk] 错误 1
+make[1]:正在离开目录 `/home/newk/install/vim72/src'
+make: *** [first] 错误 2
+</code></pre>
+<p>经过网上搜索,碰到的似乎不多,后来找到一个网页:http://linux.chinaunix.net/bbs/archiver/?tid-1009812.html
+里面有人提到了,要安装apt-get install libncurses5-dev,于是打开新立得,找libncurses5,把dev和dbg全装上了,检查通过</p>
+</li>
+<li>
+<p>然后就是make和make install,大概几分钟,安装完成</p>
+<p>运行gvim,说找不到命令,运行vim,先是出来一大堆错误,然后显示一下界面,然后自动结束,回到shell.</p>
+<p>回到一开始,找出错语句,写的是<code>*** buffer overflow detected ***: gvim terminated</code>,</p>
+<p>于是Google到了<a href="http://forum.ubuntu.com.cn/viewtopic.php?f=122&amp;t=240806&amp;start=0">这里</a>,里面提到了这是gcc新版本的一个BUG,可以这么解决,在make的时候,后面加一个参数,也就是<code>make CFLAGS="-O2 -D_FORTIFY_SOURCE=1</code></p>
+<p>我就测试了一下,的确可以解决这个问题.后来我想把vim72/src/Makefile里面的CFLAGS的赋值直接改成那个参数,结果在检查的时候就报错,原因未知,因为关系不大,也就没去研究了</p>
+</li>
+<li>
+<p>安装完后,vim可以运行,但是gvim还是不行,于是开始改源码包中的vim72/src/Makefile,按照网上说的,再加上我自己的想法,总共去掉了下面几条的注释符号(也就是启用这些功能)</p>
+<pre><code>CONF_OPT_CSCOPE = --enable-cscope
+CONF_OPT_GDB = --enable-gdb
+CONF_OPT_MULTIBYTE = --enable-multibyte
+CONF_OPT_INPUT = --enable-xim
+CONF_OPT_FEAT = --with-features=huge
+CONF_OPT_COMPBY = "--with-compiledby=newk"(这个是在输入:version后可以看到是谁编译的)
+</code></pre>
+<p>有一个选项是<code>CONF_OPT_OUTPUT = --enable-fontset</code>,网上有人说是要打开,不过我没打开,也没啥问题</p>
+<p>还有一个选项是选择用哪个图形库,我没选,文件的注释里面说了,如果不选,那么会用第一个找到的图形库,我反正不知道那个好,于是让他自己选好了</p>
+<p>安装路径没改,就放在/usr/local里面</p>
+<p>保存后再次安装(先make uninstall,再重复解压,打补丁,make,make install的过程),结果还是没有gvim</p>
+<p>又是去google,找到了<a href="http://easwy.com/blog/archives/advanced-vim-skills-solve-compile-problem/">这里</a>,去打开源码中的vim72/src/auto/config.log,里面一大堆东西,也有提到缺少一些头文件的,我也去搜索了一下,找了两三个库装了.后来又在文件里面搜索error,找到了一句是说gtk的版本太老,所以找不到可以用的图形库,于是不安装gvim.但是我用的是gnome,理论上来说,gtk不可能是太老的版本,后来又找了一些资料,然后发现gtk2.0没装,又跑去新立得装了libgtk2.0-dev</p>
+<p>现在配置里面又加了一句</p>
+<pre><code>CONF_OPT_GUI = --enable-gui=gtk2
+</code></pre>
+<p>也就是指定用gtk2,我想估计用</p>
+<pre><code>#CONF_OPT_GUI = --enable-gui=gtk --disable-gtktest
+</code></pre>
+<p>应该也可以,就是不检查gtk版本,直接用.反正gtk2能用,我也就不去测试了</p>
+</li>
+<li>
+<p>现在gvim也能运行了,不过运行前会出现几个错误,都是</p>
+<pre><code>** (gvim:14356): CRITICAL **: gtk_form_set_static_gravity: assertion `static_gravity_supported' failed
+</code></pre>
+<p>继续google,说这个是gtk库的一个BUG,不影响使用,并且有人提供了屏蔽的方法,我没用人家说的方法,而是在~/.bashrc里面,把gvim给alias了一下,将错误重定向到~/.xesssion-errors里面,现在gvim不报错了,当然这只是掩盖了问题,并没有解决.我又继续搜索彻底解决的办法,也有人说了,要更新源,但是我照做了,也没有把错误解决掉,还是只能用屏蔽的办法.</p>
+</li>
+<li>
+<p>鉴于前面多次重复劳动,进行安装,而且还经常忘记加上make后面的参数.,于是写了一个install.sh文件,和两个压缩包放在一起,直接运行就可以完成安装,一开始的内容是这样的</p>
+<p>文件名: install.sh</p>
+<pre><code>rm -R vim72
+rm -R vimgdb
+tar xjf vim-7.2.tar.bz2
+tar xzf vimgdb72-1.14.tar.gz
+patch -d vim72 --backup -p0 &lt; vimgdb/vim72.diff
+cp Makefile vim72/src
+cd vim72/src
+make CFLAGS="-O2 -D_FORTIFY_SOURCE=1"
+make install
+</code></pre>
+</li>
+<li>
+<p>目前vim和gvim都可以正常使用了,又发现一个问题,标题和提示语句全部都是英文,一旦出现中文,那就是乱码,而菜单始终是英文.</p>
+<p>又是一顿google,找到<a href="http://blog.csdn.net/Purking/archive/2010/05/30/5635064.aspx">这里</a>,也按照里面说的改了,但是问题依旧.</p>
+<p>又去<code>:h langmenu</code>,原来这里设置的值,要在$VIMRUNTIME/lang里面找到对应的文件,才能进行转换,而在/usr/local/share/vim72/lang里面的中文文件名叫menu_zh_cn.utf-8.vim,但是我原来设置的是langmenu=zh-cn.utf8,所以找不到,只要改成zh_cn.utf-8就行了.现在菜单已经是中文了</p>
+</li>
+<li>
+<p>标题和提示语句汉化的问题,又让我头疼了,无论怎么改选项,都没用,按说应该设置一句language messages=zh_cn.utf-8就OK了,可是设置已经起作用了,但是没有效果,这回google了半天,也没人说这个问题,在lang文件夹中,有一个README.txt,里面有提到如果要改变提示的语言,要找src/po里面,make一下就行,可是我无论去哪里,都找不到po这个文件夹.后来想想,似乎在下载VIM源码的时候,里面是有提到和lang有关的内容,赶快上去看,原来真的还有一个语言包,于是又下载了那个语言包,和前面下载的两个压缩包放在一起,在install.sh里面加了一句</p>
+<pre><code>tar xzf vim-7.2-lang.tar.gz
+</code></pre>
+<p>然后重新开始一次新的安装,等了几分钟,安装完成.</p>
+<p>这回打开gvim,全中文的啦.</p>
+</li>
+</ol>      </div>
+    </div>
+    <div class="span3">
+      <div class="sidebar">
+                <nav class="post_nav">
+        <a class="backlink" href="/blog">
+        &#x2190;返回文章列表</a>
+        <br /><br />
+        <div class="prev">
+        &#x00AB;前一篇文章<br />
+                <a title="2012-01-02"
+           href="/blog/how-to-use-shared-library.html">
+           共享库的生成与使用
+        </a>
+                </div>
+        <br />
+        <div class="next">
+        后一篇文章&#x00BB;<br />
+                <a title="2011-12-07"
+           href="/blog/how-to-use-ln-command.html">
+           ln命令使用
+        </a>
+                </div>
+            </div>
+    </div>
+  </div>
+</div>
+
+<hr>
+
+
+
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+var disqus_shortname = 'newk-blog';
+
+/* * * DON'T EDIT BELOW THIS LINE * * */
+(function() {
+ var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+ dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+ (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+ })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink" target=_blank>comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+
+      <footer>
+                <p>Created by <a href="http://newkedison.tk">newkedison</a></p>
+              </footer>
+
+          </div> <!-- /container -->
+
+        
+                        <script>window.jQuery || document.write('<script src="/media/js/libs/jquery-1.7.2.min.js">\x3C/script>')</script>
+    
+            
+        
+        <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-15769172-5']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+    
+      </body>
+</html>

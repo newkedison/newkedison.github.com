@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html>
+  <head>
+        <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>ln命令使用 | newk's blog</title>
+    <meta name="description" content="ln命令的作用是建立链接，这个命令其实还是比较简单的，这里主要是记录一些知识点">
+    <meta name="author" content="newkedison">
+    <meta name="viewport" content="">
+    <meta name="keywords" content="shell, ">
+
+        <link href="/media/css/bootstrap.css" rel="stylesheet">
+    <link href="/media/css/style.css" rel="stylesheet">
+        
+
+
+            
+    
+    <script src="/media/js/libs/modernizr-2.5.3-respond-1.1.0.min.js"></script>
+    
+    <link rel="stylesheet" href="/media/css/styles/tomorrow-night.css">
+<script src="/media/js/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+  </head>
+
+  <body class="how-to-use-ln-command">
+<!--[if lt IE 7]><p class=chromeframe>Your browser is <em>ancient!</em> <a href="http://browsehappy.com/">Upgrade to a different browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to experience this site.</p><![endif]-->
+
+    
+    <div class="navbar navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+          <ul class="nav">
+            <li class="active">
+              <a class="brand" href="/index.html">newk's blog</a>
+            </li>
+                        <ul class="nav">
+<li><a href="/index.html">Home</a></li><li><a href="/blog/index.html">Blog</a></li><li><a href="/about.html">About</a></li></ul>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+      
+                
+<div class="popover-title">
+    <h1>
+    ln命令使用      </h1>
+  </div>
+
+<div class="popover-content">
+  <div class="row">
+    <div class="span9">
+      <div class="content">
+        <p title="2011-12-07 Wed 21:20:21">
+            Posted: Wed, 2011-12-07
+        </p>
+
+                <div>
+          tags: 
+                      <a class="btn small" 
+               href="/blog/tags/shell.html">
+              shell
+            </a>
+                  </div>
+        
+        <hr />
+
+        <h2>基本语法</h2>
+<pre><code>$ ln source dest
+$ ln -s source dest
+</code></pre>
+<p>ln可以建立两种不同的链接，分别是：</p>
+<ol>
+<li>
+<p>硬链接（Hard Link）</p>
+<p>如果ln后面不加-s，那么建立的是硬链接，硬链接弄出来的文件，和原来的文件其实是同一个文件，只不过是文件名不同而已，他们的inode是相同的，比如：</p>
+<pre><code>$ echo test &gt; f1
+$ ln f1 f2
+$ ll -i
+总用量 16
+6947817 drwxrwxr-x  2 user user 4096 2011-12-07 20:12 ./
+5242881 drwx------ 99 user user 4096 2011-12-07 20:11 ../
+6947818 -rw-rw-r--  2 user user    5 2011-12-07 20:11 f1
+6947818 -rw-rw-r--  2 user user    5 2011-12-07 20:11 f2
+</code></pre>
+<p>可以看到，f1和f2这两个文件的所有属性都是一样的（除了文件名）,
+现在这两个文件是完全等价，完全一样的，对其中一个进行修改，另外一个也会跟着改变,
+但是假设删除了f1，并不会把f2也删除了，比如：</p>
+<pre><code>$ echo test again &gt;&gt; f1
+$ cat f2
+test
+test again
+$ rm f1
+$ cat f2
+test
+test again
+$ ll -i
+总用量 12
+6947817 drwxrwxr-x  2 user user 4096 2011-12-07 20:16 ./
+5242881 drwx------ 99 user user 4096 2011-12-07 20:11 ../
+6947818 -rw-rw-r--  1 user user   16 2011-12-07 20:16 f2
+</code></pre>
+<p>可以看到，f2依旧存在，但是和上面的一组结果比较，可以看到，有一个数字从2变成了1,
+这个数字表示的就是同一个inode，到底有多少个文件名</p>
+<p>比如上面的“./”有两个，而“../”有99个“.”我们知道，表示当前文件夹，“..”表示上一级文件夹，其实这个功能，就是通过硬链接来实现的，我们新建一个文件夹的时候，系统会自动帮我们建立这两个硬链接，上面的“..”之所以有99个硬链接，是因为那个文件夹里面有大量的子文件夹，所以就相当于有了很多个硬链接。</p>
+</li>
+<li>
+<p>软链接（Symbolic Link，也叫符号链接）</p>
+<p>当ln命令加上-s参数时，创建的就是软链接了，比如（还接上面的环境）：</p>
+<pre><code>$ ln -s f2 f3
+$ ll
+总用量 12
+drwxrwxr-x  2 user user 4096 2011-12-07 20:26 ./
+drwx------ 99 user user 4096 2011-12-07 20:11 ../
+-rw-rw-r--  1 user user   16 2011-12-07 20:16 f2
+lrwxrwxrwx  1 user user    2 2011-12-07 20:26 f3 -&gt; f2
+$ echo again and again &gt;&gt; f2
+$ cat f3
+test
+test again
+again and again
+$ ll
+总用量 12
+drwxrwxr-x  2 user user 4096 2011-12-07 20:26 ./
+drwx------ 99 user user 4096 2011-12-07 20:11 ../
+-rw-rw-r--  1 user user   32 2011-12-07 20:27 f2
+lrwxrwxrwx  1 user user    2 2011-12-07 20:26 f3 -&gt; f2
+</code></pre>
+<p>从上面可以看出几点：</p>
+<ol>
+<li>软链接的权限默认是777的，而且前面有个l，表示这是一个链接，可以看到刚才硬链接的时候，没有这个符号</li>
+<li>软链接后面的文件名，会有一个箭头，表示他链接到了哪个文件</li>
+<li>如果修改f2，然后查看f3的内容，可以看到有改变，这和硬链接是一样的，但是要注意到，f2的大小和修改时间都改变了，而f3的却没有改变，这和硬链接是不一样的。</li>
+</ol>
+</li>
+</ol>
+<h2>类比</h2>
+<p>我觉得可以用C++做一个类比</p>
+<p>软链接：</p>
+<pre><code>int a = 1;
+int&amp; b = a;
+</code></pre>
+<p>软链接就像引用，虽然他们都访问同一个空间，但是b的存在是以a为前提的</p>
+<p>硬链接：</p>
+<pre><code>int value = 1;
+int* a = &amp;value;
+int* b = &amp;value;
+</code></pre>
+<p>硬链接像指向同一个变量的两个指针，这两个指针并无主次之分，当然这里有点不太恰当的地方，就是硬链接的话，如果所有相同inode的文件都被删除了，那么这个文件就真的是被删除了，而在上面的语句中，没有这个效果。</p>
+<p>如果还要和Windows的快捷方式比较的话，那快捷方式就类似于指针了</p>
+<pre><code>int a = 1;
+int* b = &amp;a;
+</code></pre>
+<p>软链接和快捷方式很相似，但是有区别，快捷方式实际上是一个扩展名是lnk的特殊文件，比如，如果用程序直接读取快捷方式，那么读取到的是这个lnk文件，而如果读取一个软链接，那么和读取实际的文件是完全等效的。</p>
+<h2>软链接和硬链接的比较</h2>
+<ol>
+<li>硬链接出来的文件，和原来的文件共享一个inode，只增加了引用计数，而软链接出来的文件，inode不一样。</li>
+<li>虽然硬链接出来的文件，实际并不会多增加占用的空间，但看起来的文件大小是和原来的文件一样的，而且是永远一样。软链接的文件大小一直是固定的，与原文件的大小无关</li>
+<li>硬链接只能局限在同一个分区，同一种文件系统内部，不能跨分区进行硬链接，而软链接则没有这个限制</li>
+<li>硬链接只能针对文件，而软链接可以针对文件夹。</li>
+</ol>
+<h2>两种链接的使用场合</h2>
+<ol>
+<li>在大部分情况下，都建议使用软链接，因为限制较少，而且链接到哪很清晰</li>
+<li>我想到的可能需要硬链接的地方<ul>
+<li>重要文件为了避免误删除，用硬链接到几个地方，只要至少一个地方存在，则文件就存在（当然，因为硬链接局限于同一分区，实际上这样弄的可靠性也有限，还是云存储比较靠谱）</li>
+<li>将一些文件链接到dropbox文件夹，在同步的时候可以自动同步（这个不知道用软链接行不行，没测试过）</li>
+<li>硬链接可以用于改变文件的目录，比如vim的Persistent Undo，如果设置为将撤销树保存在和文件同一个目录，那么每次修改文件的时候，会有另外一个文件也跟着修改，这个撤销树的文件如果不希望放在当前文件夹，用软链接是没办法的，只能用硬链接。将其链接到其他的地方，那么撤销树文件，也将在那个新的目录。这样做的好处是，比如用DropBox同步一个文件夹，我们主要是为了同步实际的文件，其他辅助的文件并不重要，那么就可以用这种方法。</li>
+</ul>
+</li>
+</ol>
+<h2>其他</h2>
+<ol>
+<li>
+<p>根据inode查找文件</p>
+<pre><code>$ find . -inum 1234567
+</code></pre>
+</li>
+<li>
+<p>软链接的注意点</p>
+<p>一般最好cd到软链接所要放的位置，然后用</p>
+<pre><code>$ ln -s path/to/file .
+</code></pre>
+<p>因为等会在创建软链接时候，是直接复制"/path/to/file"这一段内容，不会自动改变成相对地址。所以要么写绝对地址，要么就用上面的方法</p>
+</li>
+</ol>      </div>
+    </div>
+    <div class="span3">
+      <div class="sidebar">
+                <nav class="post_nav">
+        <a class="backlink" href="/blog">
+        &#x2190;返回文章列表</a>
+        <br /><br />
+        <div class="prev">
+        &#x00AB;前一篇文章<br />
+                <a title="2011-12-11"
+           href="/blog/install-vim.html">
+           安装VIM
+        </a>
+                </div>
+        <br />
+        <div class="next">
+        后一篇文章&#x00BB;<br />
+                <a title="2011-12-07"
+           href="/blog/tips-for-python.html">
+           Python小知识
+        </a>
+                </div>
+            </div>
+    </div>
+  </div>
+</div>
+
+<hr>
+
+
+
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+var disqus_shortname = 'newk-blog';
+
+/* * * DON'T EDIT BELOW THIS LINE * * */
+(function() {
+ var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+ dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+ (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+ })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink" target=_blank>comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+
+      <footer>
+                <p>Created by <a href="http://newkedison.tk">newkedison</a></p>
+              </footer>
+
+          </div> <!-- /container -->
+
+        
+                        <script>window.jQuery || document.write('<script src="/media/js/libs/jquery-1.7.2.min.js">\x3C/script>')</script>
+    
+            
+        
+        <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-15769172-5']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+    
+      </body>
+</html>

@@ -7,7 +7,7 @@
         <link href="/"/>
     
         
-    <updated>2012-08-21T14:07:03Z</updated>
+    <updated>2012-08-21T18:50:39Z</updated>
 
     <id>/blog/excerpts.xml/</id>
 
@@ -51,6 +51,57 @@
                 &lt;p&gt;测试各种常用Markdown语法&lt;/p&gt;            </content>
         </entry>
             <entry>
+            <title type="html">快速建立一个hg服务器（hgserve）</title>
+            <author><name>newkedison</name></author>
+            <link href="/blog/how-to-use-hg-serve.html"/>
+            <updated>2012-04-08T21:25:06Z</updated>
+            <published>2012-04-08T21:25:06Z</published>
+            <id>/blog/how-to-use-hg-serve.html</id>
+                        <category   scheme="/blog/tags"
+                        term="hg"
+                        label="Hg" />
+                        <category   scheme="/blog/tags"
+                        term="server"
+                        label="Server" />
+            
+            <content type="html">
+                
+                &lt;p&gt;easily build a hg server by&amp;nbsp;hgserve&lt;/p&gt;            </content>
+        </entry>
+            <entry>
+            <title type="html">如何生成QR码</title>
+            <author><name>newkedison</name></author>
+            <link href="/blog/how-to-generate-qr-code.html"/>
+            <updated>2012-03-21T21:38:17Z</updated>
+            <published>2012-03-21T21:38:17Z</published>
+            <id>/blog/how-to-generate-qr-code.html</id>
+                        <category   scheme="/blog/tags"
+                        term="qrcode"
+                        label="Qrcode" />
+            
+            <content type="html">
+                
+                &lt;p&gt;knowledge about generate &lt;span class=&#34;caps&#34;&gt;QR&lt;/span&gt;&amp;nbsp;code&lt;/p&gt;            </content>
+        </entry>
+            <entry>
+            <title type="html">Django 安装及使用</title>
+            <author><name>newkedison</name></author>
+            <link href="/blog/how-to-use-django.html"/>
+            <updated>2012-02-26T19:50:53Z</updated>
+            <published>2012-02-26T19:50:53Z</published>
+            <id>/blog/how-to-use-django.html</id>
+                        <category   scheme="/blog/tags"
+                        term="django"
+                        label="Django" />
+                        <category   scheme="/blog/tags"
+                        term="python"
+                        label="Python" />
+            
+            <content type="html">
+                
+                &lt;p&gt;Django&amp;nbsp;安装及使用&lt;/p&gt;            </content>
+        </entry>
+            <entry>
             <title type="html">gnome-terminal技巧</title>
             <author><name>newkedison</name></author>
             <link href="/blog/tips-for-gnome-terminal.html"/>
@@ -64,6 +115,45 @@
             <content type="html">
                 
                 &lt;p&gt;some usual and useful tips for&amp;nbsp;gnome-terminal&lt;/p&gt;            </content>
+        </entry>
+            <entry>
+            <title type="html">inline的相关知识</title>
+            <author><name>newkedison</name></author>
+            <link href="/blog/how-to-use-inline.html"/>
+            <updated>2012-01-17T17:54:10Z</updated>
+            <published>2012-01-17T17:54:10Z</published>
+            <id>/blog/how-to-use-inline.html</id>
+                        <category   scheme="/blog/tags"
+                        term="c"
+                        label="C" />
+                        <category   scheme="/blog/tags"
+                        term="gcc"
+                        label="Gcc" />
+            
+            <content type="html">
+                
+                &lt;p&gt;some knowledge about inline in&amp;nbsp;gcc/g++&lt;/p&gt;            </content>
+        </entry>
+            <entry>
+            <title type="html">在Excel中调用dll</title>
+            <author><name>newkedison</name></author>
+            <link href="/blog/how-to-use-dll-in-excel.html"/>
+            <updated>2012-01-14T18:18:15Z</updated>
+            <published>2012-01-14T18:18:15Z</published>
+            <id>/blog/how-to-use-dll-in-excel.html</id>
+                        <category   scheme="/blog/tags"
+                        term="Excel"
+                        label="Excel" />
+                        <category   scheme="/blog/tags"
+                        term="dll"
+                        label="Dll" />
+                        <category   scheme="/blog/tags"
+                        term="cpp"
+                        label="Cpp" />
+            
+            <content type="html">
+                
+                &lt;p&gt;call dll(written by &lt;span class=&#34;caps&#34;&gt;VC&lt;/span&gt;) in Excel through&amp;nbsp;&lt;span class=&#34;caps&#34;&gt;VBA&lt;/span&gt;&lt;/p&gt;            </content>
         </entry>
             <entry>
             <title type="html">Bash常用命令</title>
@@ -87,6 +177,72 @@
                 &lt;p&gt;some useful bash commands which I have used, not only command, &amp;gt; but also some useful&amp;nbsp;operator&lt;/p&gt;            </content>
         </entry>
             <entry>
+            <title type="html">Git常用命令及使用心得</title>
+            <author><name>newkedison</name></author>
+            <link href="/blog/how-to-use-git.html"/>
+            <updated>2012-01-14T18:18:15Z</updated>
+            <published>2012-01-14T18:18:15Z</published>
+            <id>/blog/how-to-use-git.html</id>
+                        <category   scheme="/blog/tags"
+                        term="git"
+                        label="Git" />
+                        <category   scheme="/blog/tags"
+                        term="SourceControl"
+                        label="Sourcecontrol" />
+            
+            <content type="html">
+                
+                &lt;p&gt;Git陡峭的学习曲线，使得我实在无法光靠脑子记住那么多的命令，未免同样的问题一遍又一遍的Google，还是记录下来比较好&lt;/p&gt;            </content>
+        </entry>
+            <entry>
+            <title type="html">共享库的生成与使用</title>
+            <author><name>newkedison</name></author>
+            <link href="/blog/how-to-use-shared-library.html"/>
+            <updated>2012-01-02T20:27:21Z</updated>
+            <published>2012-01-02T20:27:21Z</published>
+            <id>/blog/how-to-use-shared-library.html</id>
+                        <category   scheme="/blog/tags"
+                        term="sharedlibrary"
+                        label="Sharedlibrary" />
+                        <category   scheme="/blog/tags"
+                        term="so"
+                        label="So" />
+            
+            <content type="html">
+                
+                &lt;p&gt;总结共享库的使用方法&lt;/p&gt;            </content>
+        </entry>
+            <entry>
+            <title type="html">安装VIM</title>
+            <author><name>newkedison</name></author>
+            <link href="/blog/install-vim.html"/>
+            <updated>2011-12-11T21:33:03Z</updated>
+            <published>2011-12-11T21:33:03Z</published>
+            <id>/blog/install-vim.html</id>
+                        <category   scheme="/blog/tags"
+                        term="vim"
+                        label="Vim" />
+            
+            <content type="html">
+                
+                &lt;p&gt;编译安装vim7.3的心得记录&lt;/p&gt;            </content>
+        </entry>
+            <entry>
+            <title type="html">ln命令使用</title>
+            <author><name>newkedison</name></author>
+            <link href="/blog/how-to-use-ln-command.html"/>
+            <updated>2011-12-07T21:20:21Z</updated>
+            <published>2011-12-07T21:20:21Z</published>
+            <id>/blog/how-to-use-ln-command.html</id>
+                        <category   scheme="/blog/tags"
+                        term="shell"
+                        label="Shell" />
+            
+            <content type="html">
+                
+                &lt;p&gt;ln命令的作用是建立链接，这个命令其实还是比较简单的，这里主要是记录一些知识点&lt;/p&gt;            </content>
+        </entry>
+            <entry>
             <title type="html">Python小知识</title>
             <author><name>newkedison</name></author>
             <link href="/blog/tips-for-python.html"/>
@@ -103,5 +259,41 @@
             <content type="html">
                 
                 &lt;p&gt;学习Python过程中,&amp;nbsp;一些小知识点的记录&lt;/p&gt;            </content>
+        </entry>
+            <entry>
+            <title type="html">Google Code使用介绍</title>
+            <author><name>newkedison</name></author>
+            <link href="/blog/how-to-use-google-code.html"/>
+            <updated>2011-12-04T20:58:10Z</updated>
+            <published>2011-12-04T20:58:10Z</published>
+            <id>/blog/how-to-use-google-code.html</id>
+                        <category   scheme="/blog/tags"
+                        term="google"
+                        label="Google" />
+                        <category   scheme="/blog/tags"
+                        term="SourceControl"
+                        label="Sourcecontrol" />
+            
+            <content type="html">
+                
+                &lt;p&gt;Google&amp;nbsp;Code使用介绍&lt;/p&gt;            </content>
+        </entry>
+            <entry>
+            <title type="html">nmap命令的使用及相关端口信息</title>
+            <author><name>newkedison</name></author>
+            <link href="/blog/how-to-use-nmap.html"/>
+            <updated>2011-12-03T14:13:38Z</updated>
+            <published>2011-12-03T14:13:38Z</published>
+            <id>/blog/how-to-use-nmap.html</id>
+                        <category   scheme="/blog/tags"
+                        term="bash"
+                        label="Bash" />
+                        <category   scheme="/blog/tags"
+                        term="command"
+                        label="Command" />
+            
+            <content type="html">
+                
+                &lt;p&gt;nmap命令的使用及相关端口信息&lt;/p&gt;            </content>
         </entry>
     </feed>
