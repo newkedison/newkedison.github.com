@@ -19,7 +19,10 @@
     
     <script src="/media/js/libs/modernizr-2.5.3-respond-1.1.0.min.js"></script>
     
-      </head>
+    <link rel="stylesheet" href="/media/css/styles/tomorrow-night.css">
+<script src="/media/js/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+  </head>
 
   <body class="test-markdown">
 <!--[if lt IE 7]><p class=chromeframe>Your browser is <em>ancient!</em> <a href="http://browsehappy.com/">Upgrade to a different browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to experience this site.</p><![endif]-->
@@ -73,26 +76,28 @@
         
         <hr />
 
-        <h1>Test Markdown&nbsp;syntax</h1>
-<h2>level 2&nbsp;title</h2>
-<h3>level 3&nbsp;title</h3>
-<h4>level 4&nbsp;title</h4>
-<h5>level 5&nbsp;title</h5>
-<h6>level 6&nbsp;title</h6>
+        <h1>Test Markdown syntax</h1>
+<h2>level 2 title</h2>
+<h3>level 3 title</h3>
+<h4>level 4 title</h4>
+<h5>level 5 title</h5>
+<h6>level 6 title</h6>
 <p>连续多行内容
 会被认为是连续的,
-放在一对&lt;P&gt;&lt;/P&gt;里面,&nbsp;如果要分段,至少留一个空行</p>
+放在一对&lt;P&gt;&lt;/P&gt;里面,
+如果要分段,至少留一个空行</p>
 <p>有另一种办法<br />
 就是在行末添加两个空格<br />
-这样会被替换为&lt;br&nbsp;/&gt;</p>
-<p><strong>可以直接写<em><span class="caps">HTML</span></em>,&nbsp;而且4&lt;5这种写法是没问题的</strong></p>
+这样会被替换为&lt;br /&gt;</p>
+<p><strong>可以直接写<em>HTML</em>, 而且4&lt;5这种写法是没问题的</strong></p>
 <blockquote>
 <p>引用内容前面用一个大于号即可<br />
 每一段内容只要第一行有一个大于号就可以了<br />
-但是为了美观,&nbsp;最好还是每一行前面一个大于号</p>
+但是为了美观, 最好还是每一行前面一个大于号</p>
 <p>引用可以嵌套</p>
 <blockquote>
-<p>只要多加一个大于号即可&nbsp;而且可以内嵌其他语法,比如 </p>
+<p>只要多加一个大于号即可
+而且可以内嵌其他语法,比如 </p>
 <h2>标题2</h2>
 </blockquote>
 <h3>标题3</h3>
@@ -119,7 +124,7 @@
 <p>只要每一段的第一行缩进即可</p>
 </li>
 </ul>
-<p>1111.&nbsp;有些时候为了避免数字被解析为列表,需要在小数点前面加上反斜杠进行转义</p>
+<p>1111. 有些时候为了避免数字被解析为列表,需要在小数点前面加上反斜杠进行转义</p>
 <p>代码段用4空格缩进来表示,比如</p>
 <pre><code>int main(int argc, const char* argv[])
 {
@@ -161,8 +166,8 @@
         <div class="prev">
         &#x00AB;前一篇文章<br />
                 <a title="2012-08-19"
-           href="/blog/how-to-use-hyde.html">
-           使用Hyde建立静态网站
+           href="/blog/useful-bash-commands.html">
+           Bash常用命令
         </a>
                 </div>
         <br />

@@ -1,5 +1,12 @@
 {% extends "base.j2" %}
 
+{% block endhead %}
+<link rel="stylesheet" href="{{ media_url('css/styles/tomorrow-night.css') }}">
+<script src="{{ media_url('js/highlight.pack.js') }}"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+{% endblock endhead %}
+
+
 {% block meta_keyword %}
 {% if resource.meta.tags %}
 <meta name="keywords" content="{% for tag in resource.meta.tags %}{{ tag~', ' }}{% endfor %}">
@@ -39,7 +46,7 @@
 
         <hr />
 
-        {% filter markdown|typogrify -%}
+        {% filter markdown -%}
           {% mark post -%}
             {% block post -%}{%- endblock %}
           {%- endmark %}
