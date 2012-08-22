@@ -1,0 +1,20 @@
+#!/bin/bash
+
+rm -rf content/blog/tags
+rm `ls content/blog/*.html | grep -v 'index.html'`
+rm -rf blog
+rm -rf media
+
+home_dir=$HOME
+source_dir=~/mynotes/
+dest_dir="$home_dir/github.pages/content/blog/"
+sed_content="s#.*\\/\\(.*\\.\\)note#${dest_dir}\\1html#g"
+for i in `ls ${source_dir}*.note`; do 
+  cp $i "`echo $i | sed "$sed_content" `"
+done
+
+if [[ "$1" == "test" ]]; then
+  hyde gen
+else
+  hyde gen -c prod.yaml
+fi

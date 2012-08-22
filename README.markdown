@@ -4,8 +4,8 @@
 
 use the below to generate the static HTML file
 
-    $ hyde gen
+    $ ./gen
 
-or, use the below to generate for production mode
+or, use the below to generate for test(without diqus and analytics)
 
-    $ hyde gen -c prod.yaml
+    $ ./gen test
