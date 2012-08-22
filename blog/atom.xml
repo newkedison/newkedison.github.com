@@ -7,7 +7,7 @@
         <link href="/"/>
     
         
-    <updated>2012-08-21T18:50:40Z</updated>
+    <updated>2012-08-22T09:37:43Z</updated>
 
     <id>/blog/atom.xml/</id>
 
@@ -126,19 +126,16 @@ jinja2&amp;nbsp;的文档总是找不到说明&lt;/p&gt;
             <entry>
             <title type="html">Markdown测试</title>
             <author><name>newkedison</name></author>
-            <link href="/blog/test-markdown.html"/>
+            <link href="/blog/tips-for-markdown.html"/>
             <updated>2012-08-18T13:00:00Z</updated>
             <published>2012-08-18T13:00:00Z</published>
-            <id>/blog/test-markdown.html</id>
-                        <category   scheme="/blog/tags"
-                        term="post"
-                        label="Post" />
-                        <category   scheme="/blog/tags"
-                        term="test"
-                        label="Test" />
+            <id>/blog/tips-for-markdown.html</id>
                         <category   scheme="/blog/tags"
                         term="markdown"
                         label="Markdown" />
+                        <category   scheme="/blog/tags"
+                        term="tips"
+                        label="Tips" />
             
             <content type="html">
                                 &lt;h1&gt;Test Markdown&amp;nbsp;syntax&lt;/h1&gt;
