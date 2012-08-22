@@ -7,7 +7,7 @@
         <link href="/"/>
     
         
-    <updated>2012-08-22T11:07:53Z</updated>
+    <updated>2012-08-22T11:20:14Z</updated>
 
     <id>/blog/excerpts.xml/</id>
 
@@ -24,6 +24,21 @@
                         <category   scheme="/blog/tags"
                         term="github"
                         label="Github" />
+                        <category   scheme="/blog/tags"
+                        term="python"
+                        label="Python" />
+                        <category   scheme="/blog/tags"
+                        term="CSS"
+                        label="Css" />
+                        <category   scheme="/blog/tags"
+                        term="HTML5"
+                        label="Html5" />
+                        <category   scheme="/blog/tags"
+                        term="js"
+                        label="Js" />
+                        <category   scheme="/blog/tags"
+                        term="jinja2"
+                        label="Jinja2" />
             
             <content type="html">
                 
@@ -60,6 +75,9 @@
                         <category   scheme="/blog/tags"
                         term="server"
                         label="Server" />
+                        <category   scheme="/blog/tags"
+                        term="SourceControl"
+                        label="Sourcecontrol" />
             
             <content type="html">
                 
@@ -106,8 +124,11 @@
             <published>2012-02-06T14:32:54Z</published>
             <id>/blog/tips-for-gnome-terminal.html</id>
                         <category   scheme="/blog/tags"
-                        term="bash"
-                        label="Bash" />
+                        term="shell"
+                        label="Shell" />
+                        <category   scheme="/blog/tags"
+                        term="tips"
+                        label="Tips" />
             
             <content type="html">
                 
@@ -123,6 +144,9 @@
                         <category   scheme="/blog/tags"
                         term="c"
                         label="C" />
+                        <category   scheme="/blog/tags"
+                        term="cpp"
+                        label="Cpp" />
                         <category   scheme="/blog/tags"
                         term="gcc"
                         label="Gcc" />
@@ -165,9 +189,6 @@
                         <category   scheme="/blog/tags"
                         term="shell"
                         label="Shell" />
-                        <category   scheme="/blog/tags"
-                        term="command"
-                        label="Command" />
             
             <content type="html">
                 
@@ -199,11 +220,14 @@
             <published>2012-01-02T20:27:21Z</published>
             <id>/blog/how-to-use-shared-library.html</id>
                         <category   scheme="/blog/tags"
-                        term="sharedlibrary"
+                        term="cpp"
+                        label="Cpp" />
+                        <category   scheme="/blog/tags"
+                        term="SharedLibrary"
                         label="Sharedlibrary" />
                         <category   scheme="/blog/tags"
-                        term="so"
-                        label="So" />
+                        term="dll"
+                        label="Dll" />
             
             <content type="html">
                 
@@ -265,8 +289,8 @@
             <published>2011-12-04T20:58:10Z</published>
             <id>/blog/how-to-use-google-code.html</id>
                         <category   scheme="/blog/tags"
-                        term="google"
-                        label="Google" />
+                        term="GoogleCode"
+                        label="Googlecode" />
                         <category   scheme="/blog/tags"
                         term="SourceControl"
                         label="Sourcecontrol" />
@@ -283,11 +307,8 @@
             <published>2011-12-03T14:13:38Z</published>
             <id>/blog/how-to-use-nmap.html</id>
                         <category   scheme="/blog/tags"
-                        term="bash"
-                        label="Bash" />
-                        <category   scheme="/blog/tags"
-                        term="command"
-                        label="Command" />
+                        term="shell"
+                        label="Shell" />
             
             <content type="html">
                 

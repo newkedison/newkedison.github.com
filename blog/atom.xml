@@ -7,7 +7,7 @@
         <link href="/"/>
     
         
-    <updated>2012-08-22T11:07:53Z</updated>
+    <updated>2012-08-22T11:20:14Z</updated>
 
     <id>/blog/atom.xml/</id>
 
@@ -24,6 +24,21 @@
                         <category   scheme="/blog/tags"
                         term="github"
                         label="Github" />
+                        <category   scheme="/blog/tags"
+                        term="python"
+                        label="Python" />
+                        <category   scheme="/blog/tags"
+                        term="CSS"
+                        label="Css" />
+                        <category   scheme="/blog/tags"
+                        term="HTML5"
+                        label="Html5" />
+                        <category   scheme="/blog/tags"
+                        term="js"
+                        label="Js" />
+                        <category   scheme="/blog/tags"
+                        term="jinja2"
+                        label="Jinja2" />
             
             <content type="html">
                                 &lt;h6&gt;想到什么写什么, 暂时比较混乱,&amp;nbsp;等写完再整理&lt;/h6&gt;
@@ -230,6 +245,9 @@ jinja2&amp;nbsp;的文档总是找不到说明&lt;/p&gt;
                         <category   scheme="/blog/tags"
                         term="server"
                         label="Server" />
+                        <category   scheme="/blog/tags"
+                        term="SourceControl"
+                        label="Sourcecontrol" />
             
             <content type="html">
                                 &lt;p&gt;我们平时用的最多的，当然是hg的client操作，commit，push，pull，update等等，但是, 
@@ -503,8 +521,11 @@ application = django.core.handlers.wsgi.WSGIHandler()
             <published>2012-02-06T14:32:54Z</published>
             <id>/blog/tips-for-gnome-terminal.html</id>
                         <category   scheme="/blog/tags"
-                        term="bash"
-                        label="Bash" />
+                        term="shell"
+                        label="Shell" />
+                        <category   scheme="/blog/tags"
+                        term="tips"
+                        label="Tips" />
             
             <content type="html">
                                 &lt;h2&gt;基本用法&lt;/h2&gt;
@@ -617,6 +638,9 @@ gnome-terminal -x bash -c &#39;export RUN_AFTER_BASHRC=&#34;vim $NAUTILUS_SCRIPT
                         <category   scheme="/blog/tags"
                         term="c"
                         label="C" />
+                        <category   scheme="/blog/tags"
+                        term="cpp"
+                        label="Cpp" />
                         <category   scheme="/blog/tags"
                         term="gcc"
                         label="Gcc" />
@@ -913,9 +937,6 @@ End Sub
                         <category   scheme="/blog/tags"
                         term="shell"
                         label="Shell" />
-                        <category   scheme="/blog/tags"
-                        term="command"
-                        label="Command" />
             
             <content type="html">
                                 &lt;h2&gt;带进度条复制文件&lt;/h2&gt;
@@ -1205,11 +1226,14 @@ password *****************
             <published>2012-01-02T20:27:21Z</published>
             <id>/blog/how-to-use-shared-library.html</id>
                         <category   scheme="/blog/tags"
-                        term="sharedlibrary"
+                        term="cpp"
+                        label="Cpp" />
+                        <category   scheme="/blog/tags"
+                        term="SharedLibrary"
                         label="Sharedlibrary" />
                         <category   scheme="/blog/tags"
-                        term="so"
-                        label="So" />
+                        term="dll"
+                        label="Dll" />
             
             <content type="html">
                                 &lt;h2&gt;参考资料&lt;/h2&gt;
@@ -1927,8 +1951,8 @@ foo(1, 2, d=None, 5) 错误，有等号的参数后面不能再有没有等号�
             <published>2011-12-04T20:58:10Z</published>
             <id>/blog/how-to-use-google-code.html</id>
                         <category   scheme="/blog/tags"
-                        term="google"
-                        label="Google" />
+                        term="GoogleCode"
+                        label="Googlecode" />
                         <category   scheme="/blog/tags"
                         term="SourceControl"
                         label="Sourcecontrol" />
@@ -1989,11 +2013,8 @@ foo(1, 2, d=None, 5) 错误，有等号的参数后面不能再有没有等号�
             <published>2011-12-03T14:13:38Z</published>
             <id>/blog/how-to-use-nmap.html</id>
                         <category   scheme="/blog/tags"
-                        term="bash"
-                        label="Bash" />
-                        <category   scheme="/blog/tags"
-                        term="command"
-                        label="Command" />
+                        term="shell"
+                        label="Shell" />
             
             <content type="html">
                                 &lt;p&gt;今天主要是想解决根据&lt;span class=&#34;caps&#34;&gt;IP&lt;/span&gt;如何找到对应的主机名，试了几个命令未果，然后找到了nmap命令，发现这个命令可以满足要求，而且同时还具有了很多我用不到的强大功能，可以说是一个万能的扫描软件，只要自己组合合适的命令，可以作为任何网络攻击的前期准备。&lt;/p&gt;
