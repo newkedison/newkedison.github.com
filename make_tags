@@ -1,0 +1,99 @@
+#!/usr/bin/env python
+
+import os
+import yaml
+import random
+
+def read_tags_from_file(file_name):
+  tags = []
+  if not os.path.exists(file_name):
+    return tags
+  f = open(file_name)
+  read_flag = False
+  yaml_content = []
+  for line in f.read().split('\n'):
+    if line == '---':
+      if read_flag:
+        try:
+          tags = yaml.load('\n'.join(yaml_content))['tags']
+        except:
+          tags = []
+        return tags
+      else:
+        read_flag = True
+      continue
+    yaml_content.append(line)
+
+
+def read_all_tags(folder_name):
+  import glob
+  tags = {}
+  file_list = glob.glob(folder_name)
+  for f in file_list:
+    tag_in_file = read_tags_from_file(f)
+    for t in tag_in_file:
+      if t in tags.keys():
+        tags[t] += 1
+      else:
+        tags[t] = 1
+  return tags
+
+def arrange_tags(tags, url):
+  min_font_size = 10
+  max_font_size = 20
+
+  tags = sorted(tags.items(), key=lambda x: x[1], reverse=True)
+  
+  count_to_size = {}
+  for k, v in tags:
+    if k not in count_to_size.keys():
+      count_to_size[v] = 0
+
+  font_size = min_font_size
+  step = (max_font_size - min_font_size) * 1.0 / len(count_to_size)
+  for key in count_to_size.keys():
+    count_to_size[key] = round(font_size, 0)
+    font_size += step
+
+  tags_info = []
+  for k, v in tags:
+    info = {}
+    info['name'] = k
+    info['count'] = v
+    info['font'] = count_to_size[v]
+    info['color'] = '0x%x%x%x' % (random.randint(0x00, 0x80), 
+                                  random.randint(0x00, 0x80),
+                                  random.randint(0x00, 0x80))
+    info['hicolor'] = '0x%x%x%x' % (random.randint(0x80, 0xFF), 
+                                    random.randint(0x80, 0xFF),
+                                    random.randint(0x80, 0xFF))
+    info['url'] = url.format(k)
+    tags_info.append(info)
+
+  return tags_info
+
+def save_to_xml(tags, file_name):
+  f = open(file_name, "w")
+  f.write('<tags>\n')
+  for tag in tags:
+    f.write('<a href="{0}" style="font-size: {1}pt;" color="{2}" hicolor="{3}">{4}</a>\n'.format(
+      tag['url'], tag['font'], tag['color'], tag['hicolor'], tag['name']))
+  f.write('</tags>')
+  f.close()
+
+def save_to_html(tags, file_name):
+  f = open(file_name, "w")
+  f.write('''---
+extends: tags_list.j2
+tags:
+''')
+  for line in yaml.dump(tags).split('\n'):
+    f.write('    {0}\n'.format(line))
+  f.write('---')
+  f.close()
+
+if __name__ == '__main__':
+  tags = arrange_tags(read_all_tags('content/blog/*.html'), '/blog/tags/{0}.html')
+  save_to_xml(tags, 'tags_data.xml')
+  save_to_html(tags, 'content/tags.html')
+

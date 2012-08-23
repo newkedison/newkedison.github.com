@@ -32,6 +32,9 @@ context:
                 type: node
                 url: /blog/index.html
             -
+                title: Tags
+                url: /tags.html
+            -
                 title: About
                 description: About
                 css_class: about

@@ -13,6 +13,8 @@ for i in `ls ${source_dir}*.note`; do
   cp $i "`echo $i | sed "$sed_content" `"
 done
 
+./make_tags
+
 if [[ "$1" == "test" ]]; then
   hyde gen
 else
