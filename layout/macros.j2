@@ -10,6 +10,9 @@
 {% refer to res.url as post %}
 <article {{'class='~class if class }}>
 <h3><a href="{{ content_url(res.url) }}">{{ res.meta.title }}</a></h3>
+{% if res.meta.subtitle %}
+<small>{{ res.meta.subtitle }}</small><br />
+{% endif %}
 <a href="{{ content_url(res.url) }}">{{ post.image|markdown|typogrify }}</a>
 {{ res.meta.description|typogrify }}
 <p title="{{ res.meta.created.strftime('%Y-%m-%d %a %H:%M:%S') }}">

@@ -7,10 +7,63 @@
         <link href="/"/>
     
         
-    <updated>2012-08-23T11:11:00Z</updated>
+    <updated>2012-08-30T13:01:35Z</updated>
 
     <id>/blog/atom.xml/</id>
 
+            <entry>
+            <title type="html">mitmproxy & mitmdump 使用介绍</title>
+            <author><name>newkedison</name></author>
+            <link href="/blog/how-to-use-mitmproxy.html"/>
+            <updated>2012-08-30T11:42:53Z</updated>
+            <published>2012-08-30T11:42:53Z</published>
+            <id>/blog/how-to-use-mitmproxy.html</id>
+                        <category   scheme="/blog/tags"
+                        term="HTTP"
+                        label="Http" />
+                        <category   scheme="/blog/tags"
+                        term="dump"
+                        label="Dump" />
+                        <category   scheme="/blog/tags"
+                        term="python"
+                        label="Python" />
+            
+            <content type="html">
+                                &lt;h2&gt;mitmproxy &lt;span class=&#34;amp&#34;&gt;&amp;amp;&lt;/span&gt; mitmdump&amp;nbsp;使用介绍&lt;/h2&gt;
+&lt;h3&gt;简介&lt;/h3&gt;
+&lt;p&gt;mitmproxy和mitmdump是一个用于监视和修改http请求的工具,具体用来干什么就靠个人发挥
+了. mitmproxy是带交互界面的,&amp;nbsp;而mitmdump是纯命令行.&lt;/p&gt;
+&lt;h3&gt;官网&lt;/h3&gt;
+&lt;p&gt;官网地址: &lt;a href=&#34;http://mitmproxy.org&#34;&gt;http://mitmproxy.org&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;Github: &lt;a href=&#34;https://github.com/cortesi/mitmproxy&#34;&gt;https://github.com/cortesi/mitmproxy&lt;/a&gt;&lt;/p&gt;
+&lt;h3&gt;下载&amp;amp;安装&lt;/h3&gt;
+&lt;p&gt;在&lt;a href=&#34;http://mitmproxy.org&#34;&gt;官网&lt;/a&gt;有介绍多种安装方法, 最简单的就是使用&lt;code&gt;pip&lt;/code&gt;了:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;$ sudo pip install mitmproxy
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;其他安装方法我没尝试, 详见&lt;a href=&#34;http://mitmproxy.org&#34;&gt;官网&lt;/a&gt;&lt;/p&gt;
+&lt;h3&gt;运行&amp;amp;使用&lt;/h3&gt;
+&lt;p&gt;mitmdump是纯命令行工具, 所以需要通过参数来控制, 简单的使用方法使用参见
+&lt;a href=&#34;http://mitmproxy.org/doc/mitmdump.html&#34;&gt;说明文档&lt;/a&gt;, 由于我自己还没用过, 所以暂时&amp;nbsp;无法详述&lt;/p&gt;
+&lt;p&gt;mitmproxy是带交互的, 算是实时监测吧.&amp;nbsp;运行的方法就是直接&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;$ mitmproxy
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;就可以了. 如果要看具体的参数, 可以加上&lt;code&gt;--help&lt;/code&gt;查看&lt;/p&gt;
+&lt;p&gt;然后设置浏览器的代理为127.0.0.1:8080, 这样所有的&lt;span class=&#34;caps&#34;&gt;HTTP&lt;/span&gt;请求就会通过mitmproxy过滤后
+再发送出去, 如果要修改&lt;span class=&#34;caps&#34;&gt;HTTP&lt;/span&gt;的内容, 就要自己写脚本了, 这方面还在研究,&amp;nbsp;先挖个坑&lt;/p&gt;
+&lt;h4&gt;mitmproxy常用按键&lt;/h4&gt;
+&lt;table class=&#34;table table-striped table-bordered&#34;&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;&lt;th&gt;按键&lt;/th&gt;&lt;th&gt;功能&lt;/th&gt;&lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;&lt;td&gt;q&lt;/td&gt;&lt;td&gt;退出或返回上一页&lt;/td&gt;&lt;/tr&gt;
+    &lt;tr&gt;&lt;td&gt;方向键或hjkl&lt;/td&gt;&lt;td&gt;方向键&lt;/td&gt;&lt;/tr&gt;
+    &lt;tr&gt;&lt;td&gt;?&lt;/td&gt;&lt;td&gt;显示按键帮助&lt;/td&gt;&lt;/tr&gt;
+    &lt;tr&gt;&lt;td&gt;[Tab]&lt;/td&gt;&lt;td&gt;切换页面&lt;/td&gt;&lt;/tr&gt;
+    &lt;tr&gt;&lt;td&gt;[Enter]&lt;/td&gt;&lt;td&gt;查看当前记录的详细内容&lt;/td&gt;&lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;            </content>
+        </entry>
             <entry>
             <title type="html">使用Hyde建立静态网站</title>
             <author><name>newkedison</name></author>

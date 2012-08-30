@@ -1275,7 +1275,7 @@ table {
   line-height: 18px;
   text-align: left;
   vertical-align: top;
-  border-top: 1px solid #222222;
+  border-top: 1px solid #DDDDDD;
 }
 .table th {
   font-weight: bold;
@@ -1292,14 +1292,14 @@ table {
   border-top: 0;
 }
 .table tbody + tbody {
-  border-top: 2px solid #222222;
+  border-top: 2px solid #DDDDDD;
 }
 .table-condensed th,
 .table-condensed td {
   padding: 4px 5px;
 }
 .table-bordered {
-  border: 1px solid #222222;
+  border: 1px solid #DDDDDD;
   border-collapse: separate;
   *border-collapse: collapsed;
   border-left: 0;
@@ -1309,7 +1309,7 @@ table {
 }
 .table-bordered th,
 .table-bordered td {
-  border-left: 1px solid #222222;
+  border-left: 1px solid #DDDDDD;
 }
 .table-bordered caption + thead tr:first-child th,
 .table-bordered caption + tbody tr:first-child th,
@@ -1355,7 +1355,7 @@ table {
 }
 .table tbody tr:hover td,
 .table tbody tr:hover th {
-  background-color: #282828;
+  background-color: #333;
 }
 table .span1 {
   float: none;
