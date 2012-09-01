@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html>
+  <head>
+        <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>安装HP WebOS | newk's blog</title>
+    <meta name="description" content="WebOS is open source and release source code, I will install it on my ubuntu">
+    <meta name="author" content="newkedison">
+    <meta name="viewport" content="">
+    <meta name="keywords" content="WebOS, install, ">
+
+        <link href="/media/css/bootstrap.css" rel="stylesheet">
+    <link href="/media/css/style.css" rel="stylesheet">
+        
+
+
+            
+    
+    <script src="/media/js/libs/modernizr-2.5.3-respond-1.1.0.min.js"></script>
+    
+    <link rel="stylesheet" href="/media/css/styles/tomorrow-night.css">
+<script src="/media/js/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+  </head>
+
+  <body class="install-webos">
+<!--[if lt IE 7]><p class=chromeframe>Your browser is <em>ancient!</em> <a href="http://browsehappy.com/">Upgrade to a different browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to experience this site.</p><![endif]-->
+
+    
+    <div class="navbar navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+          <ul class="nav">
+            <li class="active">
+              <a class="brand" href="/index.html">newk's blog</a>
+            </li>
+                        <ul class="nav">
+<li><a href="/index.html">Home</a></li><li><a href="/blog/index.html">Blog</a></li><li><a href="/tags.html">Tags</a></li><li><a href="/about.html">About</a></li></ul>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+      
+                
+<div class="popover-title">
+    <h1>
+    安装HP WebOS      </h1>
+  </div>
+
+<div class="popover-content">
+  <div class="row">
+    <div class="span9">
+      <div class="content">
+        <p title="2012-09-01 Sat 08:32:58">
+            Posted: Sat, 2012-09-01
+        </p>
+
+                <div>
+          tags: 
+                      <a class="btn small" 
+               href="/blog/tags/WebOS.html">
+              WebOS
+            </a>
+                      <a class="btn small" 
+               href="/blog/tags/install.html">
+              install
+            </a>
+                  </div>
+        
+        <hr />
+
+        <h2>安装HP WebOS</h2>
+<p>早上在cnBeta上看到HP终于把WebOS的源码公布了, 从N个月前HP就说WebOS要开源, 但是
+一直没看到Roadmap, 今天终于是犹抱琵琶半遮面的搞出来一个beta版</p>
+<p>项目的网站在: <a href="http://openwebosproject.org">http://openwebosproject.org</a><br />
+代码托管在GitHub: <a href="https://github.com/openwebos">https://github.com/openwebos</a></p>
+<p>这次公开的源码, 包含两个版本, 一个是面向嵌入式的, 还有一个面向Ubuntu Desktop的,
+所以我一时兴起, 就开始下载和安装desktop版本</p>
+<h3>安装Desktop版的过程</h3>
+<p>首先要先clone安装的脚本, 地址在
+<a href="https://github.com/openwebos/build-desktop">这里</a>, 里面有安装说明, 在安装前,
+还要先用apt-get安装一堆其他的库</p>
+<p>运行<code>./build-webos-desktop.sh</code>开始安装, 一开始安装还是比较顺利的, 下载了一个200
+多M的Qt, 编译了半天也装上了. </p>
+<p>但是在下载WebKit_0.3的时候出问题了, 等了半天死活
+下载不下来, 后来我只能开了goagent, 先手动把这个压缩包下载下来, 然后放在安装脚本
+默认的下载路径(~/luna-desktop-binaries/tarballs)里面, 然后看了一下安装脚本,
+如果重新开始的话, 前面下载的东西需要重新下载和编译安装, 这显然没有必要, 
+所以我就直接修改安装脚本, 把前面已经安装过的部分注释掉, 这里需要注意两点:</p>
+<ol>
+<li>下载下来的文件名是WebKit_0.3s.zip, 复制过去的时候要改名为WebKit_0.3.zip</li>
+<li>在build-webkit函数里面的do-fetch一句必须保留, 里面会自动判断是否已经下载好,
+然后会自动解压和建立文件夹, 所以这一句必须保留</li>
+</ol>
+<p>WebKit的编译非常之慢, 虽然不到100M, 但是比前面Qt的编译还要慢. 经过漫长的等待,
+整个编译终于完成, 估计花了1个多小时吧. 整个安装过程生成的log也要有近30M.</p>
+<p>然后运行<code>sudo ./install-webos-desktop.sh</code>, 瞬间安装完成, 看起来也就是用<code>ln -s</code>
+做了几个符号链接而已</p>
+<h3>运行Desktop版本</h3>
+<p>根据<a href="https://github.com/openwebos/build-desktop">build-desktop主页</a>的介绍,
+依次执行下面的命令:</p>
+<pre><code>./service-bus.sh start
+./service-bus.sh services
+</code></pre>
+<p>然后如果是第一次运行, 还要再开一个terminal运行一下</p>
+<pre><code>./service-bus.sh init
+</code></pre>
+<p>最后再开一个新terminal, 运行</p>
+<pre><code>./run-luna-sysmgr.sh
+</code></pre>
+<p>然后就可以看到WebOS的庐山真面目了.</p>
+<p>需要注意:</p>
+<ol>
+<li>程序的高度应该是固定的800, 不能调节, 我的笔记本是1366*768的分辨率, 
+所以下面的部分显示不全, 后来是外接了一个显示器才解决的</li>
+<li>运行过程中, 控制台上会有好多提示, 据说都可以无视, 当然, 让我看也是看不懂的</li>
+<li>程序退出后, 要运行一下<code>./service-bus.sh stop</code>, 把前面开的daemon关掉</li>
+<li>目前我还找不到怎么安装新的app, 只能玩玩自带的几个简单工具, 
+体验一下卡片式多任务的感觉</li>
+</ol>      </div>
+    </div>
+    <div class="span3">
+      <div class="sidebar">
+                <nav class="post_nav">
+        <a class="backlink" href="/blog">
+        &#x2190;返回文章列表</a>
+        <br /><br />
+        <div class="prev">
+        &#x00AB;前一篇文章<br />
+                没有文章了...
+                </div>
+        <br />
+        <div class="next">
+        后一篇文章&#x00BB;<br />
+                <a title="2012-08-30"
+           href="/blog/how-to-use-mitmproxy.html">
+           mitmproxy & mitmdump 使用介绍
+        </a>
+                </div>
+            </div>
+    </div>
+  </div>
+</div>
+
+<hr>
+
+
+
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+var disqus_shortname = 'newk-blog';
+
+/* * * DON'T EDIT BELOW THIS LINE * * */
+(function() {
+ var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+ dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+ (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+ })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink" target=_blank>comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+
+      <footer>
+                <p>Created by <a href="http://newkedison.tk">newkedison</a></p>
+              </footer>
+
+          </div> <!-- /container -->
+
+        
+                        <script>window.jQuery || document.write('<script src="/media/js/libs/jquery-1.7.2.min.js">\x3C/script>')</script>
+    
+            
+        
+        <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-15769172-5']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+    
+      </body>
+</html>

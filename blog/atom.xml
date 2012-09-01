@@ -7,10 +7,72 @@
         <link href="/"/>
     
         
-    <updated>2012-08-30T13:01:35Z</updated>
+    <updated>2012-09-01T11:00:41Z</updated>
 
     <id>/blog/atom.xml/</id>
 
+            <entry>
+            <title type="html">安装HP WebOS</title>
+            <author><name>newkedison</name></author>
+            <link href="/blog/install-webos.html"/>
+            <updated>2012-09-01T08:32:58Z</updated>
+            <published>2012-09-01T08:32:58Z</published>
+            <id>/blog/install-webos.html</id>
+                        <category   scheme="/blog/tags"
+                        term="WebOS"
+                        label="Webos" />
+                        <category   scheme="/blog/tags"
+                        term="install"
+                        label="Install" />
+            
+            <content type="html">
+                                &lt;h2&gt;安装&lt;span class=&#34;caps&#34;&gt;HP&lt;/span&gt;&amp;nbsp;WebOS&lt;/h2&gt;
+&lt;p&gt;早上在cnBeta上看到&lt;span class=&#34;caps&#34;&gt;HP&lt;/span&gt;终于把WebOS的源码公布了, 从N个月前&lt;span class=&#34;caps&#34;&gt;HP&lt;/span&gt;就说WebOS要开源, 但是
+一直没看到Roadmap,&amp;nbsp;今天终于是犹抱琵琶半遮面的搞出来一个beta版&lt;/p&gt;
+&lt;p&gt;项目的网站在: &lt;a href=&#34;http://openwebosproject.org&#34;&gt;http://openwebosproject.org&lt;/a&gt;&lt;br /&gt;
+代码托管在GitHub: &lt;a href=&#34;https://github.com/openwebos&#34;&gt;https://github.com/openwebos&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;这次公开的源码, 包含两个版本, 一个是面向嵌入式的, 还有一个面向Ubuntu Desktop的,
+所以我一时兴起,&amp;nbsp;就开始下载和安装desktop版本&lt;/p&gt;
+&lt;h3&gt;安装Desktop版的过程&lt;/h3&gt;
+&lt;p&gt;首先要先clone安装的脚本, 地址在
+&lt;a href=&#34;https://github.com/openwebos/build-desktop&#34;&gt;这里&lt;/a&gt;, 里面有安装说明, 在安装前,&amp;nbsp;还要先用apt-get安装一堆其他的库&lt;/p&gt;
+&lt;p&gt;运行&lt;code&gt;./build-webos-desktop.sh&lt;/code&gt;开始安装, 一开始安装还是比较顺利的, 下载了一个200
+多M的Qt,&amp;nbsp;编译了半天也装上了. &lt;/p&gt;
+&lt;p&gt;但是在下载WebKit_0.3的时候出问题了, 等了半天死活
+下载不下来, 后来我只能开了goagent, 先手动把这个压缩包下载下来, 然后放在安装脚本
+默认的下载路径(~/luna-desktop-binaries/tarballs)里面, 然后看了一下安装脚本,
+如果重新开始的话, 前面下载的东西需要重新下载和编译安装, 这显然没有必要, 
+所以我就直接修改安装脚本, 把前面已经安装过的部分注释掉,&amp;nbsp;这里需要注意两点:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;下载下来的文件名是WebKit_0.3s.zip,&amp;nbsp;复制过去的时候要改名为WebKit_0.3.zip&lt;/li&gt;
+&lt;li&gt;在build-webkit函数里面的do-fetch一句必须保留, 里面会自动判断是否已经下载好,
+然后会自动解压和建立文件夹,&amp;nbsp;所以这一句必须保留&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;WebKit的编译非常之慢, 虽然不到100M, 但是比前面Qt的编译还要慢. 经过漫长的等待,
+整个编译终于完成, 估计花了1个多小时吧.&amp;nbsp;整个安装过程生成的log也要有近30M.&lt;/p&gt;
+&lt;p&gt;然后运行&lt;code&gt;sudo ./install-webos-desktop.sh&lt;/code&gt;, 瞬间安装完成, 看起来也就是用&lt;code&gt;ln -s&lt;/code&gt;
+做了几个符号链接而已&lt;/p&gt;
+&lt;h3&gt;运行Desktop版本&lt;/h3&gt;
+&lt;p&gt;根据&lt;a href=&#34;https://github.com/openwebos/build-desktop&#34;&gt;build-desktop主页&lt;/a&gt;的介绍,&amp;nbsp;依次执行下面的命令:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;./service-bus.sh start
+./service-bus.sh services
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;然后如果是第一次运行,&amp;nbsp;还要再开一个terminal运行一下&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;./service-bus.sh init
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;最后再开一个新terminal,&amp;nbsp;运行&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;./run-luna-sysmgr.sh
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;然后就可以看到WebOS的庐山真面目了.&lt;/p&gt;
+&lt;p&gt;需要注意:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;程序的高度应该是固定的800, 不能调节, 我的笔记本是1366*768的分辨率, 
+所以下面的部分显示不全,&amp;nbsp;后来是外接了一个显示器才解决的&lt;/li&gt;
+&lt;li&gt;运行过程中, 控制台上会有好多提示, 据说都可以无视, 当然,&amp;nbsp;让我看也是看不懂的&lt;/li&gt;
+&lt;li&gt;程序退出后, 要运行一下&lt;code&gt;./service-bus.sh stop&lt;/code&gt;,&amp;nbsp;把前面开的daemon关掉&lt;/li&gt;
+&lt;li&gt;目前我还找不到怎么安装新的app, 只能玩玩自带的几个简单工具,&amp;nbsp;体验一下卡片式多任务的感觉&lt;/li&gt;
+&lt;/ol&gt;            </content>
+        </entry>
             <entry>
             <title type="html">mitmproxy & mitmdump 使用介绍</title>
             <author><name>newkedison</name></author>
