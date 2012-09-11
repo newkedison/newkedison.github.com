@@ -7,10 +7,28 @@
         <link href="/"/>
     
         
-    <updated>2012-09-01T11:00:40Z</updated>
+    <updated>2012-09-11T10:18:24Z</updated>
 
     <id>/blog/excerpts.xml/</id>
 
+            <entry>
+            <title type="html">android程序开发基本流程</title>
+            <author><name>newkedison</name></author>
+            <link href="/blog/how-to-make-android-app.html"/>
+            <updated>2012-09-10T16:55:57Z</updated>
+            <published>2012-09-10T16:55:57Z</published>
+            <id>/blog/how-to-make-android-app.html</id>
+                        <category   scheme="/blog/tags"
+                        term="android"
+                        label="Android" />
+                        <category   scheme="/blog/tags"
+                        term="shell"
+                        label="Shell" />
+            
+            <content type="html">
+                
+                &lt;p&gt;descript the main steps of build a android&amp;nbsp;app&lt;/p&gt;            </content>
+        </entry>
             <entry>
             <title type="html">安装HP WebOS</title>
             <author><name>newkedison</name></author>

@@ -7,10 +7,196 @@
         <link href="/"/>
     
         
-    <updated>2012-09-01T11:00:41Z</updated>
+    <updated>2012-09-11T10:18:24Z</updated>
 
     <id>/blog/atom.xml/</id>
 
+            <entry>
+            <title type="html">android程序开发基本流程</title>
+            <author><name>newkedison</name></author>
+            <link href="/blog/how-to-make-android-app.html"/>
+            <updated>2012-09-10T16:55:57Z</updated>
+            <published>2012-09-10T16:55:57Z</published>
+            <id>/blog/how-to-make-android-app.html</id>
+                        <category   scheme="/blog/tags"
+                        term="android"
+                        label="Android" />
+                        <category   scheme="/blog/tags"
+                        term="shell"
+                        label="Shell" />
+            
+            <content type="html">
+                                &lt;h2&gt;android程序开发基本流程&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;操作系统是Ubuntu 12.04 32bit,&amp;nbsp;不保证在其他系统下完全一致&lt;/strong&gt;&lt;/p&gt;
+&lt;h3&gt;搭建开发环境&lt;/h3&gt;
+&lt;p&gt;&lt;em&gt;这一步是比较麻烦的事情, 我花了两天时间, 才把Ubuntu下的开发环境勉强弄起来,&amp;nbsp;而且还有随时出问题的可能&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;基本的步骤如下(但是可能会遇到各种问题, 我也记不清了,&amp;nbsp;有问题随时Google):&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;安装java7开发包jdk, jdk这个包在库里面是没有的, 应该是版权的问题. 库里面只有
+openJDK, 这个据说不能用, 而且google也没有提供对应的平台工具, 
+所以必须是原版的jdk, 而且要注意, 不是jre, jre只是运行包,&amp;nbsp;做开发是不够的.&lt;/p&gt;
+&lt;p&gt;要安装jdk, 真不是一个很轻松的事情, 找到的很多方法都不能用,&amp;nbsp;最后试了能用的方法如下(但是这个方法也无法保证一直有用,详见后文):&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;sudo add-apt-repository ppa:eugenesan/java
+sudo apt-get update
+sudo apt-get install oracle-java7-installer
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;据我推测, 似乎是由于jdk安装比较麻烦, 于是有人在GitHub上弄了一个
+&lt;a href=&#34;https://github.com/flexiondotorg/oab-java6&#34;&gt;项目&lt;/a&gt;, 里面写了一个脚本来安装,
+然后就有人做成了ppa, 方便使用. 但是这种私人的ppa总归有点不太放心, 
+稳定性也成问题, 所以可能也无法一直使用. 但是无论如何,&amp;nbsp;我这次是装好了.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;下载和安装android开发工具和平台工具&lt;/p&gt;
+&lt;p&gt;android开发工具叫android &lt;span class=&#34;caps&#34;&gt;SDK&lt;/span&gt;, 在
+&lt;a href=&#34;http://developer.android.com/sdk/index.html&#34;&gt;这里&lt;/a&gt;下载, 
+但是这个只是最基本的工具, 还没办法用于开发, 因为缺少平台对应的工具,
+这些平台工具就通过这个工具里面的一个管理器进行下载(其实也是一种包管理的方法,&amp;nbsp;要是能直接集成到软件中心就好了).&lt;/p&gt;
+&lt;p&gt;下载后解压到任意目录, 比如&lt;code&gt;~/&lt;/code&gt;目录, 会有一个android-sdk-linux的文件夹.
+然后找到里面的tools/android程序, 这个就是包管理工具(还有其他功能,&amp;nbsp;见后文)&lt;/p&gt;
+&lt;p&gt;使用&lt;code&gt;./android&lt;/code&gt;运行程序, 如果前面java7已经装好了的话, 
+就会搜索出一堆的平台工具, 我反正全部勾选, 然后慢慢下载, 花了一天的时间,
+才终于把所有东西下完, 总计有8G左右, 下Google相关的工具很快, 
+10M光纤基本可以达到900K, 但是下载那些Motorola的包就很悲剧了, 最快也就40K,
+中途还不知道什么原因下载不动了, 不过这个好解决, 只要重新启动程序,&amp;nbsp;前面已经下载和安装好的工具不需要再装.&lt;/p&gt;
+&lt;p&gt;另外, 在下载的过程, 还被迫在&lt;a href=&#34;http://www.htcdev.com&#34;&gt;HTCdev&lt;/a&gt;和
+&lt;a href=&#34;https://developer.motorola.com&#34;&gt;&lt;span class=&#34;caps&#34;&gt;MOTODEV&lt;/span&gt;&lt;/a&gt;注册了账户, 
+因为下载他们的平台工具时,&amp;nbsp;需要提供用户名和密码才能下载&lt;/p&gt;
+&lt;p&gt;下载之后, 这些工具都会自动安装好, 无需我们做什么工作, 到目前为止, 
+开发所必不可少的工具就安装完成了. 但是, 对于新手来说, 我们还需要一个&lt;span class=&#34;caps&#34;&gt;IDE&lt;/span&gt;,
+而公认的最适合android的&lt;span class=&#34;caps&#34;&gt;IDE&lt;/span&gt;就是eclipse了. 倒不是说开发android非eclipse不可,
+但是前期使用eclipse可以帮我们省好多事情, 快速进入开发程序的步骤, 
+熟悉整个android程序开发的流程. 等熟悉之后, eclipse就可以抛弃了,
+不是eclipse不好用, 而是太占资源, 我的电脑跑起来太卡, 如果电脑配置够的话,&amp;nbsp;eclipse真的是一个很不错的工具.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;下载安装eclipse&lt;/p&gt;
+&lt;p&gt;在软件中心里面, 可以直接安装eclipse, 但是版本较低, 我使用之后,&amp;nbsp;会出现&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;unable to load graphics library [cairo is required]
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;这样的错误提示, 然后很多&lt;span class=&#34;caps&#34;&gt;WYSIWYG&lt;/span&gt;的功能都打不开, 后来我跑到eclipse的
+&lt;a href=&#34;http://www.eclipse.org/downloads/&#34;&gt;官网下载页面&lt;/a&gt;下载了最新的
+Classic 4.2版本,&amp;nbsp;问题才得以解决.&lt;/p&gt;
+&lt;p&gt;安装完eclipse后, 还要安装一个Google提供的插件&lt;span class=&#34;caps&#34;&gt;ADT&lt;/span&gt;, 参照
+&lt;a href=&#34;http://developer.android.com/sdk/installing/installing-adt.html&#34;&gt;这里&lt;/a&gt;
+的说明进行安装即可, 速度还是很快的. 这个插件安装之后, 可以大大提高eclipse
+开发android程序的效率, 所以一般都是要安装的,&amp;nbsp;否则装了eclipse作用也不大&lt;/p&gt;
+&lt;p&gt;注意&lt;span class=&#34;caps&#34;&gt;ADT&lt;/span&gt;插件安装之后, 要指定一下android &lt;span class=&#34;caps&#34;&gt;SDK&lt;/span&gt;的路径,&amp;nbsp;这样才能正确识别&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3&gt;使用eclipse开发&lt;/h3&gt;
+&lt;p&gt;eclipse在安装了&lt;span class=&#34;caps&#34;&gt;ADT&lt;/span&gt;插件后, 就可以进行android程序的开发, 
+按照&lt;a href=&#34;http://developer.android.com&#34;&gt;http://developer.android.com&lt;/a&gt;提供的
+&lt;a href=&#34;http://developer.android.com/training/index.html&#34;&gt;GetStarted教程&lt;/a&gt;
+进行练习, 就可以熟悉eclipse的各项操作, 从建立工程到最后放入模拟器中运行,&amp;nbsp;这整个过程多应该可以了解&lt;/p&gt;
+&lt;p&gt;基本上开发分为以下几步:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;建立工程和第一个Acitivity&lt;/li&gt;
+&lt;li&gt;在res/layouts/里面用&lt;span class=&#34;caps&#34;&gt;XML&lt;/span&gt;放各种控件&lt;/li&gt;
+&lt;li&gt;在src/里面写java代码, 设置控件的各种行为和响应操作,
+这里要特别注意Activity在不同情况下的各种状态和回调函数, 教程里面称之为生命周期&amp;nbsp;(lifecycle)&lt;/li&gt;
+&lt;li&gt;程序编好后,&amp;nbsp;放到模拟器(&lt;span class=&#34;caps&#34;&gt;AVD&lt;/span&gt;)里面模拟运行&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;还有一些这个入门教程里面没说:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;如果存在错误,&amp;nbsp;可以使用debug功能直接在模拟器里面进行在线调试&lt;/li&gt;
+&lt;li&gt;程序要正式发布给别人使用, 需要进行签名, 签名教程见
+&lt;a href=&#34;http://developer.android.com/tools/publishing/app-signing.html&#34;&gt;这里&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;和android &lt;span class=&#34;caps&#34;&gt;SDK&lt;/span&gt;一起下载下来的, 还有一堆例程, 里面我觉得最有用的, 就是那个
+APIDemos的教程, 基本上囊括了所有自带控件的用法,&amp;nbsp;绝对是可以随时查阅的宝典&lt;/li&gt;
+&lt;li&gt;在支持多语言的时候, 简体中文是加上一个-zh-rCH的后缀, 
+比如values改为values-zh-rCN, 一开始我以为是加-zh,&amp;nbsp;一直编译不过去.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3&gt;使用命令行开发&lt;/h3&gt;
+&lt;p&gt;其实使用eclipse开发挺不错, 特别是调试做的很好, 还能实时检查代码的各种问题, 
+及时提示, 还有各种自动补全, 都是很好的功能. 但是, 不知道什么原因, 在我的电脑上,
+eclipse运行起来特别慢, 光开一个eclipse和一个&lt;span class=&#34;caps&#34;&gt;AVD&lt;/span&gt;, 内存占用就到了80%以上, 
+而且估计用到了swap, 时不时&lt;span class=&#34;caps&#34;&gt;CPU&lt;/span&gt;占用也很高. 逼的我连Chrome都没办法开,&amp;nbsp;专门去下载了一个占用资源少的浏览器来查Google.&lt;/p&gt;
+&lt;p&gt;最后没办法, 决定舍弃eclipse, 转用命令行来操作, 其实在通过eclipse熟悉了一下
+android整个文件体系之后, 我觉得用命令行也问题不大, 总共没几条命令, 
+其他的时候都是在写代码,&amp;nbsp;这个用vim也是一样很爽的.&lt;/p&gt;
+&lt;p&gt;在使用下面的命令前, 需要先把android &lt;span class=&#34;caps&#34;&gt;SDK&lt;/span&gt;的目录(假设为~/androidSDK)下面的tools和
+platform-tools加入&lt;span class=&#34;caps&#34;&gt;PATH&lt;/span&gt;,&amp;nbsp;也就是用下面的命令:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;export PATH=$PATH:~/androidSDK/tools/:~/androidSDK/platform-tools/
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;下面列出常用的命令:&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;建立工程&lt;/strong&gt;&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;android create project --target 47 --name 工程名称 --path 工程保存目录 \  
+--activity 第一个Acitvity名称 --package 包名称
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;其中&lt;code&gt;--target 47&lt;/code&gt;指定了目标平台, 这个值是通过&lt;code&gt;android list targets&lt;/code&gt;查到了, 
+根据教程里面说的, 选择越新的平台越好. 我目前看到最大的是48, 
+但是显示的type是Add-On, 所以我选择了47, Type是Platform,&amp;nbsp;我觉得这个比较靠谱&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;--name&lt;/code&gt;指定工程的名称, 也就是以后软件的名称, 一般用英文,&amp;nbsp;以后可以实现多语言的&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;--path&lt;/code&gt;是工程目录, 文件夹如果不存在,&amp;nbsp;会自动建立&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;--activity&lt;/code&gt;指定运行程序时第一个启动的Activity的名字&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;--package&lt;/code&gt;指定包名称, 一般的命名规则, 是把公司网址倒过来, 再加上程序的名称,
+比如baidu的输入法就可以叫com.baidu.inputmethod, 这是惯例,&amp;nbsp;不是强制要求&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;编译&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;这个比较简单, 用&lt;code&gt;ant debug&lt;/code&gt;编译debug版本, 会自动签名(后面再讲签名的事情), 
+用&lt;code&gt;ant release&lt;/code&gt;编译release版本,&amp;nbsp;不会自动签名&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;生成密钥文件&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;这个操作只需要进行一次, 生成一个密钥文件之后, 以后一般就用这个文件给自己的所有
+程序签名, 这样做的原因见
+&lt;a href=&#34;http://developer.android.com/tools/publishing/app-signing.html#strategies&#34;&gt;教程&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;生成密钥文件的命令是:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;keytool -genkey -v -keystore 文件名 -alias 别名 -keyalg RSA \  
+-keysize 2048 -validity 10000
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;code&gt;-keystore&lt;/code&gt;指定生成的文件名, 一般用.keystore做扩展名, 
+如果不指定路径,&amp;nbsp;那就生成在当前目录&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;-alias&lt;/code&gt;指定别名, 据说只有前8个字母有效, 在等会签名时需要用到这个别名,&amp;nbsp;但是不知道有什么用&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;-keyalg&lt;/code&gt;指定加密算法,&amp;nbsp;就用&lt;span class=&#34;caps&#34;&gt;RSA&lt;/span&gt;好了&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;-keysize&lt;/code&gt;指定密钥长度, 默认1024, 保险起见,&amp;nbsp;一般建议2048&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;-validity&lt;/code&gt;指定过期天数, 一般建议10000, 如果打算放到Google Play, 至少要保证能
+用到2033年底, 这个过期天数一般取得很大,&amp;nbsp;这也是教程里面建议的&lt;/p&gt;
+&lt;p&gt;在执行之后, 会询问很多问题, 注意里面的密钥文件密码和密钥密码设置后要记住, 
+以后一直要用的, 而且为了安全性, 建议设置的比较复杂. 不过我不知道这两个密码
+分别派什么用场, 反正允许设置为相同的,&amp;nbsp;我就设置为相同的密码了&lt;/p&gt;
+&lt;p&gt;下面假定生成的密钥文件为~/android.keystore&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;签名&lt;/strong&gt;&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;jarsigner -verbose -sigalg MD5withRSA -digestalg SHA1 \  
+-keystore ~/android.keystore apk文件名 密钥文件的别名
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;code&gt;-sigalg&lt;/code&gt;和&lt;code&gt;-digestalg&lt;/code&gt;指定算法, 似乎必须是这两个值,&amp;nbsp;而且必须写在命令里面&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;-keystore&lt;/code&gt;指定密钥文件&lt;/p&gt;
+&lt;p&gt;后面两个参数分别指定要签名的apk文件名,&amp;nbsp;还有是密钥文件的别名&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;对齐&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;为了提高程序的运行效率, 在签名后, 最好进行一下对齐的操作, 这一步操作不是必须的,&amp;nbsp;但是一般顺手就做了&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;zipalign 4 签名后的apk文件 生成的文件名
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;第一个参数&lt;code&gt;4&lt;/code&gt;表示对齐的字节数, 必须是4,&amp;nbsp;不能改&lt;/p&gt;
+&lt;p&gt;第二个参数要已经签名过,&amp;nbsp;还没有进行对齐操作的apk文件&lt;/p&gt;
+&lt;p&gt;第三个参数是生成的对齐过的文件的名字,&amp;nbsp;可以用-f参数直接替换原来的文件&lt;/p&gt;
+&lt;p&gt;要注意这个操作需要在签名后进行, 如果先对齐再签名, 程序又会变成不对齐的,&amp;nbsp;需要重新进行对齐&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;放到&lt;span class=&#34;caps&#34;&gt;AVD&lt;/span&gt;运行&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;caps&#34;&gt;AVD&lt;/span&gt;是一个测试程序的好地方, 新建一个&lt;span class=&#34;caps&#34;&gt;AVD&lt;/span&gt;的教程见
+&lt;a href=&#34;http://developer.android.com/training/basics/firstapp/running-app.html#Emulator&#34;&gt;&lt;span class=&#34;caps&#34;&gt;GUI&lt;/span&gt;版&lt;/a&gt;和
+&lt;a href=&#34;http://developer.android.com/tools/devices/managing-avds-cmdline.html&#34;&gt;命令行版&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;caps&#34;&gt;AVD&lt;/span&gt;要先运行起来, 如果只运行了一个&lt;span class=&#34;caps&#34;&gt;AVD&lt;/span&gt;,&amp;nbsp;那么导入apk的命令如下&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;adb install apk文件名
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;如果同时运行了多个&lt;span class=&#34;caps&#34;&gt;AVD&lt;/span&gt;, 则需要用&lt;code&gt;-s&lt;/code&gt;指定&lt;span class=&#34;caps&#34;&gt;AVD&lt;/span&gt;,&amp;nbsp;比如&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;adb -s emulator-5554 install apk文件名
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;-s后面的参数可以通过&lt;code&gt;adb devices&lt;/code&gt;查询&lt;/p&gt;
+&lt;p&gt;在导入的时候, 如果原来已经导入过, 必须签名是一致的,&amp;nbsp;否则要先卸载&lt;span class=&#34;caps&#34;&gt;AVD&lt;/span&gt;中的程序&lt;/p&gt;
+&lt;h3&gt;常用网址&lt;/h3&gt;
+&lt;p&gt;下面列出开发过程中需要经常访问的网站:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href=&#34;http://developer.android.com&amp;gt;&#34;&gt;android&amp;nbsp;developer主页&lt;/a&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://developer.android.com/training/index.html&#34;&gt;入门教程&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://developer.android.com/reference/packages.html&#34;&gt;参考手册&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://developer.android.com/tools/building/building-cmdline.html&#34;&gt;命令行运行&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href=&#34;https://www.google.com/ncr&#34;&gt;Google&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;            </content>
+        </entry>
             <entry>
             <title type="html">安装HP WebOS</title>
             <author><name>newkedison</name></author>
@@ -1331,7 +1517,21 @@ password *****************
 &lt;li&gt;有时候为了避免歧义，区分是分支名字还是文件名，在文件名前面加上&amp;#8221; &amp;#8212;&amp;nbsp;&amp;#8221;，注意和文件名之间要有空格&lt;/li&gt;
 &lt;li&gt;可以比较任意两个历史commit之间的区别，先要用git-log看这两个commit的hash值，然后用
         $ git diff 0123456&amp;nbsp;abcdef0&lt;/li&gt;
-&lt;/ol&gt;            </content>
+&lt;/ol&gt;
+&lt;h2&gt;&amp;#8212;bare的作用&lt;/h2&gt;
+&lt;p&gt;参考: &lt;a href=&#34;http://www.bitflop.com/document/111&#34;&gt;Git bare vs. non-bare&amp;nbsp;repositories&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;虽然是分布式版本控制, 但是git有中心版本库的概念, 这些中心版本库就是bare的,&amp;nbsp;而其他的非中心库就是non-bare的. &lt;/p&gt;
+&lt;p&gt;这两种版本库的区别在于:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;bare版本库里面没有源码文件, 只有版本历史, 也就是一般在.git文件夹里面的东西.
+而non-bare库里面有源码文件, 还有.git文件夹, 但是一般只会包括master这个branch,&amp;nbsp;其他的branch是没有的&lt;/li&gt;
+&lt;li&gt;只有bare库才可以被push, 也就是只能从non-bare库push到bare库(能不能从bare库push&amp;nbsp;到bare库没测试过)&lt;/li&gt;
+&lt;li&gt;non-bare库可以pull或者fetch, 而bare库只能fetch(而且好像还要加其他参数), 
+因为pull其实是fetch+merge, 而bare库因为没有源码文件,&amp;nbsp;所以不能merge&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;bare库可以不只是一个, 可以clone出来一个bare库, 只要在clone的时候加上&amp;#8212;bare就行.
+另外还有另外一个&amp;#8212;mirror的选项, 同步的东西比&amp;#8212;bare更全, 具体区别参见
+&lt;a href=&#34;http://stackoverflow.com/questions/3959924/whats-the-difference-between-git-clone-mirror-and-git-clone-bare&#34;&gt;StackOverFlow&lt;/a&gt;&lt;/p&gt;            </content>
         </entry>
             <entry>
             <title type="html">共享库的生成与使用</title>
@@ -2055,6 +2255,34 @@ foo(1, 2, 3)                  a=1, b=2, c=(3, ) d={}
 foo(x=2, b=&#39;0&#39;, d=&#39;&#39;, a=-1)   a=-1, b=&#39;0&#39;, c=(), d={&#39;x&#39;:2, &#39;d&#39;: &#39;&#39;}
 foo(1, 2, d=None, 5) 错误，有等号的参数后面不能再有没有等号的参数
 &lt;/code&gt;&lt;/pre&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;logging模块相关&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;logging.basicConfig函数仅在第一次调用有效&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;log的记录主要分为四块:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Logger&amp;nbsp;负责提供访问接口&lt;/li&gt;
+&lt;li&gt;Handler 发送记录到内容到不同的地方(stdout, file, socket,&amp;nbsp;email)&lt;/li&gt;
+&lt;li&gt;Filter&amp;nbsp;过滤日志的内容&lt;/li&gt;
+&lt;li&gt;Formatter&amp;nbsp;将最终要输出的日志内容格式化成字符串&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;logging.getLogger(name)用于根据名字取得一个logger的实例, 这样可以使得需要
+记录log的函数不需要传入一个logger的实例. 一般name这个参数指定为&lt;code&gt;__name__&lt;/code&gt;,
+就是模块的名称,&amp;nbsp;这样方便建立层级关系&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;根据名字取得的logger实例具有层级管理, 用小数点分隔, 比如
+&lt;code&gt;logging.getLogger(&#39;foo&#39;)&lt;/code&gt;就是&lt;code&gt;logging.getLogger(&#39;foo.bar&#39;)&lt;/code&gt;的父Logger,
+子Logger可以继承父Logger的handler(消息发送目标)还有等级. 对于一个Logger来说,
+有一个level属性和一个getEffectiveLevel()的方法, 后者是最终确定的等级, 
+而level如果非0, 则getEffectiveLevel()返回值和level一样, 如果level为0,&amp;nbsp;则返回值和父Logger的getEffictiveLevel()返回值一样&lt;/li&gt;
+&lt;li&gt;logger和handler都有setLevel()函数, 一个logger可以有多个handler, 所以logger
+的setLevel()相当于总开关, 然后每个handler的setLevel()再决定自己要记录哪些
+等级的日志. 也就是说,&amp;nbsp;如果handler设置的level比logger低是没有意义的&lt;/li&gt;
+&lt;/ul&gt;
 &lt;/li&gt;
 &lt;/ol&gt;            </content>
         </entry>

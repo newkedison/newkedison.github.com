@@ -16,7 +16,7 @@ done
 ./make_tags
 
 if [[ "$1" == "test" ]]; then
-  hyde gen
+  hyde gen -r
 else
-  hyde gen -c prod.yaml
+  hyde gen -r -c prod.yaml
 fi
