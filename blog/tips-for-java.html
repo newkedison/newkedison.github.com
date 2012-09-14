@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html>
+  <head>
+        <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>java使用笔记 | newk's blog</title>
+    <meta name="description" content="为了编写android程序, 不得不使用java, 记录一些常见的问题">
+    <meta name="author" content="newkedison">
+    <meta name="viewport" content="">
+    <meta name="keywords" content="tips, java, ">
+
+        <link href="/media/css/bootstrap.css" rel="stylesheet">
+    <link href="/media/css/style.css" rel="stylesheet">
+        
+
+
+            
+    
+    <script src="/media/js/libs/modernizr-2.5.3-respond-1.1.0.min.js"></script>
+    
+    <link rel="stylesheet" href="/media/css/styles/tomorrow-night.css">
+<script src="/media/js/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+  </head>
+
+  <body class="tips-for-java">
+<!--[if lt IE 7]><p class=chromeframe>Your browser is <em>ancient!</em> <a href="http://browsehappy.com/">Upgrade to a different browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to experience this site.</p><![endif]-->
+
+    
+    <div class="navbar navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+          <ul class="nav">
+            <li class="active">
+              <a class="brand" href="/index.html">newk's blog</a>
+            </li>
+                        <ul class="nav">
+<li><a href="/index.html">Home</a></li><li><a href="/blog/index.html">Blog</a></li><li><a href="/tags.html">Tags</a></li><li><a href="/about.html">About</a></li></ul>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+      
+                
+<div class="popover-title">
+    <h1>
+    java使用笔记      </h1>
+  </div>
+
+<div class="popover-content">
+  <div class="row">
+    <div class="span9">
+      <div class="content">
+        <p title="2012-09-14 Fri 20:17:29">
+            Posted: Fri, 2012-09-14
+        </p>
+
+                <div>
+          tags: 
+                      <a class="btn small" 
+               href="/blog/tags/tips.html">
+              tips
+            </a>
+                      <a class="btn small" 
+               href="/blog/tags/java.html">
+              java
+            </a>
+                  </div>
+        
+        <hr />
+
+        <h2>java使用笔记</h2>
+<h3>前言</h3>
+<p>为了写android程序, 迫不得已学习java程序的编写, 在一边写一边google的过程中, 
+解决了一些常见的问题, 这里做一下记录,</p>
+<h3>类名与文件名</h3>
+<p>java规定, 在一个文件中, 最外层只能有一个public的类或者接口, 
+而且文件名(去掉.java)必须和类名一样. 我觉得这是一个很不合理的规定, 
+但是也只能遵守.</p>
+<p>一个将就点的方法, 就是在所有的类和接口外面套上一个没用的public类, 比如:</p>
+<pre><code>package com.example.test;
+public useless_wrapper {
+  public class class1 {...}
+  public class class2 {...}
+  interface interface1 {...}
+}
+</code></pre>
+<p>其他需要用到这些类的的地方, 如果只要用到一个类或接口, 就单独import一个, 
+如果要用到多个, 那么用:</p>
+<pre><code>import com.example.test.useless_wrapper.*;
+</code></pre>
+<p>这样在文件里面, 就可以直接写类名和接口名了</p>
+<h3>动态数组</h3>
+<p>java里面的数组一旦定义, 长度就无法改变, 所以就没有真正的动态数组.
+要实现动态数组, 必须自己封装一个类, 把数组放在里面, 然后一旦长度改变, 
+就要重新分配空间, 并把原来的内容复制过来. 当然, 这样做的效率肯定是很差的.</p>
+<p>java提供了
+[ArrayList]h(ttp://docs.oracle.com/javase/6/docs/api/java/util/ArrayList.html)
+这个类, 可以实现类似于vector的功能, 不过似乎初始化很麻烦</p>
+<h3>访问范围</h3>
+<p>对于一个类中的变量或者函数, 可以用public, private, protected来修饰, 
+也可以不用. 这样就有四种不同的访问控制级别. </p>
+<p>另外, java有package的概念, 但是没有友元的概念, 综合起来就是下面一张表格:
+<table class="table table-striped table-bordered">
+  <theader>
+    <tr>
+      <th>修饰符</th><th>类中其他函数</th><th>同package的其他类</th>
+      <th>子类</th><th>其他package的类</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>public</th>
+      <td>Y</td><td>Y</td><td>Y</td><td>Y</td>
+    </tr>
+    <tr>
+      <th>protected</th>
+      <td>Y</td><td>Y</td><td>Y</td><td>N</td>
+    </tr>
+    <tr>
+      <th>无修饰符</th>
+      <td>Y</td><td>Y</td><td>N</td><td>N</td>
+    </tr>
+    <tr>
+      <th>private</th>
+      <td>Y</td><td>N</td><td>N</td><td>N</td>
+    </tr>
+  </tbody>
+</table>
+其中Y表示可以访问, N表示无法访问. 具体内容可以参考
+<a href="http://docs.oracle.com/javase/tutorial/java/javaOO/accesscontrol.html">来源</a></p>      </div>
+    </div>
+    <div class="span3">
+      <div class="sidebar">
+                <nav class="post_nav">
+        <a class="backlink" href="/blog">
+        &#x2190;返回文章列表</a>
+        <br /><br />
+        <div class="prev">
+        &#x00AB;前一篇文章<br />
+                没有文章了...
+                </div>
+        <br />
+        <div class="next">
+        后一篇文章&#x00BB;<br />
+                <a title="2012-09-10"
+           href="/blog/how-to-make-android-app.html">
+           android程序开发基本流程
+        </a>
+                </div>
+            </div>
+    </div>
+  </div>
+</div>
+
+<hr>
+
+
+
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+var disqus_shortname = 'newk-blog';
+
+/* * * DON'T EDIT BELOW THIS LINE * * */
+(function() {
+ var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+ dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+ (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+ })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink" target=_blank>comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+
+      <footer>
+                <p>Created by <a href="http://newkedison.tk">newkedison</a></p>
+              </footer>
+
+          </div> <!-- /container -->
+
+        
+                        <script>window.jQuery || document.write('<script src="/media/js/libs/jquery-1.7.2.min.js">\x3C/script>')</script>
+    
+            
+        
+        <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-15769172-5']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+    
+      </body>
+</html>

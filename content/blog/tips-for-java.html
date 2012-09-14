@@ -1,0 +1,89 @@
+---
+title: java使用笔记
+description: 为了编写android程序, 不得不使用java, 记录一些常见的问题
+created: !!timestamp '2012-09-14 20:17:29'
+tags:
+    - tips
+    - java
+---
+
+{% raw %}
+
+## java使用笔记
+
+### 前言
+
+为了写android程序, 迫不得已学习java程序的编写, 在一边写一边google的过程中, 
+解决了一些常见的问题, 这里做一下记录,
+
+### 类名与文件名
+
+java规定, 在一个文件中, 最外层只能有一个public的类或者接口, 
+而且文件名(去掉.java)必须和类名一样. 我觉得这是一个很不合理的规定, 
+但是也只能遵守.
+
+一个将就点的方法, 就是在所有的类和接口外面套上一个没用的public类, 比如:
+
+    package com.example.test;
+    public useless_wrapper {
+      public class class1 {...}
+      public class class2 {...}
+      interface interface1 {...}
+    }
+
+其他需要用到这些类的的地方, 如果只要用到一个类或接口, 就单独import一个, 
+如果要用到多个, 那么用:
+
+    import com.example.test.useless_wrapper.*;
+
+这样在文件里面, 就可以直接写类名和接口名了
+
+### 动态数组
+
+java里面的数组一旦定义, 长度就无法改变, 所以就没有真正的动态数组.
+要实现动态数组, 必须自己封装一个类, 把数组放在里面, 然后一旦长度改变, 
+就要重新分配空间, 并把原来的内容复制过来. 当然, 这样做的效率肯定是很差的.
+
+java提供了
+[ArrayList]h(ttp://docs.oracle.com/javase/6/docs/api/java/util/ArrayList.html)
+这个类, 可以实现类似于vector的功能, 不过似乎初始化很麻烦
+
+### 访问范围
+
+对于一个类中的变量或者函数, 可以用public, private, protected来修饰, 
+也可以不用. 这样就有四种不同的访问控制级别. 
+
+另外, java有package的概念, 但是没有友元的概念, 综合起来就是下面一张表格:
+<table class="table table-striped table-bordered">
+  <theader>
+    <tr>
+      <th>修饰符</th><th>类中其他函数</th><th>同package的其他类</th>
+      <th>子类</th><th>其他package的类</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>public</th>
+      <td>Y</td><td>Y</td><td>Y</td><td>Y</td>
+    </tr>
+    <tr>
+      <th>protected</th>
+      <td>Y</td><td>Y</td><td>Y</td><td>N</td>
+    </tr>
+    <tr>
+      <th>无修饰符</th>
+      <td>Y</td><td>Y</td><td>N</td><td>N</td>
+    </tr>
+    <tr>
+      <th>private</th>
+      <td>Y</td><td>N</td><td>N</td><td>N</td>
+    </tr>
+  </tbody>
+</table>
+其中Y表示可以访问, N表示无法访问. 具体内容可以参考
+[来源](http://docs.oracle.com/javase/tutorial/java/javaOO/accesscontrol.html)
+
+
+{% endraw %}
+{# vim: ft=markdown
+#}
