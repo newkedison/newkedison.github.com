@@ -7,7 +7,7 @@
         <link href="/"/>
     
         
-    <updated>2012-09-14T20:49:11Z</updated>
+    <updated>2012-09-23T23:48:40Z</updated>
 
     <id>/blog/atom.xml/</id>
 
@@ -51,7 +51,7 @@ public useless_wrapper {
 要实现动态数组, 必须自己封装一个类, 把数组放在里面, 然后一旦长度改变, 
 就要重新分配空间, 并把原来的内容复制过来. 当然,&amp;nbsp;这样做的效率肯定是很差的.&lt;/p&gt;
 &lt;p&gt;java提供了
-[ArrayList]h(ttp://docs.oracle.com/javase/6/docs/api/java/util/ArrayList.html)
+&lt;a href=&#34;http://docs.oracle.com/javase/6/docs/api/java/util/ArrayList.html&#34;&gt;ArrayList&lt;/a&gt;
 这个类, 可以实现类似于vector的功能,&amp;nbsp;不过似乎初始化很麻烦&lt;/p&gt;
 &lt;h3&gt;访问范围&lt;/h3&gt;
 &lt;p&gt;对于一个类中的变量或者函数, 可以用public, private, protected来修饰, 
@@ -84,7 +84,45 @@ public useless_wrapper {
   &lt;/tbody&gt;
 &lt;/table&gt;
 其中Y表示可以访问, N表示无法访问. 具体内容可以参考
-&lt;a href=&#34;http://docs.oracle.com/javase/tutorial/java/javaOO/accesscontrol.html&#34;&gt;来源&lt;/a&gt;&lt;/p&gt;            </content>
+&lt;a href=&#34;http://docs.oracle.com/javase/tutorial/java/javaOO/accesscontrol.html&#34;&gt;来源&lt;/a&gt;&lt;/p&gt;
+&lt;h3&gt;LinkedList几个常用方法的异同&lt;/h3&gt;
+&lt;p&gt;java的
+&lt;a href=&#34;http://docs.oracle.com/javase/6/docs/api/java/util/LinkedList.html&#34;&gt;LinkedList&lt;/a&gt;
+提供了好几组功能类似的方法, 用起来经常不知道选择哪个, 
+而且其自身的文档也说的不清不楚, 还是在
+&lt;a href=&#34;http://developer.android.com/reference/java/util/LinkedList.html&#34;&gt;android developer&lt;/a&gt;
+里面的说明比较清楚,&amp;nbsp;这里把他们对比一下&lt;/p&gt;
+&lt;h4&gt;add/addFirst/addLast/offer/offerFirst/offerLast&lt;/h4&gt;
+&lt;p&gt;add系和offer系的区别, 就在于如果添加失败, add系会抛出异常,&amp;nbsp;而offer系会返回false.&lt;/p&gt;
+&lt;p&gt;然后add和addLast应该是完全相同的, 但是目前找不到哪里有明确的说明, 
+addFirst和addLast从名字上就可以看出来差别了. 类似的, offer/offerFist/offerLast&amp;nbsp;的关系也是类似的&lt;/p&gt;
+&lt;h4&gt;get/element/peek/poll/pop&lt;/h4&gt;
+&lt;p&gt;get系和peek系都是只访问链表中的元素, 不将其删除, 两者的区别在于get系抛异常,&amp;nbsp;而peek系返回false&lt;/p&gt;
+&lt;p&gt;poll系会在访问元素时顺便将其remove掉, 但是要注意只能从链表头部或者尾部操作
+(其实他们是继承自deque的操作),&amp;nbsp;没有类似于extract这样从任意位置取出元素的方法&lt;/p&gt;
+&lt;p&gt;element函数等价于getFirst,&amp;nbsp;应该也等价于get(0)&lt;/p&gt;
+&lt;p&gt;pop说是等价于removeFirst,&amp;nbsp;应该也是等价于poll和pollFirst&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;注意&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;LinkedList之所以有这么多乱七八糟的方法, 主要是因为继承了很多的类和接口, 
+一般来说,&amp;nbsp;正确是使用方法应该是:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;List&amp;lt;T&amp;gt; list = new LinkedList&amp;lt;T&amp;gt;();
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;这样就只使用List这个接口提供的方法,&amp;nbsp;看起来要清爽一些&lt;/p&gt;
+&lt;h3&gt;LinkedList/ArrayList/Vector&lt;/h3&gt;
+&lt;p&gt;参考来源:
+&lt;a href=&#34;http://stackoverflow.com/questions/322715/when-to-use-linkedlist-over-arraylist&#34;&gt;When to use LinkedList&amp;lt;&amp;gt; over ArrayList&amp;lt;&amp;gt;?&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&#34;http://docs.oracle.com/javase/tutorial/collections/implementations/wrapper.html&#34;&gt;Wrapper&amp;nbsp;Implementations&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;LinkedList是通过双向链表来实现的, 而ArrayList是通过数组来实现的,
+所以他们的不同点就是链表和数组的不同点, 这是基本常识, 这里就不展开了,&amp;nbsp;第一个参考来源里面讲的很详细了&lt;/p&gt;
+&lt;p&gt;Vector可以说是一个线程安全的ArrayList, 不过据说一般都不需要用到, 
+因为java后来提供了一组wrapper, 用来把原来不是线程安全的Collection变成线程安全.&amp;nbsp;参考上面的第二个链接&lt;/p&gt;
+&lt;h3&gt;import&amp;nbsp;static&lt;/h3&gt;
+&lt;p&gt;由于java无论什么总归要套一个class, 所以当把一些常用的常量或者函数放在一个class
+里面之后, 在调用的时候总要写类名,&amp;nbsp;这显然很麻烦&lt;/p&gt;
+&lt;p&gt;还好那帮整java的大佬爷们估计自己也用烦了, 所以整出来import&amp;nbsp;static的方法.&lt;/p&gt;
+&lt;p&gt;参考&lt;a href=&#34;http://docs.oracle.com/javase/1.5.0/docs/guide/language/static-import.html&#34;&gt;这里&lt;/a&gt;,
+可以看到, 只要类里面用static声明的常量/变量/函数, 然后用import static将其import,&amp;nbsp;那么后面就可以不需要写类名了.&lt;/p&gt;
+&lt;p&gt;当然, &lt;code&gt;import static com.example.util.*;&lt;/code&gt;也是可以的,&amp;nbsp;也是更常用的.&lt;/p&gt;            </content>
         </entry>
             <entry>
             <title type="html">android程序开发基本流程</title>
@@ -265,6 +303,7 @@ platform-tools加入&lt;span class=&#34;caps&#34;&gt;PATH&lt;/span&gt;,&amp;nbsp
 &lt;li&gt;&lt;a href=&#34;http://developer.android.com/training/index.html&#34;&gt;入门教程&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;http://developer.android.com/reference/packages.html&#34;&gt;参考手册&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;http://developer.android.com/tools/building/building-cmdline.html&#34;&gt;命令行运行&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://developer.android.com/guide/faq/commontasks.html&#34;&gt;Common Tasks and How to Do Them in&amp;nbsp;Android&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;/li&gt;
 &lt;li&gt;
