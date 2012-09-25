@@ -227,6 +227,37 @@ AVD要先运行起来, 如果只运行了一个AVD, 那么导入apk的命令如�
 
 在导入的时候, 如果原来已经导入过, 必须签名是一致的, 否则要先卸载AVD中的程序
 
+**AVD相关操作**
+
+要启动AVD管理器, 使用
+
+    android avd
+
+要直接启动一个AVD, 必须知道AVD的名字, 可以用`android list avd`列出所有AVD,
+然后用下面的命令可以启动一个叫foo的AVD
+
+    emulator @foo -no-boot-anim -scale 0.65
+
+其中, `@foo`指定AVD名字, 也可以用`-name foo`. 
+`-no-boot-anim`应该是去掉开机动画的意思, `-scale`是缩放指定的比例
+
+启动AVD之后, 可以使用logcat查看其输出的调试信息, 再打开一个终端, 然后输入
+
+    adb logcat
+
+只要有AVD开着, 就可以看到log, 在程序中用log.d一类函数输出的log都可以看到.
+
+如果虚拟机没有开, 会显示
+
+>-waiting for device-
+
+有时候, AVD开着, 也会显示这个提示, 这时候需要重启一下adb服务器, 使用如下命令
+
+    adb kill-server
+    adb start-server
+
+
+
 ### 常用网址
 
 下面列出开发过程中需要经常访问的网站:

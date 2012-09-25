@@ -237,6 +237,28 @@ platform-tools加入PATH, 也就是用下面的命令:</p>
 </code></pre>
 <p>-s后面的参数可以通过<code>adb devices</code>查询</p>
 <p>在导入的时候, 如果原来已经导入过, 必须签名是一致的, 否则要先卸载AVD中的程序</p>
+<p><strong>AVD相关操作</strong></p>
+<p>要启动AVD管理器, 使用</p>
+<pre><code>android avd
+</code></pre>
+<p>要直接启动一个AVD, 必须知道AVD的名字, 可以用<code>android list avd</code>列出所有AVD,
+然后用下面的命令可以启动一个叫foo的AVD</p>
+<pre><code>emulator @foo -no-boot-anim -scale 0.65
+</code></pre>
+<p>其中, <code>@foo</code>指定AVD名字, 也可以用<code>-name foo</code>. 
+<code>-no-boot-anim</code>应该是去掉开机动画的意思, <code>-scale</code>是缩放指定的比例</p>
+<p>启动AVD之后, 可以使用logcat查看其输出的调试信息, 再打开一个终端, 然后输入</p>
+<pre><code>adb logcat
+</code></pre>
+<p>只要有AVD开着, 就可以看到log, 在程序中用log.d一类函数输出的log都可以看到.</p>
+<p>如果虚拟机没有开, 会显示</p>
+<blockquote>
+<p>-waiting for device-</p>
+</blockquote>
+<p>有时候, AVD开着, 也会显示这个提示, 这时候需要重启一下adb服务器, 使用如下命令</p>
+<pre><code>adb kill-server
+adb start-server
+</code></pre>
 <h3>常用网址</h3>
 <p>下面列出开发过程中需要经常访问的网站:</p>
 <ul>

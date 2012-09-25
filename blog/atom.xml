@@ -7,7 +7,7 @@
         <link href="/"/>
     
         
-    <updated>2012-09-23T23:48:40Z</updated>
+    <updated>2012-09-25T18:02:35Z</updated>
 
     <id>/blog/atom.xml/</id>
 
@@ -294,6 +294,27 @@ platform-tools加入&lt;span class=&#34;caps&#34;&gt;PATH&lt;/span&gt;,&amp;nbsp
 &lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;-s后面的参数可以通过&lt;code&gt;adb devices&lt;/code&gt;查询&lt;/p&gt;
 &lt;p&gt;在导入的时候, 如果原来已经导入过, 必须签名是一致的,&amp;nbsp;否则要先卸载&lt;span class=&#34;caps&#34;&gt;AVD&lt;/span&gt;中的程序&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;&lt;span class=&#34;caps&#34;&gt;AVD&lt;/span&gt;相关操作&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;要启动&lt;span class=&#34;caps&#34;&gt;AVD&lt;/span&gt;管理器,&amp;nbsp;使用&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;android avd
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;要直接启动一个&lt;span class=&#34;caps&#34;&gt;AVD&lt;/span&gt;, 必须知道&lt;span class=&#34;caps&#34;&gt;AVD&lt;/span&gt;的名字, 可以用&lt;code&gt;android list avd&lt;/code&gt;列出所有&lt;span class=&#34;caps&#34;&gt;AVD&lt;/span&gt;,&amp;nbsp;然后用下面的命令可以启动一个叫foo的&lt;span class=&#34;caps&#34;&gt;AVD&lt;/span&gt;&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;emulator @foo -no-boot-anim -scale 0.65
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;其中, &lt;code&gt;@foo&lt;/code&gt;指定&lt;span class=&#34;caps&#34;&gt;AVD&lt;/span&gt;名字, 也可以用&lt;code&gt;-name foo&lt;/code&gt;. 
+&lt;code&gt;-no-boot-anim&lt;/code&gt;应该是去掉开机动画的意思, &lt;code&gt;-scale&lt;/code&gt;是缩放指定的比例&lt;/p&gt;
+&lt;p&gt;启动&lt;span class=&#34;caps&#34;&gt;AVD&lt;/span&gt;之后, 可以使用logcat查看其输出的调试信息, 再打开一个终端,&amp;nbsp;然后输入&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;adb logcat
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;只要有&lt;span class=&#34;caps&#34;&gt;AVD&lt;/span&gt;开着, 就可以看到log,&amp;nbsp;在程序中用log.d一类函数输出的log都可以看到.&lt;/p&gt;
+&lt;p&gt;如果虚拟机没有开,&amp;nbsp;会显示&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;-waiting for&amp;nbsp;device-&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;有时候, &lt;span class=&#34;caps&#34;&gt;AVD&lt;/span&gt;开着, 也会显示这个提示, 这时候需要重启一下adb服务器,&amp;nbsp;使用如下命令&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;adb kill-server
+adb start-server
+&lt;/code&gt;&lt;/pre&gt;
 &lt;h3&gt;常用网址&lt;/h3&gt;
 &lt;p&gt;下面列出开发过程中需要经常访问的网站:&lt;/p&gt;
 &lt;ul&gt;
