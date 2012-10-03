@@ -7,10 +7,159 @@
         <link href="/"/>
     
         
-    <updated>2012-09-25T18:02:35Z</updated>
+    <updated>2012-10-03T17:41:30Z</updated>
 
     <id>/blog/atom.xml/</id>
 
+            <entry>
+            <title type="html">Android程序破解</title>
+            <author><name>newkedison</name></author>
+            <link href="/blog/how-to-decompile-android-app.html"/>
+            <updated>2012-10-03T11:33:19Z</updated>
+            <published>2012-10-03T11:33:19Z</published>
+            <id>/blog/how-to-decompile-android-app.html</id>
+                        <category   scheme="/blog/tags"
+                        term="android"
+                        label="Android" />
+                        <category   scheme="/blog/tags"
+                        term="crack"
+                        label="Crack" />
+            
+            <content type="html">
+                                &lt;h1&gt;前言&lt;/h1&gt;
+&lt;hr /&gt;
+&lt;p&gt;破解别人的软件总归是不正确的, 但是就像毒品一样, 无论其多么罪大恶极, 
+只要有软件开发, 就肯定有软件破解, 一个软件如果没有被破解, 
+唯一的理由就是其不够出名,&amp;nbsp;不够有用&lt;/p&gt;
+&lt;p&gt;作为软件开发者, 有太多的理由学习破解, 对我来说,&amp;nbsp;至少有以下两个原因:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;反编译别人的软件,&amp;nbsp;是学习别人开发思路的一个好方法&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;虽然反编译无法避免, 但是只有了解其基本原理,&amp;nbsp;才能将被反编译后的风险降至最低&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;这里要先讲讲我对几个概念的理解&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;反编译&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;就是decompile, 一般指的就是将别人编译过的程序, 重新反向解析为其原始的样子, 
+但是, 目前主流的程序开发语言,&amp;nbsp;可以分为三种, &lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;一种是如python, js这类脚本语言,  其根本就没有被编译,&amp;nbsp;所以也无需反编译&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;一种是像C, pascal这类编译型的语言, 反编译的话, 基本只能反编译到汇编级代码, 
+不可能反编译到原始的代码, 对于这类语言,&amp;nbsp;反编译一般也叫反汇编(disassembly)&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;还有一种是像java和C#这种基于虚拟机的语言, 一般是可以反编译到一种中间语言, 
+这种中间语言, 比汇编相对要好理解, 好修改一些,&amp;nbsp;所以其安全性介于上面的两种&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;破解&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;破解是一种手段, 其目的一般是为了突破原来软件的一些限制. 破解的手段千奇百怪, 
+一切以达到目的为首要目标, 大部分情况下, 都必须在反编译之后, 通过分析其中的代码,
+然后进行一些技术处理,&amp;nbsp;实现自己的目标. &lt;/p&gt;
+&lt;h1&gt;参考资料&lt;/h1&gt;
+&lt;hr /&gt;
+&lt;p&gt;&lt;a href=&#34;http://developer.android.com/guide/practices/security.html&#34;&gt;Designing for&amp;nbsp;Security&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;这篇是android官网在讲如何增加安全性,&amp;nbsp;我还没好好看&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;http://www.jybase.net/ruanjianpojie/20120329811.html&#34;&gt;Android应用程序基础破解&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;这篇写的还不错, 有原理,&amp;nbsp;有实例&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://code.google.com/p/android-apktool/&#34;&gt;android-apktool&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;apktool是一个集成了大部分破解android程序所需工具的开源项目, 使用简单, 功能强大,&amp;nbsp;基本上有这个工具就足够满足我们全部需求了&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;http://forum.xda-developers.com/showthread.php?t=1891686&#34;&gt;How to use&amp;nbsp;&lt;span class=&#34;caps&#34;&gt;APKTOOL&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;xda-developers上的一个教程,&amp;nbsp;讲的还是挺详细的&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;http://androidforums.com/esteem-all-things-root/520917-guide-how-properly-decompile-recompile-apks-apktool.html&#34;&gt;How-To: Decompile/Recompile apk&amp;#8217;s with&amp;nbsp;ApkTool&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;又是一个apktool的使用教程&lt;/p&gt;
+&lt;h1&gt;Android程序的安全性&lt;/h1&gt;
+&lt;hr /&gt;
+&lt;p&gt;就我目前的理解, android程序的安全性是较低的,&amp;nbsp;主要原因有以下几点:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;资源文件没有很强的加密, 经过apktool处理之后, 所有的资源文件(包括各个xml文件,
+各种图片和视频文件)都可以很轻松的还原出来, 
+其中的xml文件会给后面破解带来很多方便, 而图片和视频,&amp;nbsp;则会导致版权被侵犯&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;android是运行于虚拟机上面的, 属于上面的第三种情况, 虽然google自创了一种叫
+Dalvik 的虚拟机, 但是这并不能提高安全性, 而且其设计的首要目的是效率, 
+而不是安全性, 他把安全性的任务更多的交给了底层的linux系统. 所以, 从apktook
+反编译出来的smali代码, 认真看还是可以看懂的, 比用&lt;span class=&#34;caps&#34;&gt;OD&lt;/span&gt;看汇编要容易的多. 而且, 
+据说用netbean还可以直接单步调试反编译出来的smali代码,&amp;nbsp;这就更加的方便了.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;linux系统本身的安全性是很高的, google的做法也没错, 既然系统很安全, 
+那就没必要画蛇添足的降低效率来提高虚拟机的安全性. 但是, 就目前来说, 
+很多人的手机都root过, 这大大降低了linux系统的安全性. 
+原来我对root的危险性并没有太注意, 后来看到, 
+android是通过每个程序用一个用户账户来运行这种方式来隔离不同的程序,
+这对于没有root权限的程序来说, 是很安全的, 但是对于拥有root权限的程序,
+他可以&lt;strong&gt;任意&lt;/strong&gt;访问(读写)别人程序的文件, 这样实在是非常的危险. 当然, 
+这只是基于我自己的理解, 可能有些杞人忧天, 但是, 
+至少以后要给程序root权限的时候要慎重, 特别是如360这类软件(我没装过360,&amp;nbsp;不太清楚其需不需要root权限)&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h1&gt;破解基本流程&lt;/h1&gt;
+&lt;hr /&gt;
+&lt;p&gt;其实有了apktool之后, 反编译一个android程序已经很容易了, 
+先从上面的地址下载apktool, 要下载两个文件, 
+一个是各平台公用的apktool1.4.3.tar.bz2(不用管版本号, 找个最新的下载就行), 
+还有一个是平台相关的, 根据系统进行选择, 
+我下载了apktool-install-linux-r04-brut1.tar.bz2, 然后解压出来, 总共有三个文件,
+把这三个文件放在一起, 然后加到&lt;span class=&#34;caps&#34;&gt;PATH&lt;/span&gt;里面,&amp;nbsp;这样就可以使用下面的命令了&lt;/p&gt;
+&lt;h2&gt;反编译apk文件&lt;/h2&gt;
+&lt;p&gt;假设要反编译的apk文件为foo.apk,&amp;nbsp;使用下面的命令&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;apktool d foo.apk
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;里面的&lt;code&gt;d&lt;/code&gt;表示decode, 就是反编码, 然后加上apk文件名, 
+这样会在当前文件夹生成一个叫foo的文件夹, 里面就是反编译出来的内容. 
+如果要指定文件夹的名字,&amp;nbsp;用&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;apktool d foo.apk dir-name
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2&gt;修改apk文件的内容(未经验证,&amp;nbsp;不保证正确)&lt;/h2&gt;
+&lt;p&gt;如果只是想提取apk中的资源, 或者研究人家的编程技巧, 那就没必要修改了, 
+但是很多时候, 不管是出于什么目的,&amp;nbsp;反编译的目的都是为了修改原来的东西.&lt;/p&gt;
+&lt;p&gt;反编译出来的东西, 那些xml文件可以直接修改的, 图片什么的也可以直接替换. 
+代码修改起来相对比较麻烦, 毕竟那不是现成的java代码, 需要一定的耐性. 
+但是, 不可能去把所有代码看一遍并全部理解, 一般都是要找关键那段代码看, 
+然后进行修改, 这里面的门道就太多了, 我也只是知道些皮毛, 这里就不写了.&amp;nbsp;上面那篇中文的教程里面有讲通过xml文件里面的字符串找到对应的代码段的方法.&lt;/p&gt;
+&lt;h2&gt;重新打包apk(未经验证,&amp;nbsp;不保证正确)&lt;/h2&gt;
+&lt;p&gt;修改完程序之后, 还需要把原来的程序重新打包回来,&amp;nbsp;使用下面的命令&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;apktool b dir-name apk-name
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;code&gt;dir-name&lt;/code&gt;就是上面反编译出来的文件夹, 然后&lt;code&gt;apk-name&lt;/code&gt;指定重新打包后的文件名, &lt;/p&gt;
+&lt;p&gt;需要注意的就是, 这样打包出来的apk文件, 是没有签名的,&amp;nbsp;需要签名和对齐后才能用&lt;/p&gt;            </content>
+        </entry>
+            <entry>
+            <title type="html">android程序开发</title>
+            <author><name>newkedison</name></author>
+            <link href="/blog/tips-for-android-app.html"/>
+            <updated>2012-09-30T22:55:50Z</updated>
+            <published>2012-09-30T22:55:50Z</published>
+            <id>/blog/tips-for-android-app.html</id>
+                        <category   scheme="/blog/tags"
+                        term="tips"
+                        label="Tips" />
+                        <category   scheme="/blog/tags"
+                        term="android"
+                        label="Android" />
+            
+            <content type="html">
+                                &lt;h2&gt;基本知识&lt;/h2&gt;
+&lt;p&gt;我觉得有几个基本概念会贯穿整个开发的过程, 如果这些概念不能理解透彻的话, 
+几乎没办法开发出像样的程序, 这里不考虑java本身的东西,&amp;nbsp;只关注android新增的概念&lt;/p&gt;
+&lt;h3&gt;1.&amp;nbsp;Activity&lt;/h3&gt;
+&lt;h3&gt;2.&amp;nbsp;Intent&lt;/h3&gt;
+&lt;h3&gt;3.&amp;nbsp;Service&lt;/h3&gt;
+&lt;h3&gt;4.&amp;nbsp;BroadcastReceiver&lt;/h3&gt;
+&lt;h3&gt;5.&amp;nbsp;Adapter&lt;/h3&gt;
+&lt;h3&gt;6.&amp;nbsp;Bundle&lt;/h3&gt;
+&lt;h3&gt;7.&amp;nbsp;LifeCycle&lt;/h3&gt;
+&lt;h3&gt;8.&amp;nbsp;fragment&lt;/h3&gt;
+&lt;h3&gt;9.&amp;nbsp;Notification&lt;/h3&gt;            </content>
+        </entry>
             <entry>
             <title type="html">java使用笔记</title>
             <author><name>newkedison</name></author>
@@ -1502,7 +1651,14 @@ fread需要的字节数直接到一个整型变量中，后面就可以根据需
 &lt;pre&gt;&lt;code&gt;$ pstree -p | grep bash
 &lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;这样可以查看所有含有bash的命令，已经他的父进程和子进程&lt;/p&gt;
-&lt;p&gt;&lt;code&gt;-p&lt;/code&gt;参数表示同时列出&lt;span class=&#34;caps&#34;&gt;PID&lt;/span&gt;，然后要kill还是要干嘛就方便了&lt;/p&gt;            </content>
+&lt;p&gt;&lt;code&gt;-p&lt;/code&gt;参数表示同时列出&lt;span class=&#34;caps&#34;&gt;PID&lt;/span&gt;，然后要kill还是要干嘛就方便了&lt;/p&gt;
+&lt;h2&gt;设置launcher隐藏模式&lt;/h2&gt;
+&lt;p&gt;参考&lt;a href=&#34;http://askubuntu.com/questions/172505/set-launcher-reveal-mode-to-intellihide&#34;&gt;这里&lt;/a&gt;
+在Unity-2D模式下,&amp;nbsp;可以使用以下命令设置launcher的隐藏模式为智能模式:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;gsettings set com.canonical.Unity2d.Launcher hide-mode 2
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;后面是数字, 0表示始终显示, 1表示始终隐藏, 2表示智能隐藏模式, 比较好用.
+但是有时候不知道什么原因, 会变成1,&amp;nbsp;需要重新设置一下才行.&lt;/p&gt;            </content>
         </entry>
             <entry>
             <title type="html">Git常用命令及使用心得</title>

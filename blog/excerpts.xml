@@ -7,10 +7,46 @@
         <link href="/"/>
     
         
-    <updated>2012-09-25T18:02:35Z</updated>
+    <updated>2012-10-03T17:41:30Z</updated>
 
     <id>/blog/excerpts.xml/</id>
 
+            <entry>
+            <title type="html">Android程序破解</title>
+            <author><name>newkedison</name></author>
+            <link href="/blog/how-to-decompile-android-app.html"/>
+            <updated>2012-10-03T11:33:19Z</updated>
+            <published>2012-10-03T11:33:19Z</published>
+            <id>/blog/how-to-decompile-android-app.html</id>
+                        <category   scheme="/blog/tags"
+                        term="android"
+                        label="Android" />
+                        <category   scheme="/blog/tags"
+                        term="crack"
+                        label="Crack" />
+            
+            <content type="html">
+                
+                &lt;p&gt;descript how to decompile an android app and crack&amp;nbsp;it&lt;/p&gt;            </content>
+        </entry>
+            <entry>
+            <title type="html">android程序开发</title>
+            <author><name>newkedison</name></author>
+            <link href="/blog/tips-for-android-app.html"/>
+            <updated>2012-09-30T22:55:50Z</updated>
+            <published>2012-09-30T22:55:50Z</published>
+            <id>/blog/tips-for-android-app.html</id>
+                        <category   scheme="/blog/tags"
+                        term="tips"
+                        label="Tips" />
+                        <category   scheme="/blog/tags"
+                        term="android"
+                        label="Android" />
+            
+            <content type="html">
+                
+                &lt;p&gt;some note recorded down when I writting android&amp;nbsp;app&lt;/p&gt;            </content>
+        </entry>
             <entry>
             <title type="html">java使用笔记</title>
             <author><name>newkedison</name></author>

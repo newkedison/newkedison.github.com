@@ -208,7 +208,14 @@ fread需要的字节数直接到一个整型变量中，后面就可以根据需
 <pre><code>$ pstree -p | grep bash
 </code></pre>
 <p>这样可以查看所有含有bash的命令，已经他的父进程和子进程</p>
-<p><code>-p</code>参数表示同时列出PID，然后要kill还是要干嘛就方便了</p>      </div>
+<p><code>-p</code>参数表示同时列出PID，然后要kill还是要干嘛就方便了</p>
+<h2>设置launcher隐藏模式</h2>
+<p>参考<a href="http://askubuntu.com/questions/172505/set-launcher-reveal-mode-to-intellihide">这里</a>
+在Unity-2D模式下, 可以使用以下命令设置launcher的隐藏模式为智能模式:</p>
+<pre><code>gsettings set com.canonical.Unity2d.Launcher hide-mode 2
+</code></pre>
+<p>后面是数字, 0表示始终显示, 1表示始终隐藏, 2表示智能隐藏模式, 比较好用.
+但是有时候不知道什么原因, 会变成1, 需要重新设置一下才行.</p>      </div>
     </div>
     <div class="span3">
       <div class="sidebar">
