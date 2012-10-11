@@ -7,7 +7,7 @@
         <link href="/"/>
     
         
-    <updated>2012-10-03T17:41:30Z</updated>
+    <updated>2012-10-11T15:23:05Z</updated>
 
     <id>/blog/atom.xml/</id>
 
@@ -148,6 +148,7 @@ android是通过每个程序用一个用户账户来运行这种方式来隔离�
             
             <content type="html">
                                 &lt;h2&gt;基本知识&lt;/h2&gt;
+&lt;hr /&gt;
 &lt;p&gt;我觉得有几个基本概念会贯穿整个开发的过程, 如果这些概念不能理解透彻的话, 
 几乎没办法开发出像样的程序, 这里不考虑java本身的东西,&amp;nbsp;只关注android新增的概念&lt;/p&gt;
 &lt;h3&gt;1.&amp;nbsp;Activity&lt;/h3&gt;
@@ -158,7 +159,139 @@ android是通过每个程序用一个用户账户来运行这种方式来隔离�
 &lt;h3&gt;6.&amp;nbsp;Bundle&lt;/h3&gt;
 &lt;h3&gt;7.&amp;nbsp;LifeCycle&lt;/h3&gt;
 &lt;h3&gt;8.&amp;nbsp;fragment&lt;/h3&gt;
-&lt;h3&gt;9.&amp;nbsp;Notification&lt;/h3&gt;            </content>
+&lt;h3&gt;9.&amp;nbsp;Notification&lt;/h3&gt;
+&lt;h2&gt;sticky&amp;nbsp;broadcast&lt;/h2&gt;
+&lt;hr /&gt;
+&lt;p&gt;在写检测电池电量的程序时, 
+需要用一个broadcast receiver去接受电池状态改变的broadcast,&amp;nbsp;里面提到了sticky这个概念.&lt;/p&gt;
+&lt;p&gt;一般来说, 我们注册一个broadcast receiver的时候, 使用
+&lt;code&gt;registerReceiver(receiver, filter)&lt;/code&gt;这个函数, 
+第一个参数要指定一个具体的receiver, 用来处理待会会收到的broadcast信息.
+但是有一些特殊的broadcast, 第一个参数可以赋值null, 然后通过这个函数返回的Intent,
+可以直接获取到我们需要的信息, 这样的broadcast, 就是&amp;#8221;sticky&amp;#8221;&amp;nbsp;broadcast.&lt;/p&gt;
+&lt;p&gt;最典型的应用就是在获取电池状态的时候, 我们只是要获取当前的电量, 
+并不是要去时刻监视电池状态, 而ACTION_BATTERY_CHANGED这个broadcast, 
+是一个sticky broadcast, 所以我们可以给第一个参数传null, 然后通过返回值, 
+解析出来&lt;strong&gt;上一次&lt;/strong&gt;广播这个broadcast信息时的内容, 这样我们就可以无需等待,&amp;nbsp;直接取得返回值了.&lt;/p&gt;
+&lt;p&gt;sticky broadcast的实现, 其实就是系统把这个信号携带的Intent保存起来, 
+一旦有匿名的receiver,&amp;nbsp;就直接把这个Intent作为registerReceiver的返回值.&lt;/p&gt;
+&lt;p&gt;平时我们发送broadcast信息是使用&lt;code&gt;sendBroadcast(Intent)&lt;/code&gt;这个函数, 
+而也可以通过&lt;code&gt;sendStickyBroadcast(Intent)&lt;/code&gt;来发送一个sticky broadcast.
+这样系统就会自动把这个intent缓存下来,&amp;nbsp;方便后面其他地方查询&lt;/p&gt;
+&lt;p&gt;参考资料: 
+&lt;a href=&#34;http://stackoverflow.com/questions/3490913/what-is-a-sticky-intent-android&#34;&gt;1&lt;/a&gt;,
+&lt;a href=&#34;http://stackoverflow.com/questions/2584497/what-is-the-difference-between-sendstickybroadcast-and-sendbroadcast-in-android&#34;&gt;2&lt;/a&gt;&lt;/p&gt;
+&lt;h2&gt;adb的使用&lt;/h2&gt;
+&lt;hr /&gt;
+&lt;p&gt;参考资料:&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;http://developer.android.com/tools/help/adb.html&#34;&gt;adb&lt;/a&gt;, 
+&lt;a href=&#34;http://developer.android.com/tools/debugging/debugging-log.html&#34;&gt;logcat&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;adb是一个非常强大的工具, 上面的资料中已经对其用法进行了详细的介绍,&amp;nbsp;经常用到的有好几个命令:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;adb start-server
+adb kill-server
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;启动或者关闭adb服务器, adb只能有一个server, 然后可以有多个client,
+这些server和client都是运行在电脑上的, server去连接各个模拟器和手机,&amp;nbsp;client从server获取自己需要的信息&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;adb connect 192.168.1.100
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;通过ip地址连接到一个模拟器或者手机, 一般是用于连接手机的, 
+在google play有一个叫adbWireless的app, 可以让我们不需要通过&lt;span class=&#34;caps&#34;&gt;USB&lt;/span&gt;进行调试, 
+而是通过wifi连接, 这样可以不用插数据线,&amp;nbsp;用起来非常方便.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;adb devices
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;查看当前server连接了哪些模拟器或手机, 以及他们的状态, 如果连接了多个, 
+后面那些命令, 都要先加上&lt;code&gt;-s&lt;/code&gt;参数,&amp;nbsp;指定是针对那个模拟器或手机.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;adb install foo.apk
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;安装一个apk文件到模拟器或手机里面, 一般会加上&lt;code&gt;-r&lt;/code&gt;参数,&amp;nbsp;表示替代当前存在的程序.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;adb pull &amp;lt;remote&amp;gt; &amp;lt;local&amp;gt;
+adb push &amp;lt;local&amp;gt; &amp;lt;remote&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;在电脑和模拟器或手机之间传输文件, pull是从手机到电脑, push是从电脑到手机, 
+remote指的是手机里面的文件地址, 比如/sdcard/media/, local是电脑的路径, 
+这里的复制是递归的, 可以复制文件或文件夹, 比用其他的方式都要方便. 
+因为4.1开始已经禁用了手机的U盘功能, 传文件很麻烦, 用ftp的话, 
+从电脑都手机还算方便, 但是从手机到电脑总是会出问题,&amp;nbsp;用这个命令就好多了.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;adb forward tcp:8888 tcp:9999
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;端口转发, 将主机的8888端口,&amp;nbsp;转发到虚拟机或者手机的9999端口&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;adb logcat &amp;lt;filter&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;查看日志的命令, 这个在调试中是非常重要的, 几乎所有的调试都需要依靠日志, 
+后面的filter可以是多组用空格分开的tag:priority, 其中tag用来区分不同的程序, 
+priority表示日志等级, 可以是V, D, I, W, E, F, S, 前面就是分别对应verbose, 
+debug, info, warning, error, fatal, 后面的S表示silent,&amp;nbsp;就是禁止任何等级的log,&lt;/p&gt;
+&lt;h2&gt;建立公用函数库&lt;/h2&gt;
+&lt;hr /&gt;
+&lt;p&gt;无论哪门编程语言, 都会通过不同的方式支持函数库(library), java不例外,&amp;nbsp;android当然也不例外. &lt;/p&gt;
+&lt;p&gt;不过我们在写android程序的话, 还是使用android的方式来安排函数库, 
+这样有两个优点: 一方面是在使用ant等工具时, 不需要额外的参数, 
+另一方面, 以后如果android弃用java,&amp;nbsp;过度起来比较容易&lt;/p&gt;
+&lt;p&gt;要建立和引用公用库, 首先要参考
+&lt;a href=&#34;http://developer.android.com/tools/projects/index.html&#34;&gt;官网的这篇文章&lt;/a&gt;, 
+里面分别讲了通过eclipse和命令行的方法, eclipse的方法我不需要用到,&amp;nbsp;所以下面主要介绍一下相关的命令行操作&lt;/p&gt;
+&lt;p&gt;假设目录结构如下:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;~/android              android程序根目录
+~/android/CommonLib    公用库工程目录
+~/android/test         测试公用库的工程的目录
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;首先在~/android/CommonLib中建立一个library project,&amp;nbsp;使用如下命令&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;android create lib-project --name &amp;lt;your_project_name&amp;gt; \
+      --target &amp;lt;target_ID&amp;gt; \
+      --path path/to/your/project \
+      --package &amp;lt;your_library_package_namespace&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;这样建立的工程, 与其他普通工程比较, 其实就有一点点不同, 就是有个叫
+project.properties的文件,&amp;nbsp;里面有一句&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;android.library=true
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;其他的和普通工程都没有区别.&lt;/p&gt;
+&lt;p&gt;然后就可以在这个工程里面开始写公用的内容, 比如在
+&lt;code&gt;~/android/CommonLib/src/com/example/common/&lt;/code&gt;文件里面, 
+新建一个&lt;code&gt;utils.java&lt;/code&gt;的文件,&amp;nbsp;内容如下:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;package com.example.common;
+public class utils {
+  public static int sum(int a, int b) { return a + b; }
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;现在我们要新建一个工程, 来使用上面定义的&lt;code&gt;sum&lt;/code&gt;函数.&lt;/p&gt;
+&lt;p&gt;在&lt;code&gt;~/andorid/test&lt;/code&gt;文件夹, 建立一个普通工程, 然后添加通用库的引用,&amp;nbsp;命令如下:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;android update project \
+      --target &amp;lt;target_ID&amp;gt; \
+      --path path/to/your/project
+      --library path/to/library_projectA
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;里面&lt;code&gt;--library&lt;/code&gt;后面就填&lt;code&gt;--library ../CommonLib&lt;/code&gt;, 要注意, 
+这里不能使用绝对路径, 不然等会编译的时候, 会报错, 没有找到具体原因,&amp;nbsp;反正使用相对路径就可以.&lt;/p&gt;
+&lt;p&gt;这样建立的工程,&amp;nbsp;与以前工程的区别也就在project.properties文件里面多了一行&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;android.library.reference.1=path/to/library_projectA
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;这里要关注等号前面的数字, 
+这个数字表示了这个库的优先级, 在发现冲突的时候, 优先级高(数字较小)的库优先, 
+而项目本身的优先级总是最高的, 另外, 还要求这些数字必须从1开始, 每次加1, 
+不能跳过, 否则从不连续的地方开始, 后面的库全部忽略. 至于会发生冲突的东西, 
+主要是各种资源的id和名字什么, 代码一般有package,&amp;nbsp;是不会冲突的.&lt;/p&gt;
+&lt;p&gt;现在在&lt;code&gt;~/android/test/src/com/example/test/&lt;/code&gt;里面开始写代码, 
+比如新建一个文件mainActivity.java, 内容如下(代码纯手写,&amp;nbsp;未测试):&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;package com.example.test;
+import android.util.Log;
+import static com.example.common.utils.*;
+
+public class mainActivity extends Activity {
+  @Override
+  public void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    Log.d(&#34;test&#34;, Integer.toString(sum(1, 1)));
+  }
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;然后开始编译和测试, 先开一个模拟器, 或者连接一个手机, 
+然后开启logcat(相关操作可参考&lt;a href=&#34;how-to-make-android-app.html&#34;&gt;上一篇&lt;/a&gt;文章)&lt;/p&gt;
+&lt;p&gt;编译和安装的步骤和正常的操作完全一样,&amp;nbsp;都是&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;ant debug
+ant installd
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;然后运行程序,&amp;nbsp;应该就可以看到logcat里面输出日志了.&lt;/p&gt;            </content>
         </entry>
             <entry>
             <title type="html">java使用笔记</title>
