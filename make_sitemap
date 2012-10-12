@@ -1,0 +1,32 @@
+#!/usr/bin/env python
+
+from lxml import etree
+from glob import glob
+import time
+import os
+
+def append_file_to_tree(root, dir_name):
+  base_url = "http://newkedison.tk/"
+  file_list = glob(os.path.join(dir_name, "*.html"))
+  for f in file_list:
+    node = etree.SubElement(root, "url")
+    url = os.path.join(base_url, f)
+    etree.SubElement(node, "loc").text = url
+    etree.SubElement(node, "lastmod").text = time.strftime(
+      "%Y-%m-%dT%H:%M:%S%z", 
+      time.gmtime(os.path.getmtime(f)))
+    etree.SubElement(node, "changefreq").text = "daily"
+
+if __name__ == "__main__":
+  xmlns = "http://www.sitemaps.org/schemas/sitemap/0.9"
+  xsi = "http://www.w3.org/2001/XMLSchema-instance"
+  schemaLocation = "http://www.sitemaps.org/schemas/sitemap/0.9 " \
+      + "http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd"
+  root = etree.Element("urlset", nsmap={'xsi': xsi, None: xmlns})
+  attr = root.attrib
+  attr['{' + xsi + '}schemaLocation'] = schemaLocation
+  append_file_to_tree(root, "")
+  append_file_to_tree(root, "blog/")
+  f = open("sitemap.xml", "w")
+  f.write(etree.tostring(root, pretty_print=True))
+  f.close()
