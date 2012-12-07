@@ -150,6 +150,10 @@ remote指的是手机里面的文件地址, 比如/sdcard/media/, local是电脑
 后面的filter可以是多组用空格分开的tag:priority, 其中tag用来区分不同的程序, 
 priority表示日志等级, 可以是V, D, I, W, E, F, S, 前面就是分别对应verbose, 
 debug, info, warning, error, fatal, 后面的S表示silent, 就是禁止任何等级的log,</p>
+<pre><code>adb shell dumpsys activity services
+</code></pre>
+<p>查看当前有多少个Foreground Service, 可以用来验证自己的Service的startForeground
+是否设置成功. </p>
 <h2>建立公用函数库</h2>
 <hr />
 <p>无论哪门编程语言, 都会通过不同的方式支持函数库(library), java不例外, 
@@ -223,7 +227,13 @@ public class mainActivity extends Activity {
 <pre><code>ant debug
 ant installd
 </code></pre>
-<p>然后运行程序, 应该就可以看到logcat里面输出日志了.</p>      </div>
+<p>然后运行程序, 应该就可以看到logcat里面输出日志了.</p>
+<h2>查看所有系统自带的broadcast</h2>
+<hr />
+<p>打开SDK里面的platforms/android-XX/data/broadcast_actions.txt</p>
+<p>里面列出了该平台下的所有系统自带的broadcast, 然后再到
+<a href="http://developer.android.com">http://developer.android.com</a> 去搜索对应的名字, 可以找到具体的用法, 
+有时候还会有使用建议</p>      </div>
     </div>
     <div class="span3">
       <div class="sidebar">

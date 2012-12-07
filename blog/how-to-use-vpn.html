@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html>
+  <head>
+        <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>VPN搭建和使用 | newk's blog</title>
+    <meta name="description" content="how to build a VPN in a VPS, and connect to it in linux">
+    <meta name="author" content="newkedison">
+    <meta name="viewport" content="">
+    <meta name="keywords" content="vpn, ">
+
+        <link href="/media/css/bootstrap.css" rel="stylesheet">
+    <link href="/media/css/style.css" rel="stylesheet">
+        
+
+
+            
+    
+    <script src="/media/js/libs/modernizr-2.5.3-respond-1.1.0.min.js"></script>
+    
+    <link rel="stylesheet" href="/media/css/styles/tomorrow-night.css">
+<script src="/media/js/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+  </head>
+
+  <body class="how-to-use-vpn">
+<!--[if lt IE 7]><p class=chromeframe>Your browser is <em>ancient!</em> <a href="http://browsehappy.com/">Upgrade to a different browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to experience this site.</p><![endif]-->
+
+    
+    <div class="navbar navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+          <ul class="nav">
+            <li class="active">
+              <a class="brand" href="/index.html">newk's blog</a>
+            </li>
+                        <ul class="nav">
+<li><a href="/index.html">Home</a></li><li><a href="/blog/index.html">Blog</a></li><li><a href="/tags.html">Tags</a></li><li><a href="/about.html">About</a></li></ul>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+      
+                
+<div class="popover-title">
+    <h1>
+    VPN搭建和使用      </h1>
+  </div>
+
+<div class="popover-content">
+  <div class="row">
+    <div class="span9">
+      <div class="content">
+        <p title="2012-12-07 Fri 09:31:06">
+            Posted: Fri, 2012-12-07
+        </p>
+
+                <div>
+          tags: 
+                      <a class="btn small" 
+               href="/blog/tags/vpn.html">
+              vpn
+            </a>
+                  </div>
+        
+        <hr />
+
+        <p><strong>特别提醒:</strong>
+虽然下面的操作看起来都挺靠谱的, 但是我最后并没有操作成功, 所以可能还有哪些地方
+没有做对, 但是经过多处比较, 应该绝大部分的操作是正确的</p>
+<hr />
+<h2>在VPS上建立VPN服务</h2>
+<hr />
+<p>参考: <a href="http://freenuts.com/how-to-set-up-a-vpn-in-a-vps/">How To Set Up A VPN In A VPS</a></p>
+<p>上面的连接里面, 步骤讲的已经很详细了, 基本操作如下:</p>
+<ol>
+<li>购买并连接到vps上, 具体操作就不说了</li>
+<li>
+<p>安装ppptpd</p>
+<pre><code>sudo apt-get install pptpd
+</code></pre>
+</li>
+<li>
+<p>修改/etc/pptpd.conf, 这个文件主要是设置局域网的ip, 因为vpn就是一个局域网, 
+这里就是设置局域网的ip段. 找到如下的两行</p>
+<blockquote>
+<p>#localip 192.168.0.1</p>
+<p>#remoteip 192.168.0.234-238,192.168.0.245 </p>
+</blockquote>
+<p>把前面的#号去掉</p>
+</li>
+<li>
+<p>修改/etc/ppp/pptpd-options, 这个文件设置DNS, 找到</p>
+<blockquote>
+<p>#ms-dns 10.0.0.1</p>
+<p>#ms-dns 10.0.0.2</p>
+</blockquote>
+<p>改成:</p>
+<blockquote>
+<p>ms-dns 8.8.8.8</p>
+<p>ms-dns 8.8.4.4</p>
+</blockquote>
+</li>
+<li>
+<p>修改/etc/ppp/chap-secrets, 这个文件设置用户名和密码, 增加一行:</p>
+<pre><code>user1 pptpd password1 *
+</code></pre>
+<p>上面的教程说中间需要用Tab键隔开, 不过空格应该也行</p>
+</li>
+<li>
+<p>修改/etc/sysctl.conf, 设置ipv4转发, 去掉下面一行前面的#号</p>
+<blockquote>
+<p>#net.ipv4.ip_forward=1</p>
+</blockquote>
+</li>
+<li>
+<p>使能ipv4转发, 执行以下命令</p>
+<pre><code>sudo sysctl -p
+</code></pre>
+</li>
+<li>
+<p>允许路由功能, 执行下面的命令(这一步我没看懂, 可能问题就出在这里)</p>
+<pre><code>iptables -t nat -A POSTROUTING -s 192.168.0.0/24 -o eth0 -j MASQUERADE
+</code></pre>
+</li>
+<li>
+<p>重启pptpd服务, 执行:</p>
+<pre><code>sudo /etc/init.d/pptpd restart
+</code></pre>
+</li>
+</ol>
+<p>至此, vpn已经设置好了</p>
+<hr />
+<h2>在Ubuntu下连接vpn</h2>
+<hr />
+<h3>GUI方式</h3>
+<ol>
+<li>
+<p>打开"Edit connections..."</p>
+</li>
+<li>
+<p>选到vpn选项卡, 点"Add"按钮</p>
+</li>
+<li>
+<p>选择默认的PPTP方式, 点"Create..."按钮</p>
+</li>
+<li>
+<p>Gateway填VPS的IP, User name填刚才设置的用户名(上面是user1), 
+Password填刚才设置的密码(上面是password1), 点击"Advanced..."按钮</p>
+</li>
+<li>
+<p>勾选"Use Point-to-Point encryption (MPPE)", 然后点"OK"按钮</p>
+</li>
+<li>
+<p>点"Save..."按钮, 连接创建完成</p>
+</li>
+<li>
+<p>在选择网络的地方, 有一个"VPN Connections"的二级菜单, 里面会列出刚才创建的VPN,
+选择他, 如果正常的话, 应该是可以连接成功的. </p>
+</li>
+<li>
+<p>但是我连接成功之后, 就不知道怎么办了, 无论ping什么都ping不通</p>
+</li>
+</ol>
+<h3>命令行方式</h3>
+<p>参考: <a href="http://www.adminsehow.com/2010/04/connect-to-pptp-vpn-from-linux-only-by-one-command/">Connect to PPTP VPN from Linux only by one command</a></p>
+<p>我测试过, 虽然新的连接也建立了, 也连接了, 但是最后还是同样不能上</p>
+<ol>
+<li>
+<p>首先需要pptp-linux和ppp这两个包, 一般来说, 应该已经都装好了</p>
+<pre><code>sudo apt-get install pptp-linux ppp
+</code></pre>
+</li>
+<li>
+<p>执行下面的命令建立一个新连接</p>
+<pre><code>pppd pty "pptp IP --nolaunchpppd" file /etc/ppp/options.pptp \
+user USERNAME password PASSWORD
+</code></pre>
+<p>注意其中大写部分, IP改为VPS的ip, USERNAME改为vpn用户名, PASSWORD改成密码</p>
+<p>然后稍等10秒, 执行<code>ifconfig ppp0</code>, 应该可以看到新建了一个叫ppp0的连接.
+一开始我没建立成功, 查看了日志(<code>less /var/log/syslog</code>), 里面有一句</p>
+<blockquote>
+<p>LCP terminated by peer (MPPE required but peer refused)</p>
+</blockquote>
+<p>经过一阵Google, 找到了解决方法, 就是编辑/etc/ppp/options.pptp文件, 把里面的</p>
+<blockquote>
+<p>#require-mppe-128</p>
+</blockquote>
+<p>前面的注释去掉, 然后再用上面的命令就可以了</p>
+</li>
+<li>
+<p>设置连接后自动设置全局代理</p>
+<p>在/etc/ppp/ip-up.d文件夹中新建一个文件vpn-up, 内容如下:</p>
+<pre><code>#!/bin/bash
+H=`ps aux | grep 'pppd pty' | grep -v grep | awk '{print $14}'`
+DG=`route -n | grep UG | awk '{print $2}'`
+DEV=`route -n | grep UG | awk '{print $8}'`
+route add -host $H gw $DG dev $DEV
+route del default $DEV
+route add default dev ppp0
+</code></pre>
+<p>在/etc/ppp/ip-down.d文件夹中新建一个文件vpn-down, 内容如下:</p>
+<pre><code>#!/bin/bash
+H=`route -n | grep UGH | awk '{print $1}'`
+DG=`route -n | grep UGH | awk '{print $2}'`
+DEV=`route -n | grep UGH | awk '{print $8}'`
+route del -host $H
+route add default gw $DG dev $DEV
+</code></pre>
+<p>然后给这两个文件加上可执行权限(<code>chmod +x</code>), 这样就可以了</p>
+</li>
+<li>
+<p>如果要断开连接, 用</p>
+<pre><code>killall pppd
+</code></pre>
+</li>
+</ol>      </div>
+    </div>
+    <div class="span3">
+      <div class="sidebar">
+                <nav class="post_nav">
+        <a class="backlink" href="/blog">
+        &#x2190;返回文章列表</a>
+        <br /><br />
+        <div class="prev">
+        &#x00AB;前一篇文章<br />
+                没有文章了...
+                </div>
+        <br />
+        <div class="next">
+        后一篇文章&#x00BB;<br />
+                <a title="2012-10-03"
+           href="/blog/how-to-decompile-android-app.html">
+           Android程序破解
+        </a>
+                </div>
+            </div>
+    </div>
+  </div>
+</div>
+
+<hr>
+
+
+
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+var disqus_shortname = 'newk-blog';
+
+/* * * DON'T EDIT BELOW THIS LINE * * */
+(function() {
+ var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+ dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+ (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+ })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink" target=_blank>comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+
+      <footer>
+                <p>Created by <a href="http://newkedison.tk">newkedison</a></p>
+              </footer>
+
+          </div> <!-- /container -->
+
+        
+                        <script>window.jQuery || document.write('<script src="/media/js/libs/jquery-1.7.2.min.js">\x3C/script>')</script>
+    
+            
+        
+        <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-15769172-5']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+    
+      </body>
+</html>

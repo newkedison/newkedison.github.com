@@ -7,10 +7,173 @@
         <link href="/"/>
     
         
-    <updated>2012-10-12T14:45:41Z</updated>
+    <updated>2012-12-07T11:26:00Z</updated>
 
     <id>/blog/atom.xml/</id>
 
+            <entry>
+            <title type="html">VPN搭建和使用</title>
+            <author><name>newkedison</name></author>
+            <link href="/blog/how-to-use-vpn.html"/>
+            <updated>2012-12-07T09:31:06Z</updated>
+            <published>2012-12-07T09:31:06Z</published>
+            <id>/blog/how-to-use-vpn.html</id>
+                        <category   scheme="/blog/tags"
+                        term="vpn"
+                        label="Vpn" />
+            
+            <content type="html">
+                                &lt;p&gt;&lt;strong&gt;特别提醒:&lt;/strong&gt;
+虽然下面的操作看起来都挺靠谱的, 但是我最后并没有操作成功, 所以可能还有哪些地方
+没有做对, 但是经过多处比较,&amp;nbsp;应该绝大部分的操作是正确的&lt;/p&gt;
+&lt;hr /&gt;
+&lt;h2&gt;在&lt;span class=&#34;caps&#34;&gt;VPS&lt;/span&gt;上建立&lt;span class=&#34;caps&#34;&gt;VPN&lt;/span&gt;服务&lt;/h2&gt;
+&lt;hr /&gt;
+&lt;p&gt;参考: &lt;a href=&#34;http://freenuts.com/how-to-set-up-a-vpn-in-a-vps/&#34;&gt;How To Set Up A &lt;span class=&#34;caps&#34;&gt;VPN&lt;/span&gt; In A&amp;nbsp;&lt;span class=&#34;caps&#34;&gt;VPS&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;上面的连接里面, 步骤讲的已经很详细了,&amp;nbsp;基本操作如下:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;购买并连接到vps上,&amp;nbsp;具体操作就不说了&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;安装ppptpd&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;sudo apt-get install pptpd
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;修改/etc/pptpd.conf, 这个文件主要是设置局域网的ip, 因为vpn就是一个局域网, 
+这里就是设置局域网的ip段.&amp;nbsp;找到如下的两行&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;#localip&amp;nbsp;192.168.0.1&lt;/p&gt;
+&lt;p&gt;#remoteip&amp;nbsp;192.168.0.234-238,192.168.0.245 &lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;把前面的#号去掉&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;修改/etc/ppp/pptpd-options, 这个文件设置&lt;span class=&#34;caps&#34;&gt;DNS&lt;/span&gt;,&amp;nbsp;找到&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;#ms-dns&amp;nbsp;10.0.0.1&lt;/p&gt;
+&lt;p&gt;#ms-dns&amp;nbsp;10.0.0.2&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;改成:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;ms-dns&amp;nbsp;8.8.8.8&lt;/p&gt;
+&lt;p&gt;ms-dns&amp;nbsp;8.8.4.4&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;修改/etc/ppp/chap-secrets, 这个文件设置用户名和密码,&amp;nbsp;增加一行:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;user1 pptpd password1 *
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;上面的教程说中间需要用Tab键隔开,&amp;nbsp;不过空格应该也行&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;修改/etc/sysctl.conf, 设置ipv4转发,&amp;nbsp;去掉下面一行前面的#号&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;#net.ipv4.ip_forward=1&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;使能ipv4转发,&amp;nbsp;执行以下命令&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;sudo sysctl -p
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;允许路由功能, 执行下面的命令(这一步我没看懂,&amp;nbsp;可能问题就出在这里)&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;iptables -t nat -A POSTROUTING -s 192.168.0.0/24 -o eth0 -j MASQUERADE
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;重启pptpd服务,&amp;nbsp;执行:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;sudo /etc/init.d/pptpd restart
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;至此,&amp;nbsp;vpn已经设置好了&lt;/p&gt;
+&lt;hr /&gt;
+&lt;h2&gt;在Ubuntu下连接vpn&lt;/h2&gt;
+&lt;hr /&gt;
+&lt;h3&gt;&lt;span class=&#34;caps&#34;&gt;GUI&lt;/span&gt;方式&lt;/h3&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;打开&amp;#8221;Edit&amp;nbsp;connections&amp;#8230;&amp;#8221;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;选到vpn选项卡,&amp;nbsp;点&amp;#8221;Add&amp;#8221;按钮&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;选择默认的&lt;span class=&#34;caps&#34;&gt;PPTP&lt;/span&gt;方式,&amp;nbsp;点&amp;#8221;Create&amp;#8230;&amp;#8221;按钮&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Gateway填&lt;span class=&#34;caps&#34;&gt;VPS&lt;/span&gt;的&lt;span class=&#34;caps&#34;&gt;IP&lt;/span&gt;, User name填刚才设置的用户名(上面是user1), 
+Password填刚才设置的密码(上面是password1),&amp;nbsp;点击&amp;#8221;Advanced&amp;#8230;&amp;#8221;按钮&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;勾选&amp;#8221;Use Point-to-Point encryption (&lt;span class=&#34;caps&#34;&gt;MPPE&lt;/span&gt;)&amp;#8221;,&amp;nbsp;然后点&amp;#8221;&lt;span class=&#34;caps&#34;&gt;OK&lt;/span&gt;&amp;#8221;按钮&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;点&amp;#8221;Save&amp;#8230;&amp;#8221;按钮,&amp;nbsp;连接创建完成&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;在选择网络的地方, 有一个&amp;#8221;&lt;span class=&#34;caps&#34;&gt;VPN&lt;/span&gt; Connections&amp;#8221;的二级菜单, 里面会列出刚才创建的&lt;span class=&#34;caps&#34;&gt;VPN&lt;/span&gt;,
+选择他, 如果正常的话,&amp;nbsp;应该是可以连接成功的. &lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;但是我连接成功之后, 就不知道怎么办了,&amp;nbsp;无论ping什么都ping不通&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3&gt;命令行方式&lt;/h3&gt;
+&lt;p&gt;参考: &lt;a href=&#34;http://www.adminsehow.com/2010/04/connect-to-pptp-vpn-from-linux-only-by-one-command/&#34;&gt;Connect to &lt;span class=&#34;caps&#34;&gt;PPTP&lt;/span&gt; &lt;span class=&#34;caps&#34;&gt;VPN&lt;/span&gt; from Linux only by one&amp;nbsp;command&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;我测试过, 虽然新的连接也建立了, 也连接了,&amp;nbsp;但是最后还是同样不能上&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;首先需要pptp-linux和ppp这两个包, 一般来说,&amp;nbsp;应该已经都装好了&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;sudo apt-get install pptp-linux ppp
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;执行下面的命令建立一个新连接&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;pppd pty &#34;pptp IP --nolaunchpppd&#34; file /etc/ppp/options.pptp \
+user USERNAME password PASSWORD
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;注意其中大写部分, &lt;span class=&#34;caps&#34;&gt;IP&lt;/span&gt;改为&lt;span class=&#34;caps&#34;&gt;VPS&lt;/span&gt;的ip, &lt;span class=&#34;caps&#34;&gt;USERNAME&lt;/span&gt;改为vpn用户名,&amp;nbsp;&lt;span class=&#34;caps&#34;&gt;PASSWORD&lt;/span&gt;改成密码&lt;/p&gt;
+&lt;p&gt;然后稍等10秒, 执行&lt;code&gt;ifconfig ppp0&lt;/code&gt;, 应该可以看到新建了一个叫ppp0的连接.
+一开始我没建立成功, 查看了日志(&lt;code&gt;less /var/log/syslog&lt;/code&gt;),&amp;nbsp;里面有一句&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;span class=&#34;caps&#34;&gt;LCP&lt;/span&gt; terminated by peer (&lt;span class=&#34;caps&#34;&gt;MPPE&lt;/span&gt; required but peer&amp;nbsp;refused)&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;经过一阵Google, 找到了解决方法, 就是编辑/etc/ppp/options.pptp文件,&amp;nbsp;把里面的&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;#require-mppe-128&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;前面的注释去掉,&amp;nbsp;然后再用上面的命令就可以了&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;设置连接后自动设置全局代理&lt;/p&gt;
+&lt;p&gt;在/etc/ppp/ip-up.d文件夹中新建一个文件vpn-up,&amp;nbsp;内容如下:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;#!/bin/bash
+H=`ps aux | grep &#39;pppd pty&#39; | grep -v grep | awk &#39;{print $14}&#39;`
+DG=`route -n | grep UG | awk &#39;{print $2}&#39;`
+DEV=`route -n | grep UG | awk &#39;{print $8}&#39;`
+route add -host $H gw $DG dev $DEV
+route del default $DEV
+route add default dev ppp0
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;在/etc/ppp/ip-down.d文件夹中新建一个文件vpn-down,&amp;nbsp;内容如下:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;#!/bin/bash
+H=`route -n | grep UGH | awk &#39;{print $1}&#39;`
+DG=`route -n | grep UGH | awk &#39;{print $2}&#39;`
+DEV=`route -n | grep UGH | awk &#39;{print $8}&#39;`
+route del -host $H
+route add default gw $DG dev $DEV
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;然后给这两个文件加上可执行权限(&lt;code&gt;chmod +x&lt;/code&gt;),&amp;nbsp;这样就可以了&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;如果要断开连接,&amp;nbsp;用&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;killall pppd
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/li&gt;
+&lt;/ol&gt;            </content>
+        </entry>
             <entry>
             <title type="html">Android程序破解</title>
             <author><name>newkedison</name></author>
@@ -221,6 +384,9 @@ remote指的是手机里面的文件地址, 比如/sdcard/media/, local是电脑
 后面的filter可以是多组用空格分开的tag:priority, 其中tag用来区分不同的程序, 
 priority表示日志等级, 可以是V, D, I, W, E, F, S, 前面就是分别对应verbose, 
 debug, info, warning, error, fatal, 后面的S表示silent,&amp;nbsp;就是禁止任何等级的log,&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;adb shell dumpsys activity services
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;查看当前有多少个Foreground Service, 可以用来验证自己的Service的startForeground&amp;nbsp;是否设置成功. &lt;/p&gt;
 &lt;h2&gt;建立公用函数库&lt;/h2&gt;
 &lt;hr /&gt;
 &lt;p&gt;无论哪门编程语言, 都会通过不同的方式支持函数库(library), java不例外,&amp;nbsp;android当然也不例外. &lt;/p&gt;
@@ -291,7 +457,12 @@ public class mainActivity extends Activity {
 &lt;pre&gt;&lt;code&gt;ant debug
 ant installd
 &lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;然后运行程序,&amp;nbsp;应该就可以看到logcat里面输出日志了.&lt;/p&gt;            </content>
+&lt;p&gt;然后运行程序,&amp;nbsp;应该就可以看到logcat里面输出日志了.&lt;/p&gt;
+&lt;h2&gt;查看所有系统自带的broadcast&lt;/h2&gt;
+&lt;hr /&gt;
+&lt;p&gt;打开&lt;span class=&#34;caps&#34;&gt;SDK&lt;/span&gt;里面的platforms/android-&lt;span class=&#34;caps&#34;&gt;XX&lt;/span&gt;/data/broadcast_actions.txt&lt;/p&gt;
+&lt;p&gt;里面列出了该平台下的所有系统自带的broadcast, 然后再到
+&lt;a href=&#34;http://developer.android.com&#34;&gt;http://developer.android.com&lt;/a&gt; 去搜索对应的名字, 可以找到具体的用法,&amp;nbsp;有时候还会有使用建议&lt;/p&gt;            </content>
         </entry>
             <entry>
             <title type="html">java使用笔记</title>
