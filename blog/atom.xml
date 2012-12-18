@@ -7,7 +7,7 @@
         <link href="/"/>
     
         
-    <updated>2012-12-07T11:26:00Z</updated>
+    <updated>2012-12-18T10:28:38Z</updated>
 
     <id>/blog/atom.xml/</id>
 
@@ -1840,7 +1840,9 @@ End Sub
 &lt;p&gt;注意：&lt;/p&gt;
 &lt;ol&gt;
 &lt;li&gt;&lt;code&gt;-t cifs&lt;/code&gt;制定挂载后等格式，据说这种格式效率比较高&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;-o&lt;/code&gt;后面跟等设置，用都好分隔，用username制定登录用户名，用password制定密码，这个password记得用双引号，这样才能写特殊字符，password也可以不写，等会会提示输入。后面跟着等是远程路径，记得要写共享文件夹等名字，不然会出错的，最后一个参数就是挂载点&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;-o&lt;/code&gt;后面跟等设置，用逗号分隔，用username制定登录用户名，用password制定密码，
+这个password记得用双引号，这样才能写特殊字符，password也可以不写，
+等会会提示输入。后面跟着等是远程路径，记得要写共享文件夹等名字，不然会出错的，&amp;nbsp;最后一个参数就是挂载点&lt;/li&gt;
 &lt;/ol&gt;
 &lt;h2&gt;查看远程Windows主机共享了什么&lt;/h2&gt;
 &lt;pre&gt;&lt;code&gt;$ smbclient -L //192.168.18.88 -U username
@@ -1855,29 +1857,42 @@ End Sub
 &lt;h2&gt;查看所有&lt;span class=&#34;caps&#34;&gt;TCP&lt;/span&gt;链接&lt;/h2&gt;
 &lt;pre&gt;&lt;code&gt;$ netstat -npa --tcp
 &lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;code&gt;-n&lt;/code&gt;表示不解析端口名,比如不加&lt;code&gt;-n&lt;/code&gt;时显示端口是&lt;span class=&#34;caps&#34;&gt;FTP&lt;/span&gt;,加上&lt;code&gt;-n&lt;/code&gt;后显示的就直接是端口号21,这个参数最好加上去,否则解析端口可能要占用很长的时间,而这几乎是没任何必要的,&lt;code&gt;-p&lt;/code&gt;要求显示进程名,方便用&lt;code&gt;grep&lt;/code&gt;找出需要的链接,&lt;code&gt;-a&lt;/code&gt;表示显示所有socket,如果不加上,只会显示已建立的链接,不会显示在监听的链接&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;-n&lt;/code&gt;表示不解析端口名,比如不加&lt;code&gt;-n&lt;/code&gt;时显示端口是&lt;span class=&#34;caps&#34;&gt;FTP&lt;/span&gt;,
+加上&lt;code&gt;-n&lt;/code&gt;后显示的就直接是端口号21,这个参数最好加上去,
+否则解析端口可能要占用很长的时间,而这几乎是没任何必要的,
+&lt;code&gt;-p&lt;/code&gt;要求显示进程名,方便用&lt;code&gt;grep&lt;/code&gt;找出需要的链接,
+&lt;code&gt;-a&lt;/code&gt;表示显示所有socket,如果不加上,只会显示已建立的链接,不会显示在监听的链接&lt;/p&gt;
 &lt;h2&gt;VMWare切换到终端&lt;/h2&gt;
-&lt;p&gt;从XWindow进入终端模式,本来是按Ctrl+Alt+Fn的,但是Ctrl+Alt是VMWare的快捷键,一种方法是修改VMWare的快捷键,另一种方法是先按住Ctrl和Fn,然后再按Alt&amp;nbsp;另外,从终端模式返回XWindow时按Alt+F7即可&lt;/p&gt;
+&lt;p&gt;从XWindow进入终端模式,本来是按Ctrl+Alt+Fn的,但是Ctrl+Alt是VMWare的快捷键,
+一种方法是修改VMWare的快捷键,另一种方法是先按住Ctrl和Fn,然后再按Alt&amp;nbsp;另外,从终端模式返回XWindow时按Alt+F7即可&lt;/p&gt;
 &lt;h2&gt;获取当前runlevel&lt;/h2&gt;
 &lt;pre&gt;&lt;code&gt;$ runlevel | tail -c 2
 &lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;code&gt;runlevel&lt;/code&gt;命令显示上一次和本次运行等级,显示格式如&amp;#8221;a b&amp;#8221;,如果要获取当前运行等级,那么用&lt;code&gt;tail&lt;/code&gt;命令,&lt;code&gt;-c&lt;/code&gt;参数表示获取最后N个字节,虽然我们只需要最后一个数字,但是参数要写2,可能是连结束符(或者换行符)也算上去了吧&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;runlevel&lt;/code&gt;命令显示上一次和本次运行等级,显示格式如&amp;#8221;a b&amp;#8221;,如果要获取当前运行等级,
+那么用&lt;code&gt;tail&lt;/code&gt;命令,&lt;code&gt;-c&lt;/code&gt;参数表示获取最后N个字节,虽然我们只需要最后一个数字,&amp;nbsp;但是参数要写2,可能是连结束符(或者换行符)也算上去了吧&lt;/p&gt;
 &lt;h2&gt;查看系统日志&lt;/h2&gt;
 &lt;pre&gt;&lt;code&gt;$ tail -f /var/log/syslog
 &lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;查看系统日志文件的最后10行,而且程序不退出,一旦系统日志文件有更新,会追加显示,这样就可以用来监视系统日志了,当然,后面的文件名是任意的,也就是可以监视任意文件的变化&lt;/p&gt;
+&lt;p&gt;查看系统日志文件的最后10行,而且程序不退出,一旦系统日志文件有更新,会追加显示,
+这样就可以用来监视系统日志了,当然,后面的文件名是任意的,&amp;nbsp;也就是可以监视任意文件的变化&lt;/p&gt;
 &lt;h2&gt;find不递归以及多条件&lt;/h2&gt;
 &lt;pre&gt;&lt;code&gt;$ find . -maxdepth 1 -type f \( -name &#34;2*&#34; -or -name &#34;3*&#34; \) -exec echo {} \;
 &lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;在当前文件夹下面搜索以2或者3开头的文件,并显示出来
-&lt;code&gt;-maxdepth 1&lt;/code&gt; 使得find只在当前目录下查找,不深入文件夹,find在默认情况下,是递归搜索所有子文件夹的.注意这个选项要放在&lt;code&gt;-type&lt;/code&gt;前面,放在后面虽然也没问题,但是会有一个报警.
+&lt;code&gt;-maxdepth 1&lt;/code&gt; 使得find只在当前目录下查找,不深入文件夹,find在默认情况下,
+是递归搜索所有子文件夹的.注意这个选项要放在&lt;code&gt;-type&lt;/code&gt;前面,放在后面虽然也没问题,
+但是会有一个报警.
 &lt;code&gt;-type f&lt;/code&gt; 指定只搜索文件,不管文件夹的名字是不是符合要求都忽略
-后面用&lt;code&gt;\(&lt;/code&gt;和&lt;code&gt;\)&lt;/code&gt;括起来的是指定文件名,中间用一个&lt;code&gt;-or&lt;/code&gt;把两个条件&amp;#8221;或&amp;#8221;起来,注意要加上括号,但是括号前面要用反斜杠转义
+后面用&lt;code&gt;\(&lt;/code&gt;和&lt;code&gt;\)&lt;/code&gt;括起来的是指定文件名,中间用一个&lt;code&gt;-or&lt;/code&gt;把两个条件&amp;#8221;或&amp;#8221;起来,
+注意要加上括号,但是括号前面要用反斜杠转义
 最后执行一个echo命令,其实用&lt;code&gt;-print&lt;/code&gt;也是可以的&lt;/p&gt;
 &lt;h2&gt;通过ssh拷贝远程Linux主机上的文件和文件夹&lt;/h2&gt;
 &lt;pre&gt;&lt;code&gt;$ scp -p &amp;lt;login_name@hostname&amp;gt;:/dir/for/file localdir/to/filelocation
 &lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;其中&lt;code&gt;-p&lt;/code&gt;表示保留文件原来的修改时间， &lt;code&gt;&amp;lt;login_name@hostname&amp;gt;&lt;/code&gt;类似于newk@192.168.18.100，然后加上一个冒号再加上远程文件名，只要这个用户可以访问的文件，都可以复制，后面一个参数就是本地文件名
+&lt;p&gt;其中&lt;code&gt;-p&lt;/code&gt;表示保留文件原来的修改时间，
+&lt;code&gt;&amp;lt;login_name@hostname&amp;gt;&lt;/code&gt;类似于newk@192.168.18.100，
+然后加上一个冒号再加上远程文件名，只要这个用户可以访问的文件，都可以复制，
+后面一个参数就是本地文件名
 如果加上&lt;code&gt;-r&lt;/code&gt;参数，表示递归处理文件夹，不加上的话，所有文件夹将直接忽略&lt;/p&gt;
 &lt;h2&gt;关于全局菜单栏上面的按钮会莫名其妙的丢失&lt;/h2&gt;
 &lt;p&gt;先安装一个配置工具&lt;/p&gt;
@@ -1886,12 +1901,13 @@ End Sub
 &lt;p&gt;然后运行&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;$ dconf-editor
 &lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;在弹出的“Configuration Editor”窗口中，依次点击左侧展开“desktop”&amp;gt;“unity”，点击选择“panel”（一定要点击一下，右边才有显示）&amp;nbsp;在右边Name下列出的“systray-whitelist”项目中，点击Value下的值，改为&amp;#8217;all&amp;#8217;即可&lt;/p&gt;
+&lt;p&gt;在弹出的“Configuration Editor”窗口中，依次点击左侧展开“desktop”&amp;gt;“unity”，
+点击选择“panel”（一定要点击一下，右边才有显示）&amp;nbsp;在右边Name下列出的“systray-whitelist”项目中，点击Value下的值，改为&amp;#8217;all&amp;#8217;即可&lt;/p&gt;
 &lt;h2&gt;修改启动时启动的服务&lt;/h2&gt;
 &lt;p&gt;下载rcconf&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;$ sudo apt-get install rcconf
 &lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;然后用sudo执行rcconf，可以看到配置界面，用方向键移动光标，用空格切换选中，用tab跳到确定&lt;/p&gt;
+&lt;p&gt;然后用sudo执行rcconf，可以看到配置界面，&amp;nbsp;用方向键移动光标，用空格切换选中，用tab跳到确定&lt;/p&gt;
 &lt;h2&gt;查看当前进程&lt;/h2&gt;
 &lt;pre&gt;&lt;code&gt;$ ps auxf
 &lt;/code&gt;&lt;/pre&gt;
@@ -1920,12 +1936,12 @@ End Sub
 &lt;/li&gt;
 &lt;/ul&gt;
 &lt;h2&gt;Shell脚本判断是否是被source&lt;/h2&gt;
-&lt;p&gt;类似于python的if __name__ ==&amp;nbsp;&amp;#8220;__main__&amp;#8221;:，bash可以实现类似的功能，如下：&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt; if [&lt;b&gt;&lt;/b&gt;[ &#34;$BASH_SOURCE&#34; == &#34;$0&#34; ]]; then
+&lt;p&gt;类似于python的&lt;code&gt;if __name__ == &#34;__main__&#34;:&lt;/code&gt;，&amp;nbsp;bash可以实现类似的功能，如下：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;#注意,由于语法的关系, 下面的两个左方括号中间加了一个空格, 实际上是不需要的
+if [ [ &#34;$BASH_SOURCE&#34; == &#34;$0&#34; ]]; then
   main
 fi
 &lt;/code&gt;&lt;/pre&gt;
-
 &lt;h2&gt;产生随机数&lt;/h2&gt;
 &lt;p&gt;在Linux里面，有两个特殊的设备/dev/random和/dev/urandom，可以用于产生随机数，可以&amp;nbsp;使用以下命令测试：&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;$ od -vAn -N16 -w4 -tu4 &amp;lt; /dev/random
@@ -1957,12 +1973,25 @@ fread需要的字节数直接到一个整型变量中，后面就可以根据需
 &lt;p&gt;这样可以查看所有含有bash的命令，已经他的父进程和子进程&lt;/p&gt;
 &lt;p&gt;&lt;code&gt;-p&lt;/code&gt;参数表示同时列出&lt;span class=&#34;caps&#34;&gt;PID&lt;/span&gt;，然后要kill还是要干嘛就方便了&lt;/p&gt;
 &lt;h2&gt;设置launcher隐藏模式&lt;/h2&gt;
-&lt;p&gt;参考&lt;a href=&#34;http://askubuntu.com/questions/172505/set-launcher-reveal-mode-to-intellihide&#34;&gt;这里&lt;/a&gt;
-在Unity-2D模式下,&amp;nbsp;可以使用以下命令设置launcher的隐藏模式为智能模式:&lt;/p&gt;
+&lt;p&gt;参考&lt;a href=&#34;http://askubuntu.com/questions/172505/set-launcher-reveal-mode-to-intellihide&#34;&gt;这里&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;在Unity-2D模式下,&amp;nbsp;可以使用以下命令设置launcher的隐藏模式为智能模式:&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;gsettings set com.canonical.Unity2d.Launcher hide-mode 2
 &lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;后面是数字, 0表示始终显示, 1表示始终隐藏, 2表示智能隐藏模式, 比较好用.
-但是有时候不知道什么原因, 会变成1,&amp;nbsp;需要重新设置一下才行.&lt;/p&gt;            </content>
+但是有时候不知道什么原因, 会变成1,&amp;nbsp;需要重新设置一下才行.&lt;/p&gt;
+&lt;h2&gt;查看文件夹大小&lt;/h2&gt;
+&lt;pre&gt;&lt;code&gt;du -s -h dir_name
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;其中&lt;code&gt;-s&lt;/code&gt;表示只显示总大小, 不显示每个文件的大小, &lt;code&gt;-h&lt;/code&gt;表示结果显示为便于阅读的
+格式, 如果没有这个参数, 默认是按字节为单位的, 如果要自己指定单位, 可以用&lt;code&gt;-BG&lt;/code&gt;,
+&lt;code&gt;-BM&lt;/code&gt;, &lt;code&gt;-BK&lt;/code&gt;等参数来指定&lt;/p&gt;
+&lt;h2&gt;pgrep命令&lt;/h2&gt;
+&lt;p&gt;pgrep是用来查找一个指定进程名对应的进程&lt;span class=&#34;caps&#34;&gt;ID&lt;/span&gt;, 默认只显示&lt;span class=&#34;caps&#34;&gt;ID&lt;/span&gt;,&amp;nbsp;用于和其他命令(比如kill)配合使用.&lt;/p&gt;
+&lt;p&gt;如果要自己看的话, 可以让其显示完整的进程名,&amp;nbsp;用如下命令&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;pgrep -lf bash
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;其中&lt;code&gt;-l&lt;/code&gt;要求显示完整进程名, 而&lt;code&gt;-f&lt;/code&gt;表示后面的名字可以匹配路径, 而不止是命令名,
+如果不加上&lt;code&gt;-f&lt;/code&gt;,&amp;nbsp;可能会遗漏一些进程&lt;/p&gt;            </content>
         </entry>
             <entry>
             <title type="html">Git常用命令及使用心得</title>
