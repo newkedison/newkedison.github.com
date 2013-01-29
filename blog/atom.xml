@@ -7,10 +7,179 @@
         <link href="/"/>
     
         
-    <updated>2012-12-18T10:28:38Z</updated>
+    <updated>2013-01-29T22:13:36Z</updated>
 
     <id>/blog/atom.xml/</id>
 
+            <entry>
+            <title type="html">Android源码编译及自定义rom</title>
+            <author><name>newkedison</name></author>
+            <link href="/blog/how-to-make-android-rom.html"/>
+            <updated>2013-01-29T20:51:31Z</updated>
+            <published>2013-01-29T20:51:31Z</published>
+            <id>/blog/how-to-make-android-rom.html</id>
+                        <category   scheme="/blog/tags"
+                        term="android"
+                        label="Android" />
+            
+            <content type="html">
+                                &lt;p&gt;&lt;em&gt;(目前只实现了源码的下载和编译,&amp;nbsp;修改还没研究过)&lt;/em&gt;&lt;/p&gt;
+&lt;h2&gt;参考资料:&lt;/h2&gt;
+&lt;hr /&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href=&#34;http://source.android.com/&#34;&gt;http://source.android.com/&lt;/a&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href=&#34;http://source.android.com/source/initializing.html&#34;&gt;Initializing a Build&amp;nbsp;Environment&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href=&#34;http://source.android.com/source/downloading.html&#34;&gt;Downloading the Source&amp;nbsp;Tree&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href=&#34;http://source.android.com/source/building.html&#34;&gt;Building the&amp;nbsp;System&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href=&#34;http://forum.xda-developers.com/showthread.php?t=2021510&#34;&gt;[Tutorial] Install Sun Java &lt;span class=&#34;caps&#34;&gt;JDK&lt;/span&gt; 6 on Ubuntu 12.04&amp;nbsp;&lt;span class=&#34;caps&#34;&gt;LTS&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;第一步:&amp;nbsp;安装系统&lt;/h2&gt;
+&lt;hr /&gt;
+&lt;p&gt;android的源码推荐是在Ubuntu10.04 64bit上编译, 现在13.04都快要出来了, 
+还用10.04有点说不过去, 我是用12.04编译的, 也没碰上什么问题. 
+据官网说, 从Android2.3开始的版本, 都必须在64bit上编译,&amp;nbsp;所以尽量还是选择64bit的.&lt;/p&gt;
+&lt;p&gt;下载完系统刻盘或者做U盘启动, 然后安装. 也可以弄个虚拟机来跑, 
+但是速度估计就很难说了, 注意虚拟机需要有16G的&lt;span class=&#34;caps&#34;&gt;RAM&lt;/span&gt;或者Swap,&amp;nbsp;还要有30G空间.&lt;/p&gt;
+&lt;h2&gt;第二步:&amp;nbsp;安装必要的软件&lt;/h2&gt;
+&lt;hr /&gt;
+&lt;p&gt;首先要安装jdk, 目前最新版本是jdk7, 但是教程里面说用jdk6就行, 
+除非只需要编译2.3以前的版本, 否则jdk5是不行的.&amp;nbsp;我最后选择了安装jdk6.&lt;/p&gt;
+&lt;p&gt;按照官网教程里面的方法是安装不了jdk6的, 后来搜到了&lt;a href=&#34;http://forum.xda-developers.com/showthread.php?t=2021510&#34;&gt;参考资料中的那个帖子&lt;/a&gt;,&amp;nbsp;运行以下命令:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;$ sudo add-apt-repository &#34;deb http://archive.ubuntu.com/ubuntu hardy main multiverse&#34;
+$ sudo add-apt-repository &#34;deb http://archive.ubuntu.com/ubuntu hardy-updates main multiverse&#34;
+$ sudo add-apt-repository &#34;deb http://archive.canonical.com/ lucid partner&#34;
+$ sudo add-apt-repository &#34;deb http://ppa.launchpad.net/webupd8team/java/ubuntu precise main&#34;
+$ sudo apt-get update 
+$ sudo apt-get install sun-java6-jdk
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;这样jdk6就安装好了&lt;/p&gt;
+&lt;p&gt;下面是安装git等必要的工具, 按照官网说的,&amp;nbsp;执行以下命令:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;$ sudo apt-get install git-core gnupg flex bison gperf build-essential \
+    zip curl libc6-dev libncurses5-dev:i386 x11proto-core-dev \
+    libx11-dev:i386 libreadline6-dev:i386 libgl1-mesa-glx:i386 \
+    libgl1-mesa-dev g++-multilib mingw32 openjdk-6-jdk tofrodos \
+    python-markdown libxml2-utils xsltproc zlib1g-dev:i386
+
+$ sudo ln -s /usr/lib/i386-linux-gnu/mesa/libGL.so.1 /usr/lib/i386-linux-gnu/libGL.so
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;安装好之后, 官网教程里面还说需要弄什么&lt;span class=&#34;caps&#34;&gt;USB&lt;/span&gt;权限, 还要配置ccache, 我暂时都没做,&amp;nbsp;不影响后面下载和编译源码&lt;/p&gt;
+&lt;h2&gt;第三步:&amp;nbsp;下载源码&lt;/h2&gt;
+&lt;hr /&gt;
+&lt;p&gt;Android的源码是用git托管的, 但是比较复杂, 所以有一个专门的脚本来简化工作,
+所以首先是下载这个脚本,&amp;nbsp;叫repo:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;$ mkdir ~/bin
+$ PATH=~/bin:$PATH
+$ curl https://dl-ssl.google.com/dl/googlesource/git-repo/repo &amp;gt; ~/bin/repo
+$ chmod a+x ~/bin/repo
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;然后新建一个文件夹,&amp;nbsp;用来放Android的源码&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;$ mkdir WORKING_DIRECTORY
+$ cd WORKING_DIRECTORY
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;然后开始下载源码:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;$ repo init -u https://android.googlesource.com/platform/manifest
+$ repo sync
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;第一个命令运行后, 会提示输入名字和邮箱等信息, 可以随便输, 
+但是如果以后有打算报bug的,&amp;nbsp;需要填自己的gmail.&lt;/p&gt;
+&lt;p&gt;第二个命令执行的时间就比较长了, 我花了大概一个下午的时间, 才下载完成, 
+中途由于网络问题, 导致部分文件没下好, 后来再执行一次&lt;code&gt;repo sync&lt;/code&gt;就可以了&lt;/p&gt;
+&lt;p&gt;根据一些地方说的, 也可以自己找别人打包好的源码, 放在上面新建的文件夹里面,
+然后用repo sync更新一下,&amp;nbsp;可以节省时间&lt;/p&gt;
+&lt;h2&gt;第四步:&amp;nbsp;编译源码&lt;/h2&gt;
+&lt;hr /&gt;
+&lt;p&gt;根据官网说的,&amp;nbsp;执行以下命令&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;$ . build/envsetup.sh
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;可以配置好环境,&amp;nbsp;然后配置编译目标&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;$ lunch full-eng
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;最后就是&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;$ make -j4
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;四线程开始编译. 整个系统编译下来还算有惊无险, 大概花了1个小时,&amp;nbsp;顺利完成.&lt;/p&gt;            </content>
+        </entry>
+            <entry>
+            <title type="html">lua相关知识</title>
+            <author><name>newkedison</name></author>
+            <link href="/blog/tips-for-lua.html"/>
+            <updated>2013-01-03T14:14:48Z</updated>
+            <published>2013-01-03T14:14:48Z</published>
+            <id>/blog/tips-for-lua.html</id>
+                        <category   scheme="/blog/tags"
+                        term="lua"
+                        label="Lua" />
+                        <category   scheme="/blog/tags"
+                        term="tips"
+                        label="Tips" />
+            
+            <content type="html">
+                                &lt;h2&gt;参考资料&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&#34;http://www.lua.org&#34;&gt;官网&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;http://www.lua.org/manual/5.2/&#34;&gt;Manual&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;http://www.lua.org/pil/&#34;&gt;Programming in&amp;nbsp;lua&lt;/a&gt;&lt;/p&gt;
+&lt;h2&gt;require相关&lt;/h2&gt;
+&lt;p&gt;参照内容: &lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;http://www.lua.org/pil/8.1.html&#34;&gt;http://www.lua.org/pil/8.1.html&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;http://www.lua.org/manual/5.2/manual.html#6.3&#34;&gt;http://www.lua.org/manual/5.2/manual.html#6.3&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;require用于引入外部扩展库, 其机制和C中的#include差不多,
+都是将目标文件整个读取到当前位置, 而且由于lua是解释执行的,
+所以从外部导入的文件内容就直接在当前位置执行了,
+其实require的作用和dofile函数非常类似, 但是略微有点区别,&amp;nbsp;使其比dofile更加好用.&lt;/p&gt;
+&lt;p&gt;require和dofile的区别主要有两点, 一是require会根据一些规则, 搜索目标文件,
+而dofile必须指定文件的完整路径, 二是require会避免同一个文件被多次执行,&amp;nbsp;而dofile没有这个功能.&lt;/p&gt;
+&lt;p&gt;由于lua是完全按照&lt;span class=&#34;caps&#34;&gt;ANSI&lt;/span&gt; C来编写的, 所以其没有路径的概念,
+因而查找文件和一般的编程语言不一样,&amp;nbsp;lua是采用模式匹配的方式来进行的. &lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;注意&lt;/strong&gt; lua从5.0到5.1到5.2, 虽然匹配的方式基本没变, 但是相关的名字都变了, 
+下面写的变量名都是按照5.2来写的, 如果我知道的话,&amp;nbsp;会在括号里写上前面版本的变量名&lt;/p&gt;
+&lt;p&gt;当执行到&lt;code&gt;require(&#34;foo&#34;)&lt;/code&gt;时, lua调用
+&lt;a href=&#34;http://www.lua.org/manual/5.2/manual.html#pdf-package.searchers&#34;&gt;package.searcher&lt;/a&gt;
+(在5.2是package.loader)这个table里面的函数, 依次进行查找, 这个table我们可以修改,
+从而实现修改搜索方式的目的.&amp;nbsp;后面介绍的都是默认的行为.&lt;/p&gt;
+&lt;p&gt;lua首先查看package.loaded(5.1以前似乎是用_LOADED全局变量)列表,
+看看&lt;code&gt;package.loaded[&#34;foo&#34;]&lt;/code&gt;是否为nil, 如果不为nil, 直接返回其值,
+如果是nil,&amp;nbsp;进行下一步&lt;/p&gt;
+&lt;p&gt;在package.preload里面再次搜索, 看看模式是否已经预加载了, 如果是, 返回该值, 
+如果不是,&amp;nbsp;继续查找&lt;/p&gt;
+&lt;p&gt;下一步是调用&lt;a href=&#34;http://www.lua.org/manual/5.2/manual.html#pdf-package.searchpath&#34;&gt;package.searchpath&lt;/a&gt;
+来搜索, 匹配的路径是package.path, 也就是
+&lt;code&gt;package.searchpath(&#34;foo&#34;, package.searchpath)&lt;/code&gt;. package.path这个值在初始化时,
+会先找&lt;code&gt;LUA_PATH_5_2&lt;/code&gt;这个环境变量, 再找&lt;code&gt;LUA_PATH&lt;/code&gt;这个环境变量, 如果都为空,&amp;nbsp;那么使用编译lua的时候luaconf.h文件里面的默认值&lt;/p&gt;
+&lt;p&gt;如果还没找到, 那么还是调用package.searchpath, 现在是检查package.cpath这个变量,
+同样是依次匹配, 如果找不到, 那么进行最后一次尝试, 如果找到了,
+因为这个搜索出来的都是C写的so文件, 需要进行动态加载.
+首先会先查找个so文件的导出函数, 看看里面是不是有一个luaopen_开头的函数, 
+而且后面的名字和模块名字一样. 比如&lt;code&gt;require(&#34;foo&#34;)&lt;/code&gt;找到了一个foo.so文件, 
+那么就需要找一个叫luaopen_foo的函数, 如果找到了这个函数, 那么调用
+&lt;a href=&#34;http://www.lua.org/manual/5.2/manual.html#pdf-package.loadlib&#34;&gt;package.loadlib&lt;/a&gt;
+(&amp;#8220;/path/to/foo.so&amp;#8221;, luaopen_foo)来加载这个函数库, 然后整个过程完成. 
+&lt;strong&gt;注意&lt;/strong&gt; 如果模块名称中含有&amp;#8221;.&amp;#8221;和&amp;#8221;-&amp;#8220;, 那么在推测加载函数的时候,
+会进行特殊处理, &amp;#8220;.&amp;#8221;会被替换为&amp;#8221;_&amp;#8221;, 而第一个&amp;#8221;-&amp;#8220;和其前面的内容, 均会被舍弃.
+举个例子:&amp;nbsp;a.b-c.d.so的加载函数必须是luaopen_c_d&lt;/p&gt;
+&lt;p&gt;如果上面的方法都无效, 最后还会尝试一个all-in-one的方法, 
+这个方法会在package.cpath里面搜索, 假设要&lt;code&gt;require(&#34;a.b.c&#34;)&lt;/code&gt;,
+那么先取第一个&amp;#8221;.&amp;#8221;之前的部分, 在package.cpath里面搜索, 也即
+&lt;code&gt;package.searchpath(&#34;a&#34;, package.cpath)&lt;/code&gt;, 如果能找到一个a.so文件,
+那么再检查这个a.so里面是否有一个叫luaopen_a_b_c的函数, 如果有的话, 
+用这个函数来加载, 如果没有, 那整个过程以失败告终, lua会报错. 
+这个搜索方法, 使得我们可以将很多个不同的模块作为子模块放在同一个so文件里面, 
+然后提供不同的luaopen_*函数,&amp;nbsp;使得lua可以只加载其中部分函数&lt;/p&gt;
+&lt;p&gt;当找到一个文件之后, package.searcher会返回文件名, 然后加载这个文件,
+如果这个文件有返回值, 那么这个返回值作为require的返回值,
+并且保存在package.loaded里面, 如果没有返回值,&amp;nbsp;那么package.loaded里面保存一个true&lt;/p&gt;            </content>
+        </entry>
             <entry>
             <title type="html">VPN搭建和使用</title>
             <author><name>newkedison</name></author>
@@ -384,6 +553,13 @@ remote指的是手机里面的文件地址, 比如/sdcard/media/, local是电脑
 后面的filter可以是多组用空格分开的tag:priority, 其中tag用来区分不同的程序, 
 priority表示日志等级, 可以是V, D, I, W, E, F, S, 前面就是分别对应verbose, 
 debug, info, warning, error, fatal, 后面的S表示silent,&amp;nbsp;就是禁止任何等级的log,&lt;/p&gt;
+&lt;p&gt;我自己常用的一个logcat命令是:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;adb logcat TAG:V AndroidRuntime:E *:S
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;其中的&lt;span class=&#34;caps&#34;&gt;TAG&lt;/span&gt;换成自己程序定义的&lt;span class=&#34;caps&#34;&gt;TAG&lt;/span&gt;, &lt;span class=&#34;caps&#34;&gt;TAG&lt;/span&gt;后面的V根据需要也可以改成D或者其他的,
+&lt;code&gt;AndroidRuntime:E&lt;/code&gt;这个主要是用于显示一些程序的错误, 在程序抛出异常然后结束时, 
+这个filter会把出错的堆栈记录显示出来, 对查找问题非常有帮助, 
+最后的&lt;code&gt;*:S&lt;/code&gt;就是屏蔽其他的错误提示&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;adb shell dumpsys activity services
 &lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;查看当前有多少个Foreground Service, 可以用来验证自己的Service的startForeground&amp;nbsp;是否设置成功. &lt;/p&gt;
@@ -392,7 +568,7 @@ debug, info, warning, error, fatal, 后面的S表示silent,&amp;nbsp;就是禁�
 &lt;p&gt;无论哪门编程语言, 都会通过不同的方式支持函数库(library), java不例外,&amp;nbsp;android当然也不例外. &lt;/p&gt;
 &lt;p&gt;不过我们在写android程序的话, 还是使用android的方式来安排函数库, 
 这样有两个优点: 一方面是在使用ant等工具时, 不需要额外的参数, 
-另一方面, 以后如果android弃用java,&amp;nbsp;过度起来比较容易&lt;/p&gt;
+另一方面, 以后如果android弃用java,&amp;nbsp;过渡起来比较容易&lt;/p&gt;
 &lt;p&gt;要建立和引用公用库, 首先要参考
 &lt;a href=&#34;http://developer.android.com/tools/projects/index.html&#34;&gt;官网的这篇文章&lt;/a&gt;, 
 里面分别讲了通过eclipse和命令行的方法, eclipse的方法我不需要用到,&amp;nbsp;所以下面主要介绍一下相关的命令行操作&lt;/p&gt;
@@ -451,8 +627,7 @@ public class mainActivity extends Activity {
   }
 }
 &lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;然后开始编译和测试, 先开一个模拟器, 或者连接一个手机, 
-然后开启logcat(相关操作可参考&lt;a href=&#34;how-to-make-android-app.html&#34;&gt;上一篇&lt;/a&gt;文章)&lt;/p&gt;
+&lt;p&gt;然后开始编译和测试, 先开一个模拟器, 或者连接一个手机,&amp;nbsp;然后开启logcat(相关操作可参考上一节的命令)&lt;/p&gt;
 &lt;p&gt;编译和安装的步骤和正常的操作完全一样,&amp;nbsp;都是&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;ant debug
 ant installd
@@ -1991,7 +2166,22 @@ fread需要的字节数直接到一个整型变量中，后面就可以根据需
 &lt;pre&gt;&lt;code&gt;pgrep -lf bash
 &lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;其中&lt;code&gt;-l&lt;/code&gt;要求显示完整进程名, 而&lt;code&gt;-f&lt;/code&gt;表示后面的名字可以匹配路径, 而不止是命令名,
-如果不加上&lt;code&gt;-f&lt;/code&gt;,&amp;nbsp;可能会遗漏一些进程&lt;/p&gt;            </content>
+如果不加上&lt;code&gt;-f&lt;/code&gt;,&amp;nbsp;可能会遗漏一些进程&lt;/p&gt;
+&lt;h2&gt;连接无线网络&lt;/h2&gt;
+&lt;p&gt;参考资料:
+&lt;a href=&#34;http://askubuntu.com/questions/16584/how-to-connect-to-a-wireless-network-manually-in-terminal-without-using-networ&#34;&gt;How to connect to a wireless network manually (in terminal) without using network&amp;nbsp;manager?&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;首先是扫描可见的无线网络,&amp;nbsp;使用&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;$ sudo iwlist wlan0 s
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;其中, wlan0是无线网卡的id, s是scan的缩写, 这个命令最好是用sudo来执行, 
+不然可能一些需要密码的网络会被忽略, 在执行后,&amp;nbsp;可能会提示&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;wlan0     Interface doesn&amp;#8217;t support scanning : Device or resource&amp;nbsp;busy&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;只要稍等片刻,&amp;nbsp;再执行一下就好了&lt;/p&gt;
+&lt;p&gt;连接网络的时候,&amp;nbsp;使用:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;iwconfig wlan0 essid ESSID_FROM_iwlist key PASSWORD
+&lt;/code&gt;&lt;/pre&gt;            </content>
         </entry>
             <entry>
             <title type="html">Git常用命令及使用心得</title>

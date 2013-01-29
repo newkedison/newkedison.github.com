@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html>
+  <head>
+        <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Android源码编译及自定义rom | newk's blog</title>
+    <meta name="description" content="how to download and compile android source code, and also how to modify it">
+    <meta name="author" content="newkedison">
+    <meta name="viewport" content="">
+    <meta name="keywords" content="android, ">
+
+        <link href="/media/css/bootstrap.css" rel="stylesheet">
+    <link href="/media/css/style.css" rel="stylesheet">
+        
+
+
+            
+    
+    <script src="/media/js/libs/modernizr-2.5.3-respond-1.1.0.min.js"></script>
+    
+    <link rel="stylesheet" href="/media/css/styles/tomorrow-night.css">
+<script src="/media/js/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+  </head>
+
+  <body class="how-to-make-android-rom">
+<!--[if lt IE 7]><p class=chromeframe>Your browser is <em>ancient!</em> <a href="http://browsehappy.com/">Upgrade to a different browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to experience this site.</p><![endif]-->
+
+    
+    <div class="navbar navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+          <ul class="nav">
+            <li class="active">
+              <a class="brand" href="/index.html">newk's blog</a>
+            </li>
+                        <ul class="nav">
+<li><a href="/index.html">Home</a></li><li><a href="/blog/index.html">Blog</a></li><li><a href="/tags.html">Tags</a></li><li><a href="/about.html">About</a></li></ul>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+      
+                
+<div class="popover-title">
+    <h1>
+    Android源码编译及自定义rom      </h1>
+  </div>
+
+<div class="popover-content">
+  <div class="row">
+    <div class="span9">
+      <div class="content">
+        <p title="2013-01-29 Tue 20:51:31">
+            Posted: Tue, 2013-01-29
+        </p>
+
+                <div>
+          tags: 
+                      <a class="btn small" 
+               href="/blog/tags/android.html">
+              android
+            </a>
+                  </div>
+        
+        <hr />
+
+        <p><em>(目前只实现了源码的下载和编译, 修改还没研究过)</em></p>
+<h2>参考资料:</h2>
+<hr />
+<ul>
+<li>
+<p><a href="http://source.android.com/">http://source.android.com/</a></p>
+<ul>
+<li>
+<p><a href="http://source.android.com/source/initializing.html">Initializing a Build Environment</a></p>
+</li>
+<li>
+<p><a href="http://source.android.com/source/downloading.html">Downloading the Source Tree</a></p>
+</li>
+<li>
+<p><a href="http://source.android.com/source/building.html">Building the System</a></p>
+</li>
+</ul>
+</li>
+<li>
+<p><a href="http://forum.xda-developers.com/showthread.php?t=2021510">[Tutorial] Install Sun Java JDK 6 on Ubuntu 12.04 LTS</a></p>
+</li>
+</ul>
+<h2>第一步: 安装系统</h2>
+<hr />
+<p>android的源码推荐是在Ubuntu10.04 64bit上编译, 现在13.04都快要出来了, 
+还用10.04有点说不过去, 我是用12.04编译的, 也没碰上什么问题. 
+据官网说, 从Android2.3开始的版本, 都必须在64bit上编译, 所以尽量还是选择64bit的.</p>
+<p>下载完系统刻盘或者做U盘启动, 然后安装. 也可以弄个虚拟机来跑, 
+但是速度估计就很难说了, 注意虚拟机需要有16G的RAM或者Swap, 还要有30G空间.</p>
+<h2>第二步: 安装必要的软件</h2>
+<hr />
+<p>首先要安装jdk, 目前最新版本是jdk7, 但是教程里面说用jdk6就行, 
+除非只需要编译2.3以前的版本, 否则jdk5是不行的. 我最后选择了安装jdk6.</p>
+<p>按照官网教程里面的方法是安装不了jdk6的, 后来搜到了<a href="http://forum.xda-developers.com/showthread.php?t=2021510">参考资料中的那个帖子</a>,
+运行以下命令:</p>
+<pre><code>$ sudo add-apt-repository "deb http://archive.ubuntu.com/ubuntu hardy main multiverse"
+$ sudo add-apt-repository "deb http://archive.ubuntu.com/ubuntu hardy-updates main multiverse"
+$ sudo add-apt-repository "deb http://archive.canonical.com/ lucid partner"
+$ sudo add-apt-repository "deb http://ppa.launchpad.net/webupd8team/java/ubuntu precise main"
+$ sudo apt-get update 
+$ sudo apt-get install sun-java6-jdk
+</code></pre>
+<p>这样jdk6就安装好了</p>
+<p>下面是安装git等必要的工具, 按照官网说的, 执行以下命令:</p>
+<pre><code>$ sudo apt-get install git-core gnupg flex bison gperf build-essential \
+    zip curl libc6-dev libncurses5-dev:i386 x11proto-core-dev \
+    libx11-dev:i386 libreadline6-dev:i386 libgl1-mesa-glx:i386 \
+    libgl1-mesa-dev g++-multilib mingw32 openjdk-6-jdk tofrodos \
+    python-markdown libxml2-utils xsltproc zlib1g-dev:i386
+
+$ sudo ln -s /usr/lib/i386-linux-gnu/mesa/libGL.so.1 /usr/lib/i386-linux-gnu/libGL.so
+</code></pre>
+<p>安装好之后, 官网教程里面还说需要弄什么USB权限, 还要配置ccache, 我暂时都没做,
+不影响后面下载和编译源码</p>
+<h2>第三步: 下载源码</h2>
+<hr />
+<p>Android的源码是用git托管的, 但是比较复杂, 所以有一个专门的脚本来简化工作,
+所以首先是下载这个脚本, 叫repo:</p>
+<pre><code>$ mkdir ~/bin
+$ PATH=~/bin:$PATH
+$ curl https://dl-ssl.google.com/dl/googlesource/git-repo/repo &gt; ~/bin/repo
+$ chmod a+x ~/bin/repo
+</code></pre>
+<p>然后新建一个文件夹, 用来放Android的源码</p>
+<pre><code>$ mkdir WORKING_DIRECTORY
+$ cd WORKING_DIRECTORY
+</code></pre>
+<p>然后开始下载源码:</p>
+<pre><code>$ repo init -u https://android.googlesource.com/platform/manifest
+$ repo sync
+</code></pre>
+<p>第一个命令运行后, 会提示输入名字和邮箱等信息, 可以随便输, 
+但是如果以后有打算报bug的, 需要填自己的gmail.</p>
+<p>第二个命令执行的时间就比较长了, 我花了大概一个下午的时间, 才下载完成, 
+中途由于网络问题, 导致部分文件没下好, 后来再执行一次<code>repo sync</code>就可以了</p>
+<p>根据一些地方说的, 也可以自己找别人打包好的源码, 放在上面新建的文件夹里面,
+然后用repo sync更新一下, 可以节省时间</p>
+<h2>第四步: 编译源码</h2>
+<hr />
+<p>根据官网说的, 执行以下命令</p>
+<pre><code>$ . build/envsetup.sh
+</code></pre>
+<p>可以配置好环境, 然后配置编译目标</p>
+<pre><code>$ lunch full-eng
+</code></pre>
+<p>最后就是</p>
+<pre><code>$ make -j4
+</code></pre>
+<p>四线程开始编译. 整个系统编译下来还算有惊无险, 大概花了1个小时, 顺利完成.</p>      </div>
+    </div>
+    <div class="span3">
+      <div class="sidebar">
+                <nav class="post_nav">
+        <a class="backlink" href="/blog">
+        &#x2190;返回文章列表</a>
+        <br /><br />
+        <div class="prev">
+        &#x00AB;前一篇文章<br />
+                没有文章了...
+                </div>
+        <br />
+        <div class="next">
+        后一篇文章&#x00BB;<br />
+                <a title="2013-01-03"
+           href="/blog/tips-for-lua.html">
+           lua相关知识
+        </a>
+                </div>
+            </div>
+    </div>
+  </div>
+</div>
+
+<hr>
+
+
+
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+var disqus_shortname = 'newk-blog';
+
+/* * * DON'T EDIT BELOW THIS LINE * * */
+(function() {
+ var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+ dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+ (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+ })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink" target=_blank>comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+
+      <footer>
+                <p>Created by <a href="http://newkedison.tk">newkedison</a></p>
+              </footer>
+
+          </div> <!-- /container -->
+
+        
+                        <script>window.jQuery || document.write('<script src="/media/js/libs/jquery-1.7.2.min.js">\x3C/script>')</script>
+    
+            
+        
+        <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-15769172-5']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+    
+      </body>
+</html>

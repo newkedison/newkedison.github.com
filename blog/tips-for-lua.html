@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html>
+  <head>
+        <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>lua相关知识 | newk's blog</title>
+    <meta name="description" content="Tips for lua programming">
+    <meta name="author" content="newkedison">
+    <meta name="viewport" content="">
+    <meta name="keywords" content="lua, tips, ">
+
+        <link href="/media/css/bootstrap.css" rel="stylesheet">
+    <link href="/media/css/style.css" rel="stylesheet">
+        
+
+
+            
+    
+    <script src="/media/js/libs/modernizr-2.5.3-respond-1.1.0.min.js"></script>
+    
+    <link rel="stylesheet" href="/media/css/styles/tomorrow-night.css">
+<script src="/media/js/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+  </head>
+
+  <body class="tips-for-lua">
+<!--[if lt IE 7]><p class=chromeframe>Your browser is <em>ancient!</em> <a href="http://browsehappy.com/">Upgrade to a different browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to experience this site.</p><![endif]-->
+
+    
+    <div class="navbar navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+          <ul class="nav">
+            <li class="active">
+              <a class="brand" href="/index.html">newk's blog</a>
+            </li>
+                        <ul class="nav">
+<li><a href="/index.html">Home</a></li><li><a href="/blog/index.html">Blog</a></li><li><a href="/tags.html">Tags</a></li><li><a href="/about.html">About</a></li></ul>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+      
+                
+<div class="popover-title">
+    <h1>
+    lua相关知识      </h1>
+  </div>
+
+<div class="popover-content">
+  <div class="row">
+    <div class="span9">
+      <div class="content">
+        <p title="2013-01-03 Thu 14:14:48">
+            Posted: Thu, 2013-01-03
+        </p>
+
+                <div>
+          tags: 
+                      <a class="btn small" 
+               href="/blog/tags/lua.html">
+              lua
+            </a>
+                      <a class="btn small" 
+               href="/blog/tags/tips.html">
+              tips
+            </a>
+                  </div>
+        
+        <hr />
+
+        <h2>参考资料</h2>
+<p><a href="http://www.lua.org">官网</a></p>
+<p><a href="http://www.lua.org/manual/5.2/">Manual</a></p>
+<p><a href="http://www.lua.org/pil/">Programming in lua</a></p>
+<h2>require相关</h2>
+<p>参照内容: </p>
+<p><a href="http://www.lua.org/pil/8.1.html">http://www.lua.org/pil/8.1.html</a></p>
+<p><a href="http://www.lua.org/manual/5.2/manual.html#6.3">http://www.lua.org/manual/5.2/manual.html#6.3</a></p>
+<p>require用于引入外部扩展库, 其机制和C中的#include差不多,
+都是将目标文件整个读取到当前位置, 而且由于lua是解释执行的,
+所以从外部导入的文件内容就直接在当前位置执行了,
+其实require的作用和dofile函数非常类似, 但是略微有点区别,
+使其比dofile更加好用.</p>
+<p>require和dofile的区别主要有两点, 一是require会根据一些规则, 搜索目标文件,
+而dofile必须指定文件的完整路径, 二是require会避免同一个文件被多次执行,
+而dofile没有这个功能.</p>
+<p>由于lua是完全按照ANSI C来编写的, 所以其没有路径的概念,
+因而查找文件和一般的编程语言不一样, lua是采用模式匹配的方式来进行的. </p>
+<p><strong>注意</strong> lua从5.0到5.1到5.2, 虽然匹配的方式基本没变, 但是相关的名字都变了, 
+下面写的变量名都是按照5.2来写的, 如果我知道的话, 会在括号里写上前面版本的变量名</p>
+<p>当执行到<code>require("foo")</code>时, lua调用
+<a href="http://www.lua.org/manual/5.2/manual.html#pdf-package.searchers">package.searcher</a>
+(在5.2是package.loader)这个table里面的函数, 依次进行查找, 这个table我们可以修改,
+从而实现修改搜索方式的目的. 后面介绍的都是默认的行为.</p>
+<p>lua首先查看package.loaded(5.1以前似乎是用_LOADED全局变量)列表,
+看看<code>package.loaded["foo"]</code>是否为nil, 如果不为nil, 直接返回其值,
+如果是nil, 进行下一步</p>
+<p>在package.preload里面再次搜索, 看看模式是否已经预加载了, 如果是, 返回该值, 
+如果不是, 继续查找</p>
+<p>下一步是调用<a href="http://www.lua.org/manual/5.2/manual.html#pdf-package.searchpath">package.searchpath</a>
+来搜索, 匹配的路径是package.path, 也就是
+<code>package.searchpath("foo", package.searchpath)</code>. package.path这个值在初始化时,
+会先找<code>LUA_PATH_5_2</code>这个环境变量, 再找<code>LUA_PATH</code>这个环境变量, 如果都为空,
+那么使用编译lua的时候luaconf.h文件里面的默认值</p>
+<p>如果还没找到, 那么还是调用package.searchpath, 现在是检查package.cpath这个变量,
+同样是依次匹配, 如果找不到, 那么进行最后一次尝试, 如果找到了,
+因为这个搜索出来的都是C写的so文件, 需要进行动态加载.
+首先会先查找个so文件的导出函数, 看看里面是不是有一个luaopen_开头的函数, 
+而且后面的名字和模块名字一样. 比如<code>require("foo")</code>找到了一个foo.so文件, 
+那么就需要找一个叫luaopen_foo的函数, 如果找到了这个函数, 那么调用
+<a href="http://www.lua.org/manual/5.2/manual.html#pdf-package.loadlib">package.loadlib</a>
+("/path/to/foo.so", luaopen_foo)来加载这个函数库, 然后整个过程完成. 
+<strong>注意</strong> 如果模块名称中含有"."和"-", 那么在推测加载函数的时候,
+会进行特殊处理, "."会被替换为"_", 而第一个"-"和其前面的内容, 均会被舍弃.
+举个例子: a.b-c.d.so的加载函数必须是luaopen_c_d</p>
+<p>如果上面的方法都无效, 最后还会尝试一个all-in-one的方法, 
+这个方法会在package.cpath里面搜索, 假设要<code>require("a.b.c")</code>,
+那么先取第一个"."之前的部分, 在package.cpath里面搜索, 也即
+<code>package.searchpath("a", package.cpath)</code>, 如果能找到一个a.so文件,
+那么再检查这个a.so里面是否有一个叫luaopen_a_b_c的函数, 如果有的话, 
+用这个函数来加载, 如果没有, 那整个过程以失败告终, lua会报错. 
+这个搜索方法, 使得我们可以将很多个不同的模块作为子模块放在同一个so文件里面, 
+然后提供不同的luaopen_*函数, 使得lua可以只加载其中部分函数</p>
+<p>当找到一个文件之后, package.searcher会返回文件名, 然后加载这个文件,
+如果这个文件有返回值, 那么这个返回值作为require的返回值,
+并且保存在package.loaded里面, 如果没有返回值, 那么package.loaded里面保存一个true</p>      </div>
+    </div>
+    <div class="span3">
+      <div class="sidebar">
+                <nav class="post_nav">
+        <a class="backlink" href="/blog">
+        &#x2190;返回文章列表</a>
+        <br /><br />
+        <div class="prev">
+        &#x00AB;前一篇文章<br />
+                <a title="2013-01-29"
+           href="/blog/how-to-make-android-rom.html">
+           Android源码编译及自定义rom
+        </a>
+                </div>
+        <br />
+        <div class="next">
+        后一篇文章&#x00BB;<br />
+                <a title="2012-12-07"
+           href="/blog/how-to-use-vpn.html">
+           VPN搭建和使用
+        </a>
+                </div>
+            </div>
+    </div>
+  </div>
+</div>
+
+<hr>
+
+
+
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+var disqus_shortname = 'newk-blog';
+
+/* * * DON'T EDIT BELOW THIS LINE * * */
+(function() {
+ var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+ dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+ (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+ })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink" target=_blank>comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+
+      <footer>
+                <p>Created by <a href="http://newkedison.tk">newkedison</a></p>
+              </footer>
+
+          </div> <!-- /container -->
+
+        
+                        <script>window.jQuery || document.write('<script src="/media/js/libs/jquery-1.7.2.min.js">\x3C/script>')</script>
+    
+            
+        
+        <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-15769172-5']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+    
+      </body>
+</html>

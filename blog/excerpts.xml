@@ -7,10 +7,43 @@
         <link href="/"/>
     
         
-    <updated>2012-12-18T10:28:38Z</updated>
+    <updated>2013-01-29T22:13:35Z</updated>
 
     <id>/blog/excerpts.xml/</id>
 
+            <entry>
+            <title type="html">Android源码编译及自定义rom</title>
+            <author><name>newkedison</name></author>
+            <link href="/blog/how-to-make-android-rom.html"/>
+            <updated>2013-01-29T20:51:31Z</updated>
+            <published>2013-01-29T20:51:31Z</published>
+            <id>/blog/how-to-make-android-rom.html</id>
+                        <category   scheme="/blog/tags"
+                        term="android"
+                        label="Android" />
+            
+            <content type="html">
+                
+                &lt;p&gt;how to download and compile android source code, and also how to modify&amp;nbsp;it&lt;/p&gt;            </content>
+        </entry>
+            <entry>
+            <title type="html">lua相关知识</title>
+            <author><name>newkedison</name></author>
+            <link href="/blog/tips-for-lua.html"/>
+            <updated>2013-01-03T14:14:48Z</updated>
+            <published>2013-01-03T14:14:48Z</published>
+            <id>/blog/tips-for-lua.html</id>
+                        <category   scheme="/blog/tags"
+                        term="lua"
+                        label="Lua" />
+                        <category   scheme="/blog/tags"
+                        term="tips"
+                        label="Tips" />
+            
+            <content type="html">
+                
+                &lt;p&gt;Tips for lua&amp;nbsp;programming&lt;/p&gt;            </content>
+        </entry>
             <entry>
             <title type="html">VPN搭建和使用</title>
             <author><name>newkedison</name></author>

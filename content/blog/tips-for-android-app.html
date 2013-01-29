@@ -120,6 +120,15 @@ remote指的是手机里面的文件地址, 比如/sdcard/media/, local是电脑
 priority表示日志等级, 可以是V, D, I, W, E, F, S, 前面就是分别对应verbose, 
 debug, info, warning, error, fatal, 后面的S表示silent, 就是禁止任何等级的log,
 
+我自己常用的一个logcat命令是:
+
+    adb logcat TAG:V AndroidRuntime:E *:S
+
+其中的TAG换成自己程序定义的TAG, TAG后面的V根据需要也可以改成D或者其他的,
+`AndroidRuntime:E`这个主要是用于显示一些程序的错误, 在程序抛出异常然后结束时, 
+这个filter会把出错的堆栈记录显示出来, 对查找问题非常有帮助, 
+最后的`*:S`就是屏蔽其他的错误提示
+
     adb shell dumpsys activity services
 
 查看当前有多少个Foreground Service, 可以用来验证自己的Service的startForeground
@@ -134,7 +143,7 @@ android当然也不例外.
 
 不过我们在写android程序的话, 还是使用android的方式来安排函数库, 
 这样有两个优点: 一方面是在使用ant等工具时, 不需要额外的参数, 
-另一方面, 以后如果android弃用java, 过度起来比较容易
+另一方面, 以后如果android弃用java, 过渡起来比较容易
 
 要建立和引用公用库, 首先要参考
 [官网的这篇文章](http://developer.android.com/tools/projects/index.html), 
@@ -209,7 +218,7 @@ project.properties的文件, 里面有一句
     }
 
 然后开始编译和测试, 先开一个模拟器, 或者连接一个手机, 
-然后开启logcat(相关操作可参考[上一篇](how-to-make-android-app.html)文章)
+然后开启logcat(相关操作可参考上一节的命令)
 
 编译和安装的步骤和正常的操作完全一样, 都是
 
