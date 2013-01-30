@@ -7,7 +7,7 @@
         <link href="/"/>
     
         
-    <updated>2013-01-29T22:13:36Z</updated>
+    <updated>2013-01-30T20:47:42Z</updated>
 
     <id>/blog/atom.xml/</id>
 
@@ -103,13 +103,22 @@ $ repo sync
 &lt;p&gt;根据官网说的,&amp;nbsp;执行以下命令&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;$ . build/envsetup.sh
 &lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;可以配置好环境,&amp;nbsp;然后配置编译目标&lt;/p&gt;
+&lt;p&gt;可以配置好环境, 这里要增加一步, 官网没有提及,&amp;nbsp;就是运行&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;$ set_stuff_for_environment
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;如果没有这一步, 在编译完源代码后, 执行&lt;code&gt;emulator&lt;/code&gt;命令会出错, 我查了好几个地方, 
+才有人提到这个地方, 我是直接把这句命令添加到build/envsetup.sh的最后,&amp;nbsp;其实也就是调用了这个文件的一个函数&lt;/p&gt;
+&lt;p&gt;接着配置编译目标&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;$ lunch full-eng
 &lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;最后就是&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;$ make -j4
 &lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;四线程开始编译. 整个系统编译下来还算有惊无险, 大概花了1个小时,&amp;nbsp;顺利完成.&lt;/p&gt;            </content>
+&lt;p&gt;四线程开始编译. 整个系统编译下来还算有惊无险, 大概花了1个小时,&amp;nbsp;顺利完成.&lt;/p&gt;
+&lt;p&gt;完成之后,&amp;nbsp;可以执行&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;$ emulator
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;如果正常的话,&amp;nbsp;应该可以看到一个虚拟的Android系统启动了&lt;/p&gt;            </content>
         </entry>
             <entry>
             <title type="html">lua相关知识</title>

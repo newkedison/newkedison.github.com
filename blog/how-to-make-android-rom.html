@@ -149,13 +149,23 @@ $ repo sync
 <p>根据官网说的, 执行以下命令</p>
 <pre><code>$ . build/envsetup.sh
 </code></pre>
-<p>可以配置好环境, 然后配置编译目标</p>
+<p>可以配置好环境, 这里要增加一步, 官网没有提及, 就是运行</p>
+<pre><code>$ set_stuff_for_environment
+</code></pre>
+<p>如果没有这一步, 在编译完源代码后, 执行<code>emulator</code>命令会出错, 我查了好几个地方, 
+才有人提到这个地方, 我是直接把这句命令添加到build/envsetup.sh的最后, 
+其实也就是调用了这个文件的一个函数</p>
+<p>接着配置编译目标</p>
 <pre><code>$ lunch full-eng
 </code></pre>
 <p>最后就是</p>
 <pre><code>$ make -j4
 </code></pre>
-<p>四线程开始编译. 整个系统编译下来还算有惊无险, 大概花了1个小时, 顺利完成.</p>      </div>
+<p>四线程开始编译. 整个系统编译下来还算有惊无险, 大概花了1个小时, 顺利完成.</p>
+<p>完成之后, 可以执行</p>
+<pre><code>$ emulator
+</code></pre>
+<p>如果正常的话, 应该可以看到一个虚拟的Android系统启动了</p>      </div>
     </div>
     <div class="span3">
       <div class="sidebar">
