@@ -1,0 +1,379 @@
+---
+title: GnuPG使用简介
+description: 总结GnuPG的安装和使用方法
+created: !!timestamp '2014-02-20 15:20:08'
+tags:
+    - gnupg
+---
+
+{% raw %}
+
+## 参考资料
+
+[使用 GnuPG 实现电子邮件加密和数字签名——PGP 30分钟简明教程(1)](http://archboy.org/2013/04/18/gnupg-pgp-encrypt-decrypt-message-and-email-and-digital-signing-easy-tutorial/)
+
+[使用 GnuPG 实现电子邮件加密和数字签名——PGP 30分钟简明教程(2)](http://archboy.org/2013/05/15/gnupg-pgp-encrypt-decrypt-file-and-digital-signing-easy-tutorial/)
+
+[GPG入门教程 作者： 阮一峰](http://www.ruanyifeng.com/blog/2013/07/gpg.html)
+
+## 下载链接
+
+[GnuPG官网](http://www.gnupg.org/index.html)
+
+[GnuPG下载页面](http://www.gnupg.org/download/index.html)
+
+[GunPG FTP(含GPG2必须包的下载)](ftp://ftp.gnupg.org/gcrypt/)
+
+## GnuPG简介
+
+> PGP (Pretty Good Privacy) 是由 Phil Zimmermann
+于 1991 开发的一个用于数据加密和数字签名的程序，由于被广泛应用，
+以至于后来形成一个开放的标准 OpenPGP，
+这个标准也是目前最为常用的邮件加密和签名的方式。
+而 GnuPG 则是实现了该标准的一个开源免费程序， 
+
+--- 摘自 "使用 GnuPG 实现电子邮件加密和数字签名——PGP 30分钟简明教程(1)"
+
+## GnuPG的安装
+
+GnuPG目前有两个版本:
+
+* GnuPG 1.x.x 这个是经典版本, 一般系统自带或者从软件包安装的都是这个版本,
+这个版本用起来比较简单方便, 编译也比较容易, 而且没有明显缺点,
+所以一般不想折腾的话, 就用这个版本, 当前版本为1.4.16
+
+* GnuPG 2.x.x 这个是新的版本, 代码变得比较模块化, 拆分出多个软件包,
+利于代码的复用, 另外还支持一些没听说过的东西, 具体可以看官网的介绍,
+这个版本目前对于使用来说没啥特别的优点(至少对我来说是这样的),
+但是安装和使用就稍微复杂一些了, 下面会介绍编译安装和使用的方法,
+当前版本为2.0.22
+
+这两个版本从设计上就考虑了共存性, 也就是说, 可以同时安装这两个版本,
+不会有什么冲突
+
+### 安装GnuPG 1.x.x
+
+这个版本比较好装, 从官网下载压缩包之后解压, 然后标准三板斧:
+
+    $ ./configure
+    $ make
+    $ sudo make install
+
+一般来说不会有啥意外情况
+
+### 安装GnuPG 2.x.x
+
+由于这个版本的代码变的模块化了, 所以一些依赖的包需要先下载安装,
+我在第一次`$ ./configure`的时候, 提示缺少四个依赖的包
+
+* [libgpg-error](ftp://ftp.gnupg.org/gcrypt/libgpg-error/)
+* [libksba](ftp://ftp.gnupg.org/gcrypt/libksba/)
+* [libassuan](ftp://ftp.gnupg.org/gcrypt/libassuan/)
+* libpth-dev
+
+根据压缩包里面的README说, 应该还需要
+[libgcrypt](ftp://ftp.gnupg.org/gcrypt/libgcrypt/),
+但是可能我已经装过了, 所以没有提示
+
+前面三个包(包括后面的libgcrypt), 只要点击链接, 从FTP下载一个最新的版本,
+然后也是先解压, 接着三板斧解决
+
+对于libpth-dev就更加简单了, 直接`$ sudo apt-get install libpth-dev`就可以了
+
+实际上后面还需要一个pinentry的包, 可以从
+[FTP](ftp://ftp.gnupg.org/gcrypt/pinentry/)下载源码后编译,
+也可以通过apt-get安装, 我选择的是pinentry-curses, 喜欢qt风格的,
+可以选择安装pinentry-qt. 这个工具实际上是用来方便输入私钥(secret key)密码的,
+个人觉得有点画蛇添足, 但是后面使用的时候需要用到, 这个就一起先安装吧
+
+    $ sudo apt-get install pinentry-curses
+
+## GnuPG 的使用
+
+从使用上来说, 两个版本的GnuPG基本一致, 不过GunPG 2.x.x需要多启动一个gpg-agent
+
+### 启动gpg-agent(仅适用于GnuPG 2.x.x)
+
+这一步在GnuPG 1.x.x版本是不需要的, 只有2.x.x版本需要这个东西
+
+使用以下命令启动
+
+    $ eval $(gpg-agent --daemon)
+
+由于要设置环境变量的原因, 不能直接`$ gpg-agent --daemon`来运行
+
+另外, 在启动前, 还要新建或者打开~/.gnupg/gpg-agent.conf文件,
+里面添加一行
+
+    pinentry-program /usr/bin/pinentry-curses
+
+或者
+
+    pinentry-program /usr/bin/pinentry-qt 
+
+视安装的pinentry包选择其一
+
+不然在运行`gpg2`时, 会提示
+
+> gpg: problem with the agent: No pinentry
+
+
+### 制作自己的公钥和私钥
+
+**注意**: 本文后面的命令中, 使用`gpg`这个命令, 调用的是GnuPG 1.x.x的版本,
+如果要使用GnuPG 2.x.x的版本, 只要改成`gpg2`就可以了, 参数什么的都是通用的.
+另外, 如果没有按照前面说的安装pinentry, 那么`gpg2`在要输入私钥密码的时候会报错,
+所以在使用`gpg2`这个命令前, 一定要先安装pinentry
+
+这一步在前面参考资料的两篇中文文章中都有详细的介绍, 其实就一个命令
+
+    $ gpg --gen-key
+
+然后根据提示操作既可. 基本都可以用默认值, 除了里面选择有效期限这一步,
+我觉得不应该选择不过期, 应该选个相对较长的过期时间(比如1年或2年).
+因为当一组key过期后, 实际上还是可以用来解密或者校验签名的,
+只是不能添加信任(使用--sign-key, 后面会提到),
+而且过期后还可以手动延期(由于我没试过, 具体是否有用无法确定),
+会过期的好处在于, 如果我们丢失了私钥文件, 或者忘记了私钥文件的密码,
+不至于留着一对key放在那里占地方, 想用又用不了, 还会误导他人
+
+在输入名字(Real name), 邮箱(Email address), 注释(Comment)时, 可以任意输入,
+似乎没啥限制, 邮箱也不需要一定是按照邮箱的格式. 当然, 为了方便其他人阅读,
+还是写稍微有意义的内容比较好, 要注意这3个内容都是公开的,
+所以里面不要含有什么和密码有关的内容
+
+还有是最后在设置私钥密码的时候, 一般是建议设置一个稍微复杂一些的密码,
+而且一定要记住, 私钥和私钥密码就是对我们身份的唯一确认方式,
+这两者遗失任意一个, 就只能重新再生成一对了. 虽然重新生成很容易,
+但是如果公钥已经提供给了很多人, 那么就需要提醒他们删除原来的公钥,
+再换成新的, 这个工作量就可大可小了. 所以前面也提到了最好设置一个过期时间.
+另外在生成的时候, 还可以趁着还记得密码, 先生成一个对应的"撤销证书",
+这个证书可以提交到证书服务器, 用来撤销我们提交上去的证书,
+撤销证书也要妥善保存, 而且不能被其他人获取, 否则他就能在直接撤销我们的证书了.
+撤销证书的生成使用以下命令
+
+    $ gpg --gen-revoke [uid]
+
+这里的uid是公钥的一个Hash值, 8个字符, 在生成之后可以看到, 或者用
+
+    $ gpg --list-keys
+
+查看到自己的公钥, 也可以看到有这么一个8个字符的Hash值. 另外, 
+据说撤销公钥的步骤, 是先本地撤销自己的私钥, 然后再将其同步到服务器上去,
+具体我没操作过, 不太清楚流程
+
+公钥和私钥制作好之后, 一般为了和别人交流, 我们会把公钥上传到公钥服务器,
+使用以下命令:
+
+    $ gpg --keyserver keys.gnupg.net --send-key <uid>
+
+`--keyserver`指定公钥服务器, 一般也可以不写,
+默认的服务器一般就是keys.gnupg.net, 这个可以在`~/.gnupg/gpg.conf`里面修改.
+`--send-key`后面跟的就是公钥的Hash值了
+
+### 添加/查询/删除公钥
+
+为了和别人交流, 我们肯定需要保存他们的公钥在电脑上, 这样才可以校验他们的签名.
+添加别人的公钥, 如果知道他们公钥的信息, 可以在公钥服务器上搜索.
+
+参考"30分钟简明教程"里面的例子, 比如知道那个作者公钥的邮箱是:ivarptr@126.com,
+那么使用如下命令:
+
+    $ gpg --search-keys ivarptr@126.com
+
+结果如下:
+
+    > gpg: searching for "ivarptr@126.com" from hkp server keys.gnupg.net
+    > (1) qiuci (ivarptr on Twitter) <qiucisuju@126.com>
+    > 1024 bit DSA key 0CE5A137, created: 2013-11-26
+    > (2) wentao (ivarptr on Twitter) <ffantastic@126.com>
+    > 1024 bit DSA key 4726E54D, created: 2013-11-24
+    > (3) ivarptr (ivarptr on Twitter) <ivarptr@126.com>
+    > 2048 bit RSA key 72E75B05, created: 2013-04-17
+    > Keys 1-3 of 3 for "ivarptr@126.com".  Enter number(s), N)ext, or Q)uit > 
+
+这里搜到了3个匹配的, 可以看出这里采用很模糊的匹配, 实际上前两个都不是我们要的,
+这里输入3然后回车, 就会把这个公钥导入到我们本地电脑上. 另外注意,
+"2048 bit RSA key 72E75B05"这一句表示这个公钥是2048位RSA加密的,
+其Hash值就是72E75B05, 如果我们知道这个Hash值, 前面直接用
+
+    $ gpg --search-keys 72E75B05
+
+同样可以搜索到这个公钥, 由于Hash值只有8位字符, 所以存在重复的可能性,
+当然这个可能性不大, 而且也没啥影响
+
+现在这个公钥已经添加到我们本地电脑的公钥列表了, 可以通过以下命令查看:
+
+    $ gpg --list-keys
+
+输出的部分结果如下:
+
+    > pub   2048R/72E75B05 2013-04-17 [expires: 2015-04-17]
+    > uid                  ivarptr (ivarptr on Twitter) <ivarptr@126.com>
+    > sub   2048R/74F0F5F9 2013-04-17 [expires: 2015-04-17]
+
+这里又可以看到Hash值, 还可以看到过期时间(expires: 2015-04-17),
+名字(ivarptr), 注释(ivarptr on Twitter), 邮箱(ivarptr@126.com)
+
+下面sub开头的一行我还不太理解是做什么用的, 据说这两个Hash值,
+一个一般用于加密, 另一个一般用于签名
+
+另外一种添加公钥的方法, 是下载别人导出的公钥文件, 一般公钥文件有两种格式,
+二进制格式一般以.gpg为扩展名, ascii格式一般以.asc为扩展名,
+或者直接贴在邮件或者网页上
+
+比如gnu项目组就提供了一个他们的[公钥文件](ftp://ftp.gnu.org/gnu/gnu-keyring.gpg)
+让别人下载, 而GnuPG官方则在[这里](http://www.gnupg.org/signature_key.html)
+贴出了ascii格式的公钥文件, 注意其中前面部分是说明,
+从5个减号开始的地方才是导出的公钥, 把这段内容保存为一个文件, 就可以用来导入了
+
+下载到公钥文件后, 使用
+
+    $ gpg --import <公钥文件名>
+
+就可以把公钥导入到本地电脑, 以后用于校验
+
+如果导入了错误的公钥, 或者某些公钥不再需要, 我们需要删除这个公钥,
+只要先查到公钥的Hash值, 然后通过以下命令既可从本地删除该公钥
+
+    $ gpg --delete-key <uid>
+
+### 导出自己的公钥和私钥
+
+导出公钥的命令
+
+    $ gpg --output my_keys.gpg --export <uid>
+
+如果没有`--output`指定输出文件, 则输出到stdout, 如果想输出二进制格式, 则
+
+    $ gpg --armor --output my_keys.asc --export <uid>
+
+导出私钥的命令
+
+    $ gpg --output my_secret_key.gpg --export-secret-keys
+
+同样也支持加上`--armor`导出ascii格式
+
+### 编辑自己的公钥和私钥
+
+如果自己公钥的信息需要修改, 可以通过
+
+    $ gpg --edit-key <uid>
+
+进行修改, 需要根据提示来操作
+
+### 信任一个公钥
+
+我们从任意途径导入的公钥, 默认都是不被信任的, 因为别人可能伪造公钥服务器,
+可能伪造公钥文件, 为了确认一个公钥是真实的, 我们需要通过其他的手段,
+比如可以通过电话跟好友确认, 或者当面确认, 如果是网站的话,
+一般会公布其公钥的指纹, 比如前面提到的
+[GunPG官方网站](http://www.gnupg.org/signature_key.html)上,
+就写明了他们公钥的指纹(fingerprint), 我们可以在导入一个公钥之后, 通过以下命令
+
+    $ gpg --fingerprint <uid>
+
+来查看公钥的指纹, 与网站公布的指纹进行对比, 虽然网站也存在被篡改的可能,
+但是这样至少增加了一层安全的保证
+
+当我们确认这个公钥是正确的之后, 就可以信任这个公钥, 使用以下命令
+
+    $ gpg --sign-key <uid>
+
+这个命令还会再次打印fingerprint, 以便我们再次确认其真实性
+
+一个公钥如果没有进行过确认, 在后面校验签名的时候, 会提示虽然校验成功,
+但是这个公钥不保证是真实的, 如果不在乎这个提示, 那么可以不用去信任任何公钥的
+
+
+## GnuPG的作用
+
+本文到目前为之, 只介绍了GnuPG公钥和私钥的相关命令, 但是没有提到他们到底有什么用.
+下面就介绍GnuPG最重要的两个功能, 一个是加密文件, 另一个是对文件进行签名
+
+GnuPG采用非对称加密的方法, 我们生成一对公钥和私钥, 私钥自己保存,
+公钥可通过各种方式提供给别人. 
+
+当别人要跟我们传输文件或者信息时,
+就可以使用我们的公钥对文件或者信息进行加密, 然后发送给我们,
+我们用私钥进行解密, 还原出原始的文件或者信息.
+
+当我们要发送一个文件或者信息给别人, 我们要让别人相信这个文件确实是我们发的,
+而且发送过程没有被任何修改, 那么可以使用私钥对这个文件或者信息进行签名,
+然后对方收到后, 使用我们的公钥对签名进行校验, 如果校验通过,
+则可以保证对方收到的文件确实就是我们发的那个文件
+
+当然, 加密和签名也可以同时使用, 发送文件时, 使用对方的公钥进行加密,
+再用自己的私钥签名, 对方收到后先校验签名, 校验无误后再解密,
+这样就完成了一次可靠的, 安全的传输
+
+### GnuPG加密和解密
+
+假设a.txt需要加密, 命令如下:
+
+    $ gpg --recipient <接收方uid> --output a.txt.encrypt --encrypt a.txt
+
+注意--recipient后面要指定接收方的uid, 也就是这个文件要发给谁, 就用谁的公钥uid,
+如果没有`--output`, 结果就输出到stdout, 另外, 可以加上`--armor`来生成二进制格式,
+还可以加上`--cipher-algo 加密算法`来指定加密的算法, 默认的算法似乎不太安全,
+可以指定为AES256, 据说比较可靠
+
+对应的解密命令是
+
+    $ gpg --output a.txt --decrypt a.txt.encrypt
+
+然后需要输入对应的私钥密码, 如果密码正确, 就可以正确解密了
+
+### GunPG签名和校验
+
+假设a.txt需要签名, 命令如下:
+
+    $ gpg --sign a.txt
+
+这样会生成一个a.txt.gpg文件, 这个就是签名后的文件, 是二进制格式的,
+如果需要ascii格式, 不能用`--armor`了, 需要用以下命令
+
+    $ gpg --clearsign a.txt
+
+这样会生成a.txt.asc文件, 这个文件要比原文件大很多,
+但是可以方便的贴到邮件或者网页上.
+
+另外更普遍的做法, 是单独生成一个签名文件, 使用以下命令
+
+    $ gpg --detach-sig a.txt
+
+这样不会修改原来的a.txt, 而是额外生成了一个a.txt.sig的文件作为其签名,
+这个可以加上`--armor`生成ascii格式
+
+对于这三种签名的方法, 校验的方法都是类似的
+
+    $ gpg --verify a.txt.gpg
+    $ gpg --verify a.txt.asc
+    $ gpg --verify a.txt.sig
+
+最后一个命令要求a.txt和a.txt.sig放在同一个目录下
+
+### GnuPG对称加密
+
+GnuPG不仅支持非对称加密, 还支持对称加密, 其实从实际操作来看,
+前面一节中的加密实际上是非对称加密和对称加密的结合,
+这是因为对称加密和解密的速度要远快于非对称加密,
+一般非对称加密的的方法, 都是采用非对称加密的算法算出一个新的密钥,
+然后采用对称加密来加密, 这样既可以有非对称加密的效果, 也可以不牺牲速度
+
+对称加密的工具就不止GnuPG一家了, 不过顺便用用也无妨,可以参考
+[这篇文章](http://www.tutonics.com/2012/11/gpg-encryption-guide-part-4-symmetric.html)
+或者[这篇](http://www.gnupg.org/gph/en/manual/c173.html)
+
+对称加密就没有公钥和私钥了, 就是一个密码, 也叫密钥, 把文件和密钥提供给别人,
+对方就可以解密
+
+## 拾遗
+
+1. 前文的命令中提到uid的地方, 一般是写Hash值, 而且大部分地方允许输入名字,
+邮件地址, 或者是备注来指定一个公钥, 注意如果有空格, 需要加上双引号
+
+
+{% endraw %}
+{# vim: ft=markdown
+#}

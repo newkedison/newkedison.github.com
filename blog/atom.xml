@@ -7,10 +7,286 @@
         <link href="/"/>
     
         
-    <updated>2013-01-30T20:47:42Z</updated>
+    <updated>2014-03-05T18:53:01Z</updated>
 
     <id>/blog/atom.xml/</id>
 
+            <entry>
+            <title type="html">GnuPG使用简介</title>
+            <author><name>newkedison</name></author>
+            <link href="/blog/how-to-use-gnupg.html"/>
+            <updated>2014-02-20T15:20:08Z</updated>
+            <published>2014-02-20T15:20:08Z</published>
+            <id>/blog/how-to-use-gnupg.html</id>
+                        <category   scheme="/blog/tags"
+                        term="gnupg"
+                        label="Gnupg" />
+            
+            <content type="html">
+                                &lt;h2&gt;参考资料&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&#34;http://archboy.org/2013/04/18/gnupg-pgp-encrypt-decrypt-message-and-email-and-digital-signing-easy-tutorial/&#34;&gt;使用 GnuPG 实现电子邮件加密和数字签名——&lt;span class=&#34;caps&#34;&gt;PGP&lt;/span&gt;&amp;nbsp;30分钟简明教程(1)&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;http://archboy.org/2013/05/15/gnupg-pgp-encrypt-decrypt-file-and-digital-signing-easy-tutorial/&#34;&gt;使用 GnuPG 实现电子邮件加密和数字签名——&lt;span class=&#34;caps&#34;&gt;PGP&lt;/span&gt;&amp;nbsp;30分钟简明教程(2)&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;http://www.ruanyifeng.com/blog/2013/07/gpg.html&#34;&gt;&lt;span class=&#34;caps&#34;&gt;GPG&lt;/span&gt;入门教程 作者：&amp;nbsp;阮一峰&lt;/a&gt;&lt;/p&gt;
+&lt;h2&gt;下载链接&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&#34;http://www.gnupg.org/index.html&#34;&gt;GnuPG官网&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;http://www.gnupg.org/download/index.html&#34;&gt;GnuPG下载页面&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;ftp://ftp.gnupg.org/gcrypt/&#34;&gt;GunPG&amp;nbsp;&lt;span class=&#34;caps&#34;&gt;FTP&lt;/span&gt;(含&lt;span class=&#34;caps&#34;&gt;GPG2&lt;/span&gt;必须包的下载)&lt;/a&gt;&lt;/p&gt;
+&lt;h2&gt;GnuPG简介&lt;/h2&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;span class=&#34;caps&#34;&gt;PGP&lt;/span&gt; (Pretty Good Privacy) 是由 Phil Zimmermann
+于 1991 开发的一个用于数据加密和数字签名的程序，由于被广泛应用，
+以至于后来形成一个开放的标准 OpenPGP，
+这个标准也是目前最为常用的邮件加密和签名的方式。
+而 GnuPG&amp;nbsp;则是实现了该标准的一个开源免费程序， &lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;&amp;#8211; 摘自 &amp;#8220;使用 GnuPG 实现电子邮件加密和数字签名——&lt;span class=&#34;caps&#34;&gt;PGP&lt;/span&gt;&amp;nbsp;30分钟简明教程(1)&amp;#8221;&lt;/p&gt;
+&lt;h2&gt;GnuPG的安装&lt;/h2&gt;
+&lt;p&gt;GnuPG目前有两个版本:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;GnuPG 1.x.x 这个是经典版本, 一般系统自带或者从软件包安装的都是这个版本,
+这个版本用起来比较简单方便, 编译也比较容易, 而且没有明显缺点,
+所以一般不想折腾的话, 就用这个版本,&amp;nbsp;当前版本为1.4.16&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;GnuPG 2.x.x 这个是新的版本, 代码变得比较模块化, 拆分出多个软件包,
+利于代码的复用, 另外还支持一些没听说过的东西, 具体可以看官网的介绍,
+这个版本目前对于使用来说没啥特别的优点(至少对我来说是这样的),
+但是安装和使用就稍微复杂一些了, 下面会介绍编译安装和使用的方法,&amp;nbsp;当前版本为2.0.22&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;这两个版本从设计上就考虑了共存性, 也就是说, 可以同时安装这两个版本,&amp;nbsp;不会有什么冲突&lt;/p&gt;
+&lt;h3&gt;安装GnuPG&amp;nbsp;1.x.x&lt;/h3&gt;
+&lt;p&gt;这个版本比较好装, 从官网下载压缩包之后解压,&amp;nbsp;然后标准三板斧:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;$ ./configure
+$ make
+$ sudo make install
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;一般来说不会有啥意外情况&lt;/p&gt;
+&lt;h3&gt;安装GnuPG&amp;nbsp;2.x.x&lt;/h3&gt;
+&lt;p&gt;由于这个版本的代码变的模块化了, 所以一些依赖的包需要先下载安装,
+我在第一次&lt;code&gt;$ ./configure&lt;/code&gt;的时候,&amp;nbsp;提示缺少四个依赖的包&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;ftp://ftp.gnupg.org/gcrypt/libgpg-error/&#34;&gt;libgpg-error&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;ftp://ftp.gnupg.org/gcrypt/libksba/&#34;&gt;libksba&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;ftp://ftp.gnupg.org/gcrypt/libassuan/&#34;&gt;libassuan&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;libpth-dev&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;根据压缩包里面的&lt;span class=&#34;caps&#34;&gt;README&lt;/span&gt;说, 应该还需要
+&lt;a href=&#34;ftp://ftp.gnupg.org/gcrypt/libgcrypt/&#34;&gt;libgcrypt&lt;/a&gt;,
+但是可能我已经装过了,&amp;nbsp;所以没有提示&lt;/p&gt;
+&lt;p&gt;前面三个包(包括后面的libgcrypt), 只要点击链接, 从&lt;span class=&#34;caps&#34;&gt;FTP&lt;/span&gt;下载一个最新的版本,
+然后也是先解压,&amp;nbsp;接着三板斧解决&lt;/p&gt;
+&lt;p&gt;对于libpth-dev就更加简单了, 直接&lt;code&gt;$ sudo apt-get install libpth-dev&lt;/code&gt;就可以了&lt;/p&gt;
+&lt;p&gt;实际上后面还需要一个pinentry的包, 可以从
+&lt;a href=&#34;ftp://ftp.gnupg.org/gcrypt/pinentry/&#34;&gt;&lt;span class=&#34;caps&#34;&gt;FTP&lt;/span&gt;&lt;/a&gt;下载源码后编译,
+也可以通过apt-get安装, 我选择的是pinentry-curses, 喜欢qt风格的,
+可以选择安装pinentry-qt. 这个工具实际上是用来方便输入私钥(secret key)密码的,
+个人觉得有点画蛇添足, 但是后面使用的时候需要用到,&amp;nbsp;这个就一起先安装吧&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;$ sudo apt-get install pinentry-curses
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2&gt;GnuPG&amp;nbsp;的使用&lt;/h2&gt;
+&lt;p&gt;从使用上来说, 两个版本的GnuPG基本一致, 不过GunPG&amp;nbsp;2.x.x需要多启动一个gpg-agent&lt;/p&gt;
+&lt;h3&gt;启动gpg-agent(仅适用于GnuPG&amp;nbsp;2.x.x)&lt;/h3&gt;
+&lt;p&gt;这一步在GnuPG 1.x.x版本是不需要的,&amp;nbsp;只有2.x.x版本需要这个东西&lt;/p&gt;
+&lt;p&gt;使用以下命令启动&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;$ eval $(gpg-agent --daemon)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;由于要设置环境变量的原因, 不能直接&lt;code&gt;$ gpg-agent --daemon&lt;/code&gt;来运行&lt;/p&gt;
+&lt;p&gt;另外, 在启动前, 还要新建或者打开~/.gnupg/gpg-agent.conf文件,&amp;nbsp;里面添加一行&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;pinentry-program /usr/bin/pinentry-curses
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;或者&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;pinentry-program /usr/bin/pinentry-qt
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;视安装的pinentry包选择其一&lt;/p&gt;
+&lt;p&gt;不然在运行&lt;code&gt;gpg2&lt;/code&gt;时,&amp;nbsp;会提示&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;gpg: problem with the agent: No&amp;nbsp;pinentry&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h3&gt;制作自己的公钥和私钥&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;注意&lt;/strong&gt;: 本文后面的命令中, 使用&lt;code&gt;gpg&lt;/code&gt;这个命令, 调用的是GnuPG 1.x.x的版本,
+如果要使用GnuPG 2.x.x的版本, 只要改成&lt;code&gt;gpg2&lt;/code&gt;就可以了, 参数什么的都是通用的.
+另外, 如果没有按照前面说的安装pinentry, 那么&lt;code&gt;gpg2&lt;/code&gt;在要输入私钥密码的时候会报错,
+所以在使用&lt;code&gt;gpg2&lt;/code&gt;这个命令前,&amp;nbsp;一定要先安装pinentry&lt;/p&gt;
+&lt;p&gt;这一步在前面参考资料的两篇中文文章中都有详细的介绍,&amp;nbsp;其实就一个命令&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;$ gpg --gen-key
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;然后根据提示操作既可. 基本都可以用默认值, 除了里面选择有效期限这一步,
+我觉得不应该选择不过期, 应该选个相对较长的过期时间(比如1年或2年).
+因为当一组key过期后, 实际上还是可以用来解密或者校验签名的,
+只是不能添加信任(使用&amp;#8212;sign-key, 后面会提到),
+而且过期后还可以手动延期(由于我没试过, 具体是否有用无法确定),
+会过期的好处在于, 如果我们丢失了私钥文件, 或者忘记了私钥文件的密码,
+不至于留着一对key放在那里占地方, 想用又用不了,&amp;nbsp;还会误导他人&lt;/p&gt;
+&lt;p&gt;在输入名字(Real name), 邮箱(Email address), 注释(Comment)时, 可以任意输入,
+似乎没啥限制, 邮箱也不需要一定是按照邮箱的格式. 当然, 为了方便其他人阅读,
+还是写稍微有意义的内容比较好, 要注意这3个内容都是公开的,&amp;nbsp;所以里面不要含有什么和密码有关的内容&lt;/p&gt;
+&lt;p&gt;还有是最后在设置私钥密码的时候, 一般是建议设置一个稍微复杂一些的密码,
+而且一定要记住, 私钥和私钥密码就是对我们身份的唯一确认方式,
+这两者遗失任意一个, 就只能重新再生成一对了. 虽然重新生成很容易,
+但是如果公钥已经提供给了很多人, 那么就需要提醒他们删除原来的公钥,
+再换成新的, 这个工作量就可大可小了. 所以前面也提到了最好设置一个过期时间.
+另外在生成的时候, 还可以趁着还记得密码, 先生成一个对应的&amp;#8221;撤销证书&amp;#8221;,
+这个证书可以提交到证书服务器, 用来撤销我们提交上去的证书,
+撤销证书也要妥善保存, 而且不能被其他人获取, 否则他就能在直接撤销我们的证书了.&amp;nbsp;撤销证书的生成使用以下命令&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;$ gpg --gen-revoke [uid]
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;这里的uid是公钥的一个Hash值, 8个字符, 在生成之后可以看到,&amp;nbsp;或者用&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;$ gpg --list-keys
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;查看到自己的公钥, 也可以看到有这么一个8个字符的Hash值. 另外, 
+据说撤销公钥的步骤, 是先本地撤销自己的私钥, 然后再将其同步到服务器上去,
+具体我没操作过,&amp;nbsp;不太清楚流程&lt;/p&gt;
+&lt;p&gt;公钥和私钥制作好之后, 一般为了和别人交流, 我们会把公钥上传到公钥服务器,&amp;nbsp;使用以下命令:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;$ gpg --keyserver keys.gnupg.net --send-key &amp;lt;uid&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;code&gt;--keyserver&lt;/code&gt;指定公钥服务器, 一般也可以不写,
+默认的服务器一般就是keys.gnupg.net, 这个可以在&lt;code&gt;~/.gnupg/gpg.conf&lt;/code&gt;里面修改.
+&lt;code&gt;--send-key&lt;/code&gt;后面跟的就是公钥的Hash值了&lt;/p&gt;
+&lt;h3&gt;添加/查询/删除公钥&lt;/h3&gt;
+&lt;p&gt;为了和别人交流, 我们肯定需要保存他们的公钥在电脑上, 这样才可以校验他们的签名.
+添加别人的公钥, 如果知道他们公钥的信息,&amp;nbsp;可以在公钥服务器上搜索.&lt;/p&gt;
+&lt;p&gt;参考&amp;#8221;30分钟简明教程&amp;#8221;里面的例子, 比如知道那个作者公钥的邮箱是:ivarptr@126.com,&amp;nbsp;那么使用如下命令:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;$ gpg --search-keys ivarptr@126.com
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;结果如下:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;&amp;gt; gpg: searching for &#34;ivarptr@126.com&#34; from hkp server keys.gnupg.net
+&amp;gt; (1) qiuci (ivarptr on Twitter) &amp;lt;qiucisuju@126.com&amp;gt;
+&amp;gt; 1024 bit DSA key 0CE5A137, created: 2013-11-26
+&amp;gt; (2) wentao (ivarptr on Twitter) &amp;lt;ffantastic@126.com&amp;gt;
+&amp;gt; 1024 bit DSA key 4726E54D, created: 2013-11-24
+&amp;gt; (3) ivarptr (ivarptr on Twitter) &amp;lt;ivarptr@126.com&amp;gt;
+&amp;gt; 2048 bit RSA key 72E75B05, created: 2013-04-17
+&amp;gt; Keys 1-3 of 3 for &#34;ivarptr@126.com&#34;.  Enter number(s), N)ext, or Q)uit &amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;这里搜到了3个匹配的, 可以看出这里采用很模糊的匹配, 实际上前两个都不是我们要的,
+这里输入3然后回车, 就会把这个公钥导入到我们本地电脑上. 另外注意,
+&amp;#8220;2048 bit &lt;span class=&#34;caps&#34;&gt;RSA&lt;/span&gt; key &lt;span class=&#34;caps&#34;&gt;72E75B05&lt;/span&gt;&amp;#8221;这一句表示这个公钥是2048位&lt;span class=&#34;caps&#34;&gt;RSA&lt;/span&gt;加密的,
+其Hash值就是&lt;span class=&#34;caps&#34;&gt;72E75B05&lt;/span&gt;, 如果我们知道这个Hash值,&amp;nbsp;前面直接用&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;$ gpg --search-keys 72E75B05
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;同样可以搜索到这个公钥, 由于Hash值只有8位字符, 所以存在重复的可能性,
+当然这个可能性不大,&amp;nbsp;而且也没啥影响&lt;/p&gt;
+&lt;p&gt;现在这个公钥已经添加到我们本地电脑的公钥列表了,&amp;nbsp;可以通过以下命令查看:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;$ gpg --list-keys
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;输出的部分结果如下:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;&amp;gt; pub   2048R/72E75B05 2013-04-17 [expires: 2015-04-17]
+&amp;gt; uid                  ivarptr (ivarptr on Twitter) &amp;lt;ivarptr@126.com&amp;gt;
+&amp;gt; sub   2048R/74F0F5F9 2013-04-17 [expires: 2015-04-17]
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;这里又可以看到Hash值, 还可以看到过期时间(expires: 2015-04-17),
+名字(ivarptr), 注释(ivarptr on Twitter),&amp;nbsp;邮箱(ivarptr@126.com)&lt;/p&gt;
+&lt;p&gt;下面sub开头的一行我还不太理解是做什么用的, 据说这两个Hash值,
+一个一般用于加密,&amp;nbsp;另一个一般用于签名&lt;/p&gt;
+&lt;p&gt;另外一种添加公钥的方法, 是下载别人导出的公钥文件, 一般公钥文件有两种格式,
+二进制格式一般以.gpg为扩展名, ascii格式一般以.asc为扩展名,&amp;nbsp;或者直接贴在邮件或者网页上&lt;/p&gt;
+&lt;p&gt;比如gnu项目组就提供了一个他们的&lt;a href=&#34;ftp://ftp.gnu.org/gnu/gnu-keyring.gpg&#34;&gt;公钥文件&lt;/a&gt;
+让别人下载, 而GnuPG官方则在&lt;a href=&#34;http://www.gnupg.org/signature_key.html&#34;&gt;这里&lt;/a&gt;
+贴出了ascii格式的公钥文件, 注意其中前面部分是说明,
+从5个减号开始的地方才是导出的公钥, 把这段内容保存为一个文件,&amp;nbsp;就可以用来导入了&lt;/p&gt;
+&lt;p&gt;下载到公钥文件后,&amp;nbsp;使用&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;$ gpg --import &amp;lt;公钥文件名&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;就可以把公钥导入到本地电脑,&amp;nbsp;以后用于校验&lt;/p&gt;
+&lt;p&gt;如果导入了错误的公钥, 或者某些公钥不再需要, 我们需要删除这个公钥,
+只要先查到公钥的Hash值,&amp;nbsp;然后通过以下命令既可从本地删除该公钥&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;$ gpg --delete-key &amp;lt;uid&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3&gt;导出自己的公钥和私钥&lt;/h3&gt;
+&lt;p&gt;导出公钥的命令&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;$ gpg --output my_keys.gpg --export &amp;lt;uid&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;如果没有&lt;code&gt;--output&lt;/code&gt;指定输出文件, 则输出到stdout, 如果想输出二进制格式,&amp;nbsp;则&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;$ gpg --armor --output my_keys.asc --export &amp;lt;uid&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;导出私钥的命令&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;$ gpg --output my_secret_key.gpg --export-secret-keys
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;同样也支持加上&lt;code&gt;--armor&lt;/code&gt;导出ascii格式&lt;/p&gt;
+&lt;h3&gt;编辑自己的公钥和私钥&lt;/h3&gt;
+&lt;p&gt;如果自己公钥的信息需要修改,&amp;nbsp;可以通过&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;$ gpg --edit-key &amp;lt;uid&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;进行修改,&amp;nbsp;需要根据提示来操作&lt;/p&gt;
+&lt;h3&gt;信任一个公钥&lt;/h3&gt;
+&lt;p&gt;我们从任意途径导入的公钥, 默认都是不被信任的, 因为别人可能伪造公钥服务器,
+可能伪造公钥文件, 为了确认一个公钥是真实的, 我们需要通过其他的手段,
+比如可以通过电话跟好友确认, 或者当面确认, 如果是网站的话,
+一般会公布其公钥的指纹, 比如前面提到的
+&lt;a href=&#34;http://www.gnupg.org/signature_key.html&#34;&gt;GunPG官方网站&lt;/a&gt;上,
+就写明了他们公钥的指纹(fingerprint), 我们可以在导入一个公钥之后,&amp;nbsp;通过以下命令&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;$ gpg --fingerprint &amp;lt;uid&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;来查看公钥的指纹, 与网站公布的指纹进行对比, 虽然网站也存在被篡改的可能,&amp;nbsp;但是这样至少增加了一层安全的保证&lt;/p&gt;
+&lt;p&gt;当我们确认这个公钥是正确的之后, 就可以信任这个公钥,&amp;nbsp;使用以下命令&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;$ gpg --sign-key &amp;lt;uid&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;这个命令还会再次打印fingerprint,&amp;nbsp;以便我们再次确认其真实性&lt;/p&gt;
+&lt;p&gt;一个公钥如果没有进行过确认, 在后面校验签名的时候, 会提示虽然校验成功,
+但是这个公钥不保证是真实的, 如果不在乎这个提示,&amp;nbsp;那么可以不用去信任任何公钥的&lt;/p&gt;
+&lt;h2&gt;GnuPG的作用&lt;/h2&gt;
+&lt;p&gt;本文到目前为之, 只介绍了GnuPG公钥和私钥的相关命令, 但是没有提到他们到底有什么用.
+下面就介绍GnuPG最重要的两个功能, 一个是加密文件,&amp;nbsp;另一个是对文件进行签名&lt;/p&gt;
+&lt;p&gt;GnuPG采用非对称加密的方法, 我们生成一对公钥和私钥, 私钥自己保存,&amp;nbsp;公钥可通过各种方式提供给别人. &lt;/p&gt;
+&lt;p&gt;当别人要跟我们传输文件或者信息时,
+就可以使用我们的公钥对文件或者信息进行加密, 然后发送给我们,
+我们用私钥进行解密,&amp;nbsp;还原出原始的文件或者信息.&lt;/p&gt;
+&lt;p&gt;当我们要发送一个文件或者信息给别人, 我们要让别人相信这个文件确实是我们发的,
+而且发送过程没有被任何修改, 那么可以使用私钥对这个文件或者信息进行签名,
+然后对方收到后, 使用我们的公钥对签名进行校验, 如果校验通过,&amp;nbsp;则可以保证对方收到的文件确实就是我们发的那个文件&lt;/p&gt;
+&lt;p&gt;当然, 加密和签名也可以同时使用, 发送文件时, 使用对方的公钥进行加密,
+再用自己的私钥签名, 对方收到后先校验签名, 校验无误后再解密,
+这样就完成了一次可靠的,&amp;nbsp;安全的传输&lt;/p&gt;
+&lt;h3&gt;GnuPG加密和解密&lt;/h3&gt;
+&lt;p&gt;假设a.txt需要加密,&amp;nbsp;命令如下:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;$ gpg --recipient &amp;lt;接收方uid&amp;gt; --output a.txt.encrypt --encrypt a.txt
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;注意&amp;#8212;recipient后面要指定接收方的uid, 也就是这个文件要发给谁, 就用谁的公钥uid,
+如果没有&lt;code&gt;--output&lt;/code&gt;, 结果就输出到stdout, 另外, 可以加上&lt;code&gt;--armor&lt;/code&gt;来生成二进制格式,
+还可以加上&lt;code&gt;--cipher-algo 加密算法&lt;/code&gt;来指定加密的算法, 默认的算法似乎不太安全,
+可以指定为&lt;span class=&#34;caps&#34;&gt;AES256&lt;/span&gt;,&amp;nbsp;据说比较可靠&lt;/p&gt;
+&lt;p&gt;对应的解密命令是&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;$ gpg --output a.txt --decrypt a.txt.encrypt
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;然后需要输入对应的私钥密码, 如果密码正确,&amp;nbsp;就可以正确解密了&lt;/p&gt;
+&lt;h3&gt;GunPG签名和校验&lt;/h3&gt;
+&lt;p&gt;假设a.txt需要签名,&amp;nbsp;命令如下:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;$ gpg --sign a.txt
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;这样会生成一个a.txt.gpg文件, 这个就是签名后的文件, 是二进制格式的,
+如果需要ascii格式, 不能用&lt;code&gt;--armor&lt;/code&gt;了,&amp;nbsp;需要用以下命令&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;$ gpg --clearsign a.txt
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;这样会生成a.txt.asc文件, 这个文件要比原文件大很多,&amp;nbsp;但是可以方便的贴到邮件或者网页上.&lt;/p&gt;
+&lt;p&gt;另外更普遍的做法, 是单独生成一个签名文件,&amp;nbsp;使用以下命令&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;$ gpg --detach-sig a.txt
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;这样不会修改原来的a.txt, 而是额外生成了一个a.txt.sig的文件作为其签名,
+这个可以加上&lt;code&gt;--armor&lt;/code&gt;生成ascii格式&lt;/p&gt;
+&lt;p&gt;对于这三种签名的方法,&amp;nbsp;校验的方法都是类似的&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;$ gpg --verify a.txt.gpg
+$ gpg --verify a.txt.asc
+$ gpg --verify a.txt.sig
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;最后一个命令要求a.txt和a.txt.sig放在同一个目录下&lt;/p&gt;
+&lt;h3&gt;GnuPG对称加密&lt;/h3&gt;
+&lt;p&gt;GnuPG不仅支持非对称加密, 还支持对称加密, 其实从实际操作来看,
+前面一节中的加密实际上是非对称加密和对称加密的结合,
+这是因为对称加密和解密的速度要远快于非对称加密,
+一般非对称加密的的方法, 都是采用非对称加密的算法算出一个新的密钥,
+然后采用对称加密来加密, 这样既可以有非对称加密的效果,&amp;nbsp;也可以不牺牲速度&lt;/p&gt;
+&lt;p&gt;对称加密的工具就不止GnuPG一家了, 不过顺便用用也无妨,可以参考
+&lt;a href=&#34;http://www.tutonics.com/2012/11/gpg-encryption-guide-part-4-symmetric.html&#34;&gt;这篇文章&lt;/a&gt;
+或者&lt;a href=&#34;http://www.gnupg.org/gph/en/manual/c173.html&#34;&gt;这篇&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;对称加密就没有公钥和私钥了, 就是一个密码, 也叫密钥, 把文件和密钥提供给别人,&amp;nbsp;对方就可以解密&lt;/p&gt;
+&lt;h2&gt;拾遗&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;前文的命令中提到uid的地方, 一般是写Hash值, 而且大部分地方允许输入名字,
+邮件地址, 或者是备注来指定一个公钥, 注意如果有空格,&amp;nbsp;需要加上双引号&lt;/li&gt;
+&lt;/ol&gt;            </content>
+        </entry>
             <entry>
             <title type="html">Android源码编译及自定义rom</title>
             <author><name>newkedison</name></author>
@@ -118,7 +394,11 @@ $ repo sync
 &lt;p&gt;完成之后,&amp;nbsp;可以执行&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;$ emulator
 &lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;如果正常的话,&amp;nbsp;应该可以看到一个虚拟的Android系统启动了&lt;/p&gt;            </content>
+&lt;p&gt;如果正常的话,&amp;nbsp;应该可以看到一个虚拟的Android系统启动了&lt;/p&gt;
+&lt;h2&gt;修改rom&lt;/h2&gt;
+&lt;p&gt;暂时没没研究,&amp;nbsp;找到两个比较好的帖子:&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;http://forum.xda-developers.com/showthread.php?t=1661770&#34;&gt;http://forum.xda-developers.com/showthread.php?t=1661770&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;http://forum.xda-developers.com/showthread.php?t=1272270&#34;&gt;http://forum.xda-developers.com/showthread.php?t=1272270&lt;/a&gt;&lt;/p&gt;            </content>
         </entry>
             <entry>
             <title type="html">lua相关知识</title>
